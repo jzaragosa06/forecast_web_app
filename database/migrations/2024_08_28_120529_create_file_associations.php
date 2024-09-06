@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('file_id');
             $table->unsignedBigInteger('user_id');
 
+            $table->string('assoc_filename');
             $table->string('associated_file_path');
             $table->string('operation');
             $table->timestamps();

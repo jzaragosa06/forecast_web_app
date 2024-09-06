@@ -9,7 +9,7 @@ class FileAssociation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['file_id', 'user_id', 'associated_file_path', 'operation'];
+    protected $fillable = ['file_id', 'user_id', 'assoc_filename', 'associated_file_path', 'operation'];
     public function file()
     {
         return $this->belongsTo(File::class);
@@ -17,7 +17,7 @@ class FileAssociation extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'associated_by');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
 }
