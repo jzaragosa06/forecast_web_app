@@ -51,9 +51,10 @@
                         <div class="form-group">
                             <label for="file_id">Select File</label>
                             <select name="file_id" id="file_id" class="form-control">
-                                @foreach ($files as $file)
+                                @foreach (Auth::user()->files as $file)
                                     <option value="{{ $file->file_id }}">{{ $file->filename }}</option>
                                 @endforeach
+                                <option value="" id="add-more-from-option"> Add more data +</option>
                             </select>
                         </div>
 
@@ -83,56 +84,7 @@
                         data-target="#ts-info-form">Add More data</button>
                 </div>
                 <hr>
-                {{-- <div>
-                    <h5>Results (Forecast, Trend, Seasonality Analysis)</h5>
-                    <div class="container">
-                        <h1>Results</h1>
-                        <ul>
-                            @foreach ($files as $file)
-                                <li>
-                                    <p>{{ $file->filename }}</p>
-                                    <p>File ID: {{ $file->file_id }}</p>
-                                    <p>File ID: {{ $file->id }}</p>
 
-                                    <br>Associated Results:
-                                    <ul>
-                                        @if ($file->associations->isEmpty())
-                                            <p>No associations found for this file.</p>
-                                        @else
-                                            @foreach ($file->associations as $association)
-                                                <li>
-                                                    <p>Association Filename: {{ $association->assoc_filename }}</p>
-                                                    <p>File Association ID: {{ $association->file_assoc_id }}</p>
-                                                </li>
-                                            @endforeach
-                                        @endif
-                                    </ul>
-                                </li>
-                            @endforeach
-
-                        </ul>
-                    </div>
-                </div> --}}
-
-                {{-- <div>
-                    <h5>Results (Forecast, Trend, Seasonality Analysis)</h5>
-                    <div class="container">
-                        @foreach ($assoc_files as $association)
-                            <li>
-                                <p>{{ $association->assoc_filename }} - modified:
-                                    {{ $association->updated_at }}</p>
-                                <form action="{{ route('manage.results', $association->file_assoc_id) }}"
-                                    method="post">
-                                    <button type="submit">View</button>
-                                </form>
-                            </li>
-                        @endforeach
-
-
-
-
-                    </div>
-                </div> --}}
 
                 <div>
                     <h5>Results (Forecast, Trend, Seasonality Analysis)</h5>
@@ -280,6 +232,15 @@
                     $('#modal_file_id').val($('#file_id').val());
                 }
             });
+
+
+            // Open the 'Add More data' modal when 'Add more data' is selected
+            $('#file_id').on('change', function() {
+                if ($(this).val() === '') {
+                    $('#ts-info-form').modal('show');
+                }
+            });
+
         });
     </script>
 </body>

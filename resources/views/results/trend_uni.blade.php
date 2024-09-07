@@ -50,7 +50,7 @@
                     {
                         label: 'Simple Moving Average using 5 moving window',
                         data: data.trend.target_sma_5,
-                        borderColor: 'red',
+                        borderColor: 'black',
                         fill: false,
                         borderWidth: 2
 
@@ -58,7 +58,7 @@
                     {
                         label: 'Simple Moving Average using 10 moving window',
                         data: data.trend.target_sma_10,
-                        borderColor: 'red',
+                        borderColor: 'blue',
                         fill: false,
                         borderWidth: 2
 
@@ -66,7 +66,7 @@
                     {
                         label: 'Simple Moving Average using 20 moving window',
                         data: data.trend.target_sma_20,
-                        borderColor: 'red',
+                        borderColor: 'green',
                         fill: false,
                         borderWidth: 2
 
