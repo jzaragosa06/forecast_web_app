@@ -7,3 +7,6 @@
 
 Create an enviroment file `.venv` which contains the configuration of the project.
 To run the project, open two terminal. In the first terminal, run `php artisan serve`. In the second terminal run `npm run dev`.
+
+
+

@@ -188,6 +188,8 @@
 
     </div>
 
+    
+
 
     <!-- Forecast Modal -->
     <div class="modal fade" id="forecast-modal" tabindex="-1" role="dialog" aria-labelledby="forecastModalLabel"
