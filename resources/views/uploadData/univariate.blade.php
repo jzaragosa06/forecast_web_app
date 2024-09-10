@@ -5,9 +5,12 @@
     <title>Univariate Data Processing</title>
 
 
-
+    {{-- 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script> --}}
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -73,50 +76,194 @@
                 const dates = originalData.map(row => new Date(row[0]));
                 const label = headers[1];
 
+
                 showChart(label, dates, values);
             } else {
                 console.error('Invalid data or headers');
             }
+
+            //orig
+            // function showChart(label, dates, values) {
+            //     // Destroy existing chart if it exists
+            //     if (chartInstance) {
+            //         chartInstance.destroy();
+            //     }
+            //     const ctx = chartCanvas.getContext('2d');
+            //     chartInstance = new Chart(ctx, {
+            //         type: 'line',
+            //         data: {
+            //             labels: dates,
+            //             datasets: [{
+            //                 label: label,
+            //                 data: values,
+            //                 borderColor: 'rgba(75, 192, 192, 1)',
+            //                 borderWidth: 1,
+            //                 fill: false
+            //             }]
+            //         },
+            //         options: {
+            //             scales: {
+            //                 x: {
+            //                     type: 'time',
+            //                     time: {
+            //                         unit: 'day'
+            //                     },
+            //                     title: {
+            //                         display: true,
+            //                         text: 'Date'
+            //                     }
+            //                 },
+            //                 y: {
+            //                     title: {
+            //                         display: true,
+            //                         text: label
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     });
+            // }
+
+            // function showChart(label, dates, values) {
+            //     // Destroy existing chart if it exists
+            //     if (chartInstance) {
+            //         chartInstance.destroy();
+            //     }
+
+            //     const formattedData = dates.map((date, index) => ({
+            //         x: date,
+            //         y: values[index]
+            //     }));
+
+            //     console.log(formattedData);
+
+
+            //     // Initialize ApexCharts
+            //     const options = {
+            //         chart: {
+            //             type: 'line',
+            //             height: 350
+            //         },
+            //         series: [{
+            //             name: label,
+            //             data: formattedData
+            //         }],
+            //         xaxis: {
+            //             type: 'datetime',
+            //             title: {
+            //                 text: 'Date'
+            //             }
+            //         },
+            //         yaxis: {
+            //             title: {
+            //                 text: label
+            //             }
+            //         },
+            //         stroke: {
+            //             curve: 'smooth',
+            //             width: 1 // Thin line
+            //         },
+
+            //     };
+
+            //     const chart = new ApexCharts(document.querySelector("#chart-container"), options);
+            //     chart.render();
+            // }
+
+
+
+            // function fillMissingValues(method) {
+            //     tempData = JSON.parse(JSON.stringify(originalData)); // Reset tempData to original each time
+
+            //     switch (method) {
+            //         case 'forward':
+            //             for (let i = 1; i < tempData.length; i++) {
+            //                 if (tempData[i][1] === null || tempData[i][1] === '') {
+            //                     tempData[i][1] = tempData[i - 1][1];
+            //                 }
+            //             }
+            //             break;
+            //         case 'backward':
+            //             for (let i = tempData.length - 2; i >= 0; i--) {
+            //                 if (tempData[i][1] === null || tempData[i][1] === '') {
+            //                     tempData[i][1] = tempData[i + 1][1];
+            //                 }
+            //             }
+            //             break;
+            //         case 'average':
+            //             let sum = 0;
+            //             let count = 0;
+            //             for (let i = 0; i < tempData.length; i++) {
+            //                 if (tempData[i][1] !== null && tempData[i][1] !== '') {
+            //                     sum += parseFloat(tempData[i][1]);
+            //                     count++;
+            //                 }
+            //             }
+            //             const average = sum / count;
+            //             for (let i = 0; i < tempData.length; i++) {
+            //                 if (tempData[i][1] === null || tempData[i][1] === '') {
+            //                     tempData[i][1] = average;
+            //                 }
+            //             }
+            //             break;
+            //         case 'zero':
+            //             for (let i = 0; i < tempData.length; i++) {
+            //                 if (tempData[i][1] === null || tempData[i][1] === '') {
+            //                     tempData[i][1] = 0;
+            //                 }
+            //             }
+            //             break;
+            //     }
+
+            //     const values = tempData.map(row => parseFloat(row[1]));
+            //     const dates = tempData.map(row => new Date(row[0]));
+            //     showChart(headers[1], dates, values);
+            // }
+
 
             function showChart(label, dates, values) {
                 // Destroy existing chart if it exists
                 if (chartInstance) {
                     chartInstance.destroy();
                 }
-                const ctx = chartCanvas.getContext('2d');
-                chartInstance = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: dates,
-                        datasets: [{
-                            label: label,
-                            data: values,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1,
-                            fill: false
-                        }]
+
+                // Create formatted data
+                const formattedData = dates.map((date, index) => ({
+                    x: date,
+                    y: values[index]
+                }));
+
+                console.log(formattedData);
+
+                // Initialize ApexCharts
+                const options = {
+                    chart: {
+                        type: 'line',
+                        height: 350
                     },
-                    options: {
-                        scales: {
-                            x: {
-                                type: 'time',
-                                time: {
-                                    unit: 'day'
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Date'
-                                }
-                            },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: label
-                                }
-                            }
+                    series: [{
+                        name: label,
+                        data: formattedData
+                    }],
+                    xaxis: {
+                        type: 'datetime',
+                        title: {
+                            text: 'Date'
                         }
-                    }
-                });
+                    },
+                    yaxis: {
+                        title: {
+                            text: label
+                        }
+                    },
+                    stroke: {
+                        curve: 'smooth',
+                        width: 1 // Thin line
+                    },
+                };
+
+                chartInstance = new ApexCharts(document.querySelector("#chart-container"), options);
+                chartInstance.render();
             }
 
             function fillMissingValues(method) {
@@ -163,9 +310,12 @@
                 }
 
                 const values = tempData.map(row => parseFloat(row[1]));
-                const dates = tempData.map(row => new Date(row[0]));
+                const dates = tempData.map(row => row[0]); // Use original date strings
                 showChart(headers[1], dates, values);
             }
+
+
+
 
 
             function generateCSV(data) {
