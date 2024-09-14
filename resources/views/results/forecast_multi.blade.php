@@ -6,17 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <title>Document</title>
 </head>
 
 <body>
-    <h4>Forecast Result</h4>
+
     <div class="container">
+        <h4>Forecast Result</h4>
         <div class="row">
             <div class="col-md-8 border border-dark">
-                <canvas id="chart1"></canvas>
-                <canvas id="chart2"></canvas>
+                <div id="chart1"></div>
+            </div>
+            <div class="col-md-4 border border-dark">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                    culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+        <h4>Detailed Forecast Result</h4>
+        <div class="row">
+            <div class="col-md-8 border border-dark">
+                <div id="chart2"></div>
+            </div>
+            <div class="col-md-4 border border-dark">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                    culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 border border-dark">
+                <div id="chart3"></div>
             </div>
             <div class="col-md-4 border border-dark">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
@@ -28,44 +53,156 @@
         </div>
 
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         // Fetch and parse JSON data from the server-side
-        const jsonData = @json($data);
+        const jsonData = @json($data); // Server-side rendered data
         const data = JSON.parse(jsonData);
 
+        console.log(data.metadata.colname);
+        const colname = (data.metadata.colname)[(data.metadata.colname).length - 1];
 
-        // Initialize the first chart
-        let chart1 = new Chart(document.getElementById('chart1'), {
-            type: 'line',
-            data: {
-                labels: data.forecast.pred_out.index,
-                datasets: [{
-                    label: 'Pred Out',
-                    data: data.forecast.pred_out.target,
-                    borderColor: 'red',
-                    fill: false
-                }]
-            }
-        });
 
-        // Initialize the second chart
-        let chart2 = new Chart(document.getElementById('chart2'), {
-            type: 'line',
-            data: {
-                labels: data.forecast.pred_test.index,
-                datasets: [{
-                    label: 'Pred Test',
-                    data: data.forecast.pred_test.target,
-                    borderColor: 'blue',
-                    fill: false
-                }]
-            }
-        });
+        console.log(colname);
 
-        // Update both charts
-        chart1.update();
-        chart2.update();
+        renderChart1();
+        renderChart2();
+        renderChart3();
+
+        function renderChart1() {
+            // Forecast index
+            let forecastIndex = data.forecast.pred_out.index;
+            let originalDataIndex = data.data.entire_data.index;
+            let full_index = [...originalDataIndex, ...forecastIndex];
+
+            let forecastData_null = [...Array(originalDataIndex.length).fill(null), ...data.forecast.pred_out[`${colname}`]];
+            let origDataValue = data.data.entire_data[`${colname}`];
+
+
+
+
+
+            // Initialize the first chart using ApexCharts
+            let options1 = {
+                chart: {
+                    type: 'line',
+                    height: 300
+                },
+                series: [{
+                    name: 'orig data',
+                    data: origDataValue,
+
+                }, {
+                    name: 'Pred Out',
+                    data: forecastData_null,
+
+                }],
+                xaxis: {
+                    categories: full_index
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 1,
+                },
+
+            };
+
+            let chart1 = new ApexCharts(document.querySelector("#chart1"), options1);
+            chart1.render();
+        }
+
+
+        function renderChart2() {
+            let full_index = data.data.entire_data.index;
+            let trainData = data.data.train_data[`${colname}`];
+
+            let testValue = [...Array(trainData.length).fill(null), ...data.data.test_data[`${colname}`]];
+            let predValue = [...Array(trainData.length).fill(null), ...data.forecast.pred_test[`${colname}`]];
+
+
+            // Initialize the first chart using ApexCharts
+            let options2 = {
+                chart: {
+                    type: 'line',
+                    height: 300
+                },
+                series: [{
+                        name: 'train data',
+                        data: trainData,
+
+                    }, {
+                        name: 'Test data',
+                        data: testValue,
+
+                    },
+                    {
+                        name: 'Pred test data',
+                        data: predValue,
+
+                    },
+                ],
+                xaxis: {
+                    categories: full_index
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 1,
+                },
+
+            };
+
+            let chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
+            chart2.render();
+        }
+
+
+        function renderChart3() {
+            // Forecast index
+            let forecastIndex = data.forecast.pred_out.index;
+            let originalDataIndex = data.data.entire_data.index;
+            let full_index = [...originalDataIndex, ...forecastIndex];
+
+            let forecastData_null = [...Array(originalDataIndex.length).fill(null), ...data.forecast.pred_out[
+                `${colname}`]];
+            let origDataValue = data.data.entire_data[`${colname}`];
+
+
+
+
+
+            // Initialize the first chart using ApexCharts
+            let options3 = {
+                chart: {
+                    type: 'line',
+                    height: 300
+                },
+                series: [{
+                    name: 'orig data',
+                    data: origDataValue,
+
+                }, {
+                    name: 'Pred Out',
+                    data: forecastData_null,
+
+                }],
+                xaxis: {
+                    categories: full_index
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 1,
+                },
+
+            };
+
+            let chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+            chart3.render();
+        }
     </script>
+
+
+
 
 
 </body>

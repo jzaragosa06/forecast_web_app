@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ManageOperationsController;
 use App\Http\Controllers\ManageShowResultsController;
 use App\Http\Controllers\PreprocessInputFileController;
@@ -28,4 +29,4 @@ Route::post('upload/ts', [PreprocessInputFileController::class, 'preprocess_fill
 Route::post('save/ts', [SaveInputController::class, 'save'])->name('save');
 Route::post('manage/operations', [ManageOperationsController::class, 'manage'])->name('manage.operations');
 Route::post('manage/results/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results');
-
+Route::get('/manage/results/files', [HomeController::class, 'manage_result_files'])->name('home.manage_result_files');

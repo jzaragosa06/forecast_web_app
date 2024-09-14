@@ -12,6 +12,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
+
+
+
 </head>
 
 <body>
@@ -33,6 +36,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home.manage_result_files') }}">Manage Results</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Settings</a>
@@ -188,7 +194,7 @@
 
     </div>
 
-    
+
 
 
     <!-- Forecast Modal -->

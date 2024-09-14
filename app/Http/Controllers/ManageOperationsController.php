@@ -41,7 +41,7 @@ class ManageOperationsController extends Controller
                     'inputFile',
                     $file_content,
                     basename($file->filepath)
-                )->post('http://127.0.0.1:5000/forecast-univariate', [
+                )->post('http://127.0.0.1:5000/api/forecast-univariate', [
                             'type' => $type,
                             'freq' => $freq,
                             'description' => $description,
@@ -66,12 +66,12 @@ class ManageOperationsController extends Controller
                 }
 
             } else {
-                $response = Http::timeout(120) // Increase timeout to 120 seconds
+                $response = Http::timeout(300) // Increase timeout to 120 seconds
                     ->attach(
                         'inputFile',
                         $file_content,
                         basename($file->filepath)
-                    )->post('http://127.0.0.1:5000/forecast-multivariate', [
+                    )->post('http://127.0.0.1:5000/api/forecast-multivariate', [
                             'type' => $type,
                             'freq' => $freq,
                             'description' => $description,
@@ -110,7 +110,7 @@ class ManageOperationsController extends Controller
                     'inputFile',
                     $file_content,
                     basename($file->filepath)
-                )->post('http://127.0.0.1:5000/trend', [
+                )->post('http://127.0.0.1:5000/api/trend', [
                             'type' => $type,
                             'freq' => $freq,
                             'description' => $description
@@ -149,7 +149,7 @@ class ManageOperationsController extends Controller
                     'inputFile',
                     $file_content,
                     basename($file->filepath)
-                )->post('http://127.0.0.1:5000/seasonality', [
+                )->post('http://127.0.0.1:5000/api/seasonality', [
                             'type' => $type,
                             'freq' => $freq,
                             'description' => $description
