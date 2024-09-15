@@ -2,7 +2,7 @@
 
 -   Run `composer install` to install the dependencies.
 -   Additionally, run `npm install`.
--   Create a database in your local computer with the name 'tsforecast_db'.
+-   Create a database in your local computer with the name 'forecast_web_app_db'.
 -   Run the migration files, i.e., `php artisan migrate`.
 
 Create an enviroment file `.venv` which contains the configuration of the project.
