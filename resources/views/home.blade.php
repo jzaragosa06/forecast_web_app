@@ -38,7 +38,7 @@
                         <a class="nav-link" href="#">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home.manage_result_files') }}">Manage Results</a>
+                        <a class="nav-link" href="{{ route('crud.show') }}">Manage Results</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Settings</a>

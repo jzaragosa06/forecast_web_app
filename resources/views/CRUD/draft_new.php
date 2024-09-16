@@ -65,11 +65,12 @@
 
                                     {{-- Delete Button --}}
                                     {{-- <form action="{{ route('delete.result', $file->file_assoc_id) }}" method="post" style="display: inline-block;"> --}}
-                                    <form action="" method="post" style="display: inline-block;">
+                                    {{-- <form action="{{ route('crud.delete', $file->file_assoc_id) }}" method="post"
+                                        style="display: inline-block;"> --}}
 
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    @csrf
+                                    {{-- @method('DELETE') --}}
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                     </form>
 
                                     {{-- Update Button --}}

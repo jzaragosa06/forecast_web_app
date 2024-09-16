@@ -13,7 +13,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('file_associations', function (Blueprint $table) {
-            $table->bigIncrements('file_assoc_id');
+            $table->bigIncrements(column: 'file_assoc_id');
             $table->unsignedBigInteger('file_id');
             $table->unsignedBigInteger('user_id');
 

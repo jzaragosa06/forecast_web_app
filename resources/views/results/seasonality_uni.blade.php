@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -14,18 +14,11 @@
     <h4>Seasonality Result</h4>
     <div class="container">
         <div class="row">
-            <div class="col-md-8 border border-dark">
-                <canvas id="chart1"></canvas>
-            </div>
-            <div class="col-md-4 border border-dark">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.</p>
+            <!-- Container where charts will be dynamically added -->
+            <div id="chart-container" class="col-md-12">
+                <!-- Dynamic charts will be inserted here -->
             </div>
         </div>
-
     </div>
 
     <script>
@@ -33,21 +26,144 @@
         const jsonData = @json($data);
         const data = JSON.parse(jsonData);
 
-        // Initialize the first chart
-        let chart1 = new Chart(document.getElementById('chart1'), {
-            type: 'line',
-            data: {
-                labels: data.seasonality.index,
-                datasets: [{
-                    label: 'Seasonality',
-                    data: data.seasonality.target,
-                    borderColor: 'red',
-                    fill: false
-                }]
-            }
-        });
+        console.log(data);
+    </script>
 
-        chart1.update();
+</body>
+
+</html> --}}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <title>Seasonality Chart</title>
+</head>
+
+<body>
+    <h4>Seasonality Result</h4>
+    <div class="container">
+        <div class="row">
+            <!-- Container where charts will be dynamically added -->
+            <div id="chart-container" class="col-md-12">
+                <!-- Dynamic charts will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mocked JSON data for demonstration, replace with your dynamic data
+        const jsonData = @json($data);
+        const data = JSON.parse(jsonData);
+
+        // console.log(data);
+
+        // Generate x-axis labels
+        const weeklyLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        const yearlyLabels = Array.from({
+            length: 365
+        }, (_, i) => `Day ${i + 1}`);
+
+        // Reference to the chart container
+        const chartContainer = document.getElementById('chart-container');
+
+        // Function to create chart
+        function createChart(title, labels, seriesData) {
+            const chartDiv = document.createElement('div');
+            chartDiv.style.marginBottom = '30px';
+            chartContainer.appendChild(chartDiv);
+
+            const options = {
+                chart: {
+                    type: 'line',
+                    height: 350,
+                    animations: {
+                        enabled: true
+                    }
+                },
+                title: {
+                    text: title,
+                    align: 'center'
+                },
+                xaxis: {
+                    categories: labels
+                },
+                series: seriesData,
+                stroke: {
+                    curve: 'smooth',
+                    width: 1,
+                },
+                markers: {
+                    size: 0
+                },
+                // tooltip: {
+                //     shared: true,
+                //     intersect: false
+                // },
+                yaxis: {
+                    title: {
+                        text: 'Value'
+                    }
+                }
+            };
+
+            const chart = new ApexCharts(chartDiv, options);
+            chart.render();
+        }
+
+        // Loop through each variable (colname)
+        const colnames = data.colnames;
+
+        if (data.seasonality_per_period && colnames) {
+            for (const col in data.seasonality_per_period) {
+                const seasonalityData = data.seasonality_per_period[col];
+                console.log(seasonalityData);
+
+                // Loop through the components (e.g., 'weekly', 'yearly')
+                data.components.forEach(component => {
+
+                    if (seasonalityData[component]) {
+                        let labels, title;
+                        if (component === 'weekly') {
+                            labels = weeklyLabels;
+                            title = `${col} - Weekly Seasonality`;
+                        } else if (component === 'yearly') {
+                            labels = yearlyLabels;
+                            title = `${col} - Yearly Seasonality`;
+                        }
+
+                        console.log(labels);
+                        console.log(title);
+                        console.log(seasonalityData[component].values);
+
+
+                        // Prepare series data for ApexCharts
+                        const seriesData = [{
+                                name: 'Value',
+                                data: seasonalityData[component].values
+                            },
+                            // {
+                            //     name: 'Lower Bound',
+                            //     data: seasonalityData[component].lower
+                            // },
+                            // {
+                            //     name: 'Upper Bound',
+                            //     data: seasonalityData[component].upper
+                            // }
+                        ];
+
+                        // Create chart
+                        createChart(title, labels, seriesData);
+                    }
+                });
+            }
+        }
     </script>
 
 </body>
