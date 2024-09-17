@@ -14,67 +14,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHELiMiSckEBBGpn5KaM9TZVlYGevcKTg&libraries=places">
     </script>
 
-    <style>
-        /* Custom Theme Colors */
-        :root {
-            --primary-color: #1B3B6F;
-            --secondary-color: #21295C;
-            --tertiary-color: #1C7293;
-            --black-color: #000000;
-            --white-color: #FFFFFF;
-        }
 
-        body {
-            background-color: var(--white-color);
-            color: var(--black-color);
-        }
-
-        .navbar {
-            background-color: var(--primary-color);
-            color: var(--white-color);
-        }
-
-        .navbar .navbar-brand,
-        .navbar .btn {
-            color: var(--white-color);
-        }
-
-        .sidebar {
-            background-color: var(--secondary-color);
-            color: var(--white-color);
-        }
-
-        .sidebar .nav-link {
-            color: var(--white-color);
-        }
-
-        .sidebar .nav-link.active {
-            background-color: var(--tertiary-color);
-            color: var(--white-color);
-        }
-
-        .card-header {
-            background-color: var(--primary-color);
-            color: var(--white-color);
-        }
-
-        .btn-primary {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-            color: var(--white-color);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--tertiary-color);
-            border-color: var(--tertiary-color);
-            color: var(--white-color);
-        }
-
-        /* Sidebar icons */
-        .nav-item .fas {
-            margin-right: 8px;
-        }
-    </style>
 
 </head>
 
@@ -421,6 +361,19 @@
 
                         </div>
 
+                        <div class="container mt-3">
+                            <!-- Date Pickers -->
+                            <div class="form-group">
+                                <label for="start-date">Start Date</label>
+                                <input type="date" id="start-date" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="end-date">End Date</label>
+                                <input type="date" id="end-date" class="form-control" required>
+                            </div>
+                        </div>
+
 
                         <div class="container">
                             <!-- Map Display -->
@@ -433,7 +386,7 @@
                         </div>
 
 
-                        <button type="submit" class="btn btn-primary">Fetch</button>
+                        <button type="submit" id="fetch-data-open-meteo-bth" class="btn btn-primary">Fetch</button>
                     </form>
                 </div>
             </div>
@@ -444,6 +397,9 @@
         $(document).ready(function() {
             let map;
             let marker;
+            let lat;
+            let lon;
+
 
             // Initialize and show Google Map when "Open Map" button is clicked
             $('#get-from-maps-btn').on('click', function() {
@@ -468,6 +424,8 @@
 
             // Place a marker on map and pan to it
             function placeMarkerAndPanTo(latLng, map) {
+
+
                 if (marker) {
                     marker.setPosition(latLng);
                 } else {
@@ -478,9 +436,14 @@
                 }
                 map.panTo(latLng);
 
+                lat = latLng.lat();
+                lon = latLng.lng();
+
+
+
                 // Update the latitude and longitude in the form
-                $('#lat').text(latLng.lat());
-                $('#long').text(latLng.lng());
+                $('#lat').text(lat);
+                $('#long').text(lon);
             }
 
 
@@ -504,19 +467,23 @@
             $('#use-current-loc-btn').on('click', function() {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(position) {
-                        let lat = position.coords.latitude;
-                        let lon = position.coords.longitude;
+
+                        lat = position.coords.latitude;
+                        lon = position.coords.longitude;
 
                         console.log(lat);
                         console.log(lon);
 
-                        // Update the map's center and place a marker
-                        let currentLocation = new google.maps.LatLng(lat, lon);
-                        map.setCenter(currentLocation);
-                        placeMarkerAndPanTo(currentLocation, map);
+                        if (map) {
+                            // Update the map's center and place a marker
+                            let currentLocation = new google.maps.LatLng(lat, lon);
+                            map.setCenter(currentLocation);
+                            placeMarkerAndPanTo(currentLocation, map);
+                        }
 
                         $('#lat').text(lat);
                         $('#long').text(lon);
+
                     }, function(error) {
                         console.error("Error retrieving location: ", error);
                     });
@@ -524,6 +491,87 @@
                     alert("Geolocation is not supported by this browser.");
                 }
             });
+        });
+
+        // Listen for click event on the fetch button
+        $('#fetch-data-open-meteo-bth').on('click', function(e) {
+            e.preventDefault();
+
+            // Extract latitude and longitude
+            let lat = $('#lat').text().trim(); // Assuming lat and long values are stored here
+            let long = $('#long').text().trim();
+
+            // Get the selected checkboxes
+            let selectedDaily = [];
+            $('input[name="daily"]:checked').each(function() {
+                selectedDaily.push($(this).val());
+            });
+
+            // If no checkboxes are selected, alert the user
+            if (selectedDaily.length === 0) {
+                alert('Please select at least one data field');
+                return;
+            }
+
+            // Build the API request URL
+            let apiUrl = 'https://archive-api.open-meteo.com/v1/archive';
+            let startDate = $('#start-date').val(); // Extracting start date
+            let endDate = $('#end-date').val(); // Extracting end date
+
+            let dailyParams = selectedDaily.join(',');
+
+            let requestUrl =
+                `${apiUrl}?latitude=${lat}&longitude=${long}&start_date=${startDate}&end_date=${endDate}&daily=${dailyParams}&timezone=auto`;
+
+
+            console.log(requestUrl);
+
+            // Send the AJAX request
+            $.ajax({
+                url: requestUrl,
+                type: 'GET',
+                success: function(response) {
+                    // Handle the response from the server
+                    console.log('Data fetched successfully:', response);
+                    console.log('daily units', response.daily);
+                    // You can display the data in the modal or elsewhere in the app
+
+                    csv_raw = generateCSV(response, selectedDaily);
+                    console.log("generated csv raw", csv_raw);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                    alert('Failed to fetch data. Please try again.');
+                }
+            });
+
+
+            function generateCSV(data, selectedVariables) {
+                // Extract time array from the response
+                const timeArray = data.daily.time;
+
+                // Initialize CSV content with headers
+                let csvContent = 'time,' + selectedVariables.join(',') + '\n';
+
+                // Loop through each day (time array)
+                for (let i = 0; i < timeArray.length; i++) {
+                    // Start each row with the time (date)
+                    let row = [timeArray[i]];
+
+                    // For each selected variable, add the corresponding value to the row
+                    selectedVariables.forEach(variable => {
+                        row.push(data.daily[variable][i]);
+                    });
+
+                    // Add the row to CSV content
+                    csvContent += row.join(',') + '\n';
+                }
+
+                return csvContent;
+            }
+
+
+
         });
     </script>
 </body>
