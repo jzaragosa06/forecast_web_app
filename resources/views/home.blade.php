@@ -105,57 +105,7 @@
                         data-toggle="modal" data-target="#ts-add-via-api-open-meteo-modal">Add data form
                         Open-Meteo</button>
                 </div>
-                <hr>
-
-
-                <div>
-                    <h5>Results (Forecast, Trend, Seasonality Analysis)</h5>
-                    <div class="container">
-                        <ul>
-                            @php
-                                $currentFileId = null;
-                            @endphp
-
-                            @foreach ($files as $file)
-                                @if ($currentFileId !== $file->file_id)
-                                    @if ($currentFileId !== null)
-                        </ul>
-                        </li>
-                        @endif
-
-                        <li>
-                            <p>{{ $file->filename }}</p>
-                            Associated Results:
-                            <ul>
-                                @php
-                                    $currentFileId = $file->file_id;
-                                @endphp
-                                @endif
-
-                                @if ($file->assoc_filename)
-                                    <li>
-                                        <p>{{ $file->assoc_filename }}</p>
-                                        <form action="{{ route('manage.results', $file->file_assoc_id) }}"
-                                            method="post">
-                                            @csrf
-                                            <button type="submit">View</button>
-                                        </form>
-                                    </li>
-                                @else
-                                    <li>No associated results found.</li>
-                                @endif
-                                @endforeach
-
-                                @if ($currentFileId !== null)
-                            </ul>
-                        </li>
-                        @endif
-                        </ul>
-                    </div>
-                </div>
-
-
-
+                
             </div>
         </div>
     </div>

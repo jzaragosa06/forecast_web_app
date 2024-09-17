@@ -14,83 +14,145 @@
 </head>
 
 <body>
-    <div>
 
-        <h5>Files</h5>
-        <div class="container">
-            <table id="resultsTable" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>File Name</th>
-                        <th>Type</th>
-                        <th>Description</th>
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-4">
+                <div class="container">
+                    <h5>Files and Results Tree</h5>
+                    <ul>
+                        @php
+                            $currentFileId = null;
+                        @endphp
+
+                        @foreach ($files as $file)
+                            @if ($currentFileId !== $file->file_id)
+                                @if ($currentFileId !== null)
+                    </ul>
+                    </li>
+                    @endif
+
+                    <li>
+                        <p>{{ $file->filename }}</p>
+                        Associated Results:
+                        <ul>
+                            @php
+                                $currentFileId = $file->file_id;
+                            @endphp
+                            @endif
+
+                            @if ($file->assoc_filename)
+                                <li>
+                                    <p>{{ $file->assoc_filename }}</p>
+                                    <form action="{{ route('manage.results', $file->file_assoc_id) }}" method="post">
+                                        @csrf
+                                        <button type="submit">View</button>
+                                    </form>
+                                </li>
+                            @else
+                                <li>No associated results found.</li>
+                            @endif
+                            @endforeach
+
+                            @if ($currentFileId !== null)
+                        </ul>
+                    </li>
+                    @endif
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div>
+                    <div class="container">
+                        <h5>Files</h5>
+                        <table id="resultsTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>File Name</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
 
 
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($files as $file)
-                        <tr>
-                            <td>{{ $file->file_id }}</td>
-                            <td>{{ $file->filename }}</td>
-                            <td>{{ $file->type }}</td>
-                            <td>
-                                <form action="" method="post" style="display: inline-block;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary btn-sm">View</button>
-                                </form>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($files as $file)
+                                    <tr>
+                                        <td>{{ $file->file_id }}</td>
+                                        <td>{{ $file->filename }}</td>
+                                        <td>{{ $file->type }}</td>
+                                        <td>
+                                            <form action="" method="post" style="display: inline-block;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary btn-sm">View</button>
+                                            </form>
 
-                                <form action="{{ route('crud.delete.file', $file->file_id) }}" method="POST"
-                                    style="display:inline-block;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                            <form action="{{ route('crud.delete.file', $file->file_id) }}"
+                                                method="POST" style="display:inline-block;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+
+
+                    <div class="container">
+                        <h5>Result Files (Forecast, Trend, Seasonality Analysis)</h5>
+
+                        <table id="resultsTable" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>File ID</th>
+                                    <th>Result File Name</th>
+                                    <th>Operation</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($files_assoc as $file_assoc)
+                                    <tr>
+                                        <td>{{ $file_assoc->file_assoc_id }}</td>
+                                        <td>{{ $file_assoc->assoc_filename }}</td>
+                                        <td>{{ $file_assoc->operation }}</td>
+                                        <td>
+                                            <form action="{{ route('manage.results', $file_assoc->file_assoc_id) }}"
+                                                method="post" style="display: inline-block;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary btn-sm">View</button>
+                                            </form>
+
+                                            <form
+                                                action="{{ route('crud.delete.file_assoc', $file_assoc->file_assoc_id) }}"
+                                                method="POST" style="display:inline-block;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <hr>
 
 
-        <h5>Result Files (Forecast, Trend, Seasonality Analysis)</h5>
-        <div class="container">
-            <table id="resultsTable" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>File ID</th>
-                        <th>Result File Name</th>
-                        <th>Operation</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($files_assoc as $file_assoc)
-                        <tr>
-                            <td>{{ $file_assoc->file_assoc_id }}</td>
-                            <td>{{ $file_assoc->assoc_filename }}</td>
-                            <td>{{ $file_assoc->operation }}</td>
-                            <td>
-                                <form action="{{ route('manage.results', $file_assoc->file_assoc_id) }}" method="post"
-                                    style="display: inline-block;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary btn-sm">View</button>
-                                </form>
 
-                                <form action="{{ route('crud.delete.file_assoc', $file_assoc->file_assoc_id) }}"
-                                    method="POST" style="display:inline-block;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+
+
     </div>
+
+
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
