@@ -15,15 +15,6 @@
     </script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    {{-- <script>
-        $(document).ready(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-        });
-    </script> --}}
 
 
 
@@ -62,7 +53,7 @@
                 </ul>
             </div>
             <!-- Right Side Content -->
-            <div class="col-md-9">
+            {{-- <div class="col-md-9">
                 <div>
                     <h4>Analyze</h4>
                     <form action="{{ route('manage.operations') }}" method="post">
@@ -94,10 +85,13 @@
                 <div>
                     <h5>List of Input Time Series Data</h5>
                     @foreach (Auth::user()->files as $file)
-                        <li>
-                            <a href="{{ Storage::url($file->filepath) }}">{{ $file->filename }}</a>
+                        <div>
+                            <p>{{ $file->filename }}</p>
+                            <p>{{ $file->type }}</p>
+                            <p>{{ $file->freq }}</p>
+                            <p>{{ $file->description }}</p>
 
-                        </li>
+                        </div>
                     @endforeach
                     <button type="button" id="ts-info" class="btn btn-primary" data-toggle="modal"
                         data-target="#ts-info-form">Add More data via upload</button>
@@ -105,8 +99,73 @@
                         data-toggle="modal" data-target="#ts-add-via-api-open-meteo-modal">Add data form
                         Open-Meteo</button>
                 </div>
-                
+
+            </div> --}}
+
+            <div class="col-md-9">
+                <div>
+                    <h4>Analyze</h4>
+                    <form action="{{ route('manage.operations') }}" method="post">
+                        @csrf
+                        <div class="form-group">
+                            <label for="file_id">Select File</label>
+                            <select name="file_id" id="file_id" class="form-control">
+                                @foreach (Auth::user()->files as $file)
+                                    <option value="{{ $file->file_id }}">{{ $file->filename }}</option>
+                                @endforeach
+                                <option value="" id="add-more-from-option"> Add more data +</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="operation">Select Operation</label>
+                            <select name="operation" id="operation" class="form-control">
+                                <option value="trend">Trend</option>
+                                <option value="seasonality">Seasonality</option>
+                                <option value="forecast">Forecast</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-secondary">Analyze</button>
+                    </form>
+                </div>
+
+                <hr>
+
+                <div>
+                    <h5>List of Input Time Series Data</h5>
+
+                    <!-- Loop through the files and display each inside a Bootstrap card -->
+                    @foreach (Auth::user()->files as $file)
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <!-- File information -->
+                                <h5 class="card-title">{{ $file->filename }}</h5>
+                                <p class="card-text">Type: {{ $file->type }}</p>
+                                <p class="card-text">Frequency: {{ $file->freq }}</p>
+                                <p class="card-text">Description: {{ $file->description }}</p>
+
+                                <!-- Placeholder for graph (can be replaced with an actual graph later) -->
+                                <div class="graph-placeholder mt-4" style="height: 200px; background-color: #f7f7f7;">
+                                    <!-- Graph will be added here later -->
+                                    <p class="text-center text-muted" style="line-height: 200px;">Graph Placeholder</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    <!-- Buttons to add more data -->
+                    <button type="button" id="ts-info" class="btn btn-primary" data-toggle="modal"
+                        data-target="#ts-info-form">
+                        Add More data via upload
+                    </button>
+                    <button type="button" id="ts-add-via-api-open-meteo-btn" class="btn btn-primary"
+                        data-toggle="modal" data-target="#ts-add-via-api-open-meteo-modal">
+                        Add data from Open-Meteo
+                    </button>
+                </div>
             </div>
+
         </div>
     </div>
 
