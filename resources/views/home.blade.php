@@ -13,6 +13,18 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHELiMiSckEBBGpn5KaM9TZVlYGevcKTg&libraries=places">
     </script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    {{-- <script>
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        });
+    </script> --}}
+
 
 
 
@@ -386,7 +398,7 @@
                         </div>
 
 
-                        <button type="submit" id="fetch-data-open-meteo-bth" class="btn btn-primary">Fetch</button>
+                        <button type="submit" id="fetch-data-open-meteo-btn" class="btn btn-primary">Fetch</button>
                     </form>
                 </div>
             </div>
@@ -494,7 +506,7 @@
         });
 
         // Listen for click event on the fetch button
-        $('#fetch-data-open-meteo-bth').on('click', function(e) {
+        $('#fetch-data-open-meteo-btn').on('click', function(e) {
             e.preventDefault();
 
             // Extract latitude and longitude
@@ -533,11 +545,86 @@
                 success: function(response) {
                     // Handle the response from the server
                     console.log('Data fetched successfully:', response);
-                    console.log('daily units', response.daily);
-                    // You can display the data in the modal or elsewhere in the app
 
-                    csv_raw = generateCSV(response, selectedDaily);
-                    console.log("generated csv raw", csv_raw);
+
+                    // You can display the data in the modal or elsewhere in the app
+                    // =================================================================================================
+                    csvData = generateCSV(response, selectedDaily);
+                    console.log("generated csv raw", csvData);
+
+                    // Create a FormData object to send the CSV and other data
+                    const blob = new Blob([csvData], {
+                        type: 'text/csv'
+                    });
+
+                    const formData = new FormData();
+                    formData.append('csv_file', blob, 'data.csv');
+
+                    let currentDate = new Date().toISOString().split('T')[0];
+                    console.log(currentDate);
+
+
+                    let type;
+                    let freq = 'D';
+                    let description = `time sereis data involving ${selectedDaily.join(',')}`;
+                    let filename = `${selectedDaily.join('-')}-${currentDate}.csv`;
+
+                    if (selectedDaily.length == 1) {
+                        type = "univariate";
+                    } else {
+                        type = "multivariate";
+                    }
+
+                    formData.append('type', type);
+                    formData.append('freq', freq);
+                    formData.append('description', description);
+                    formData.append('filename', filename);
+
+                    // Inspect FormData
+                    for (let [key, value] of formData.entries()) {
+                        console.log(key, value);
+                    }
+
+
+
+                    // Send the data using AJAX
+                    // $.ajax({
+                    //     url: '{{ route('save') }}', // URL to your Laravel route
+                    //     type: 'POST',
+                    //     data: formData,
+                    //     processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                    //     contentType: false, // Let the browser set the content type
+                    //     success: function(response) {
+                    //         console.log('Data saved successfully:');
+
+                    //         // Redirect the user manually
+                    //         window.location.href = response.redirect_url;
+                    //     },
+                    //     error: function(xhr, status, error) {
+                    //         console.error('Error saving data:', error);
+                    //     }
+                    // });
+
+                    $.ajax({
+                        url: '{{ route('save') }}', // URL to your Laravel route
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                'content') // Add CSRF token here
+                        },
+                        data: formData,
+                        processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                        contentType: false, // Let the browser set the content type
+                        success: function(response) {
+                            console.log('Data saved successfully:');
+                            window.location.href = response.redirect_url;
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error saving data:', error);
+                        }
+                    });
+
+                    // ========================================================================================
                 },
                 error: function(xhr, status, error) {
                     console.error('Error fetching data:', error);
