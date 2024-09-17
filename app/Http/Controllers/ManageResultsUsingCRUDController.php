@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\File;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\FileAssociation;
@@ -29,13 +30,15 @@ class ManageResultsUsingCRUDController extends Controller
         //     )
         //     ->get();
 
-        $files = FileAssociation::where('user_id', Auth::id())->get();
+        $files = File::where('user_id', Auth::id())->get();
+        $files_assoc = FileAssociation::where('user_id', Auth::id())->get();
 
 
-        return view('CRUD.index', compact('files'));
+        return view('CRUD.index', compact('files_assoc', 'files'));
     }
 
-    public function delete($file_assoc_id)
+
+    public function delete_file_assoc($file_assoc_id)
     {
         // Find the FileAssociation entry by its ID
         // $fileAssociation = FileAssociation::findOrFail($file_assoc_id);
@@ -50,6 +53,26 @@ class ManageResultsUsingCRUDController extends Controller
         // Delete the entry from the database
         // $fileAssociation->delete();
         DB::table('file_associations')->where('file_assoc_id', $file_assoc_id)->delete();
+
+        return redirect()->route('crud.show');
+    }
+
+    public function delete_file($file_id)
+    {
+        // Find the FileAssociation entry by its ID
+        // $fileAssociation = FileAssociation::findOrFail($file_assoc_id);
+        // $fileAssociation = FileAssociation::where('file_assoc_id', $file_assoc_id)->firstOrFail();
+        $file = File::where('file_id', $file_id)->firstOrFail();
+
+
+        // Delete the file from the storage
+        if (Storage::exists($file->filepath)) {
+            Storage::delete($file->filepath);
+        }
+
+        // Delete the entry from the database
+        // $fileAssociation->delete();
+        DB::table('files')->where('file_id', $file_id)->delete();
 
         return redirect()->route('crud.show');
     }

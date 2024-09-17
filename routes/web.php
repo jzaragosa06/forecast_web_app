@@ -32,7 +32,8 @@ Route::post('manage/operations', action: [ManageOperationsController::class, 'ma
 Route::post('manage/results/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results');
 Route::get('/manage/results/crud/show', action: [ManageResultsUsingCRUDController::class, 'show'])->name('crud.show');
 // Route::post('/manage/results/crud/view/{file_assoc_id}', action: [ManageResultsUsingCRUDController::class, 'view'])->name('crud.view');
-Route::post('/manage/results/crud/delete/{file_assoc_id}', action: [ManageResultsUsingCRUDController::class, 'delete'])->name('crud.delete');
+Route::post('/manage/results/crud/delete/file_assoc/{file_assoc_id}', action: [ManageResultsUsingCRUDController::class, 'delete_file_assoc'])->name('crud.delete.file_assoc');
+Route::post('/manage/results/crud/delete/file/{file_id}', action: [ManageResultsUsingCRUDController::class, 'delete_file'])->name('crud.delete.file');
 
 
 Route::get('/test_date_parse', function () {
