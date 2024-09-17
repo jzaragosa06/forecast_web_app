@@ -1,5 +1,3 @@
-{{-- -------------------------------------------------------------------------------------------------------------- --}}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +14,67 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHELiMiSckEBBGpn5KaM9TZVlYGevcKTg&libraries=places">
     </script>
 
+    <style>
+        /* Custom Theme Colors */
+        :root {
+            --primary-color: #1B3B6F;
+            --secondary-color: #21295C;
+            --tertiary-color: #1C7293;
+            --black-color: #000000;
+            --white-color: #FFFFFF;
+        }
 
+        body {
+            background-color: var(--white-color);
+            color: var(--black-color);
+        }
+
+        .navbar {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        .navbar .navbar-brand,
+        .navbar .btn {
+            color: var(--white-color);
+        }
+
+        .sidebar {
+            background-color: var(--secondary-color);
+            color: var(--white-color);
+        }
+
+        .sidebar .nav-link {
+            color: var(--white-color);
+        }
+
+        .sidebar .nav-link.active {
+            background-color: var(--tertiary-color);
+            color: var(--white-color);
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: var(--white-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--tertiary-color);
+            border-color: var(--tertiary-color);
+            color: var(--white-color);
+        }
+
+        /* Sidebar icons */
+        .nav-item .fas {
+            margin-right: 8px;
+        }
+    </style>
 
 </head>
 
@@ -363,20 +421,6 @@
 
                         </div>
 
-                        {{-- <div class="container">
-                            <button type="button" id="use-current-loc-btn">Use Current Location to get lat
-                                long</button>
-                            <button type ="button" id="get-from-maps-btn">Open Map</button>
-                            
-                            <p id="location"></p>
-                        </div>
-
-                        <!-- This section shows the map modal -->
-                        <div class="container">
-                            <div id="map" class="mt-3" style="display: none;"></div>
-                        </div>
-
-                        <p id="selected-location"></p> --}}
 
                         <div class="container">
                             <!-- Map Display -->
@@ -455,42 +499,6 @@
                     $('#ts-info-form').modal('show');
                 }
             });
-
-
-
-            // $('#use-current-loc-btn').on('click', function() {
-            //     if (navigator.geolocation) {
-            //         navigator.geolocation.getCurrentPosition(showPosition, showError);
-            //     } else {
-            //         document.getElementById("location").innerHTML =
-            //             "Geolocation is not supported by this browser.";
-            //     }
-            // });
-
-            // function showPosition(position) {
-            //     let lat = position.coords.latitude;
-            //     let lon = position.coords.longitude;
-            //     document.getElementById("location").innerHTML = "Latitude: " + lat + "<br>Longitude: " + lon;
-            // }
-
-
-            // function showError(error) {
-            //     switch (error.code) {
-            //         case error.PERMISSION_DENIED:
-            //             document.getElementById("location").innerHTML = "User denied the request for Geolocation.";
-            //             break;
-            //         case error.POSITION_UNAVAILABLE:
-            //             document.getElementById("location").innerHTML = "Location information is unavailable.";
-            //             break;
-            //         case error.TIMEOUT:
-            //             document.getElementById("location").innerHTML =
-            //                 "The request to get user location timed out.";
-            //             break;
-            //         case error.UNKNOWN_ERROR:
-            //             document.getElementById("location").innerHTML = "An unknown error occurred.";
-            //             break;
-            //     }
-            // }
 
             // Geolocation: Use current location
             $('#use-current-loc-btn').on('click', function() {
