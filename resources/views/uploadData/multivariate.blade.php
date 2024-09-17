@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html>
 
 <head>
@@ -68,6 +68,10 @@
         let fillMethods = {};
         let activeIndex = null;
         let chartInstance = null;
+
+
+        console.log(data);
+        console.log(headers);
 
         document.querySelectorAll('.feature-btn').forEach(button => {
             button.addEventListener('click', () => {
@@ -328,8 +332,8 @@
     </script>
 </body>
 
-</html>
-{{-- 
+</html> --}}
+
 
 <!DOCTYPE html>
 <html>
@@ -337,12 +341,26 @@
 <head>
     <title>Multivariate Data Processing</title>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@latest"></script>
+
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -374,8 +392,11 @@
                 </div>
             </div>
         </div>
+
         <button type="button" id="submit-button" name="submit-button">Save</button>
     </div>
+
+
 
     <script>
         const data = @json($data);
@@ -383,7 +404,11 @@
         let tempData = JSON.parse(JSON.stringify(data));
         let fillMethods = {};
         let activeIndex = null;
-        let chartInstance = null; // To store the current ApexCharts instance
+        let chartInstance = null;
+
+
+        console.log(data);
+        console.log(headers);
 
         document.querySelectorAll('.feature-btn').forEach(button => {
             button.addEventListener('click', () => {
@@ -391,21 +416,25 @@
                 const label = headers[activeIndex];
                 let method = 'forward';
 
+                // Use the previously selected fill method if available
                 if (fillMethods[activeIndex]) {
                     method = fillMethods[activeIndex];
                 }
 
+                // Fill missing values using the selected or default method
                 fillMissingValues(method, activeIndex);
 
                 const values = tempData.map(row => parseFloat(row[activeIndex]) || null);
-                const dates = tempData.map(row => formatDate(row[0]));
+                const dates = tempData.map(row => convertDate(row[0]));
 
                 showChart(label, dates, values);
                 document.getElementById('processing-options').style.display = 'block';
+                // document.getElementById('next-button').style.display = 'block';
 
                 document.querySelector(`input[name="fill-method"][value="${method}"]`).checked = true;
             });
         });
+
 
         function showChart(label, dates, values) {
             if (chartInstance) {
@@ -416,8 +445,6 @@
                 x: date,
                 y: values[index]
             }));
-
-            console.log(formattedData);
 
             const options = {
                 chart: {
@@ -449,23 +476,27 @@
             chartInstance.render();
         }
 
+
+
+
         function fillMissingValues(method, index) {
             fillMethods[index] = method;
-            const dataCopy = JSON.parse(JSON.stringify(data));
+            const dataCopy = JSON.parse(JSON.stringify(data)); // Make a copy of the original data
 
             for (const [i, row] of dataCopy.entries()) {
-                switch (method) {
+                const currentMethod = fillMethods[i] || 'forward';
+                switch (currentMethod) {
                     case 'forward':
                         for (let j = 1; j < dataCopy.length; j++) {
-                            if (dataCopy[j][index] === null || dataCopy[j][index] === '') {
-                                dataCopy[j][index] = dataCopy[j - 1][index];
+                            if (dataCopy[j][i] === null || dataCopy[j][i] === '') {
+                                dataCopy[j][i] = dataCopy[j - 1][i];
                             }
                         }
                         break;
                     case 'backward':
                         for (let j = dataCopy.length - 2; j >= 0; j--) {
-                            if (dataCopy[j][index] === null || dataCopy[j][index] === '') {
-                                dataCopy[j][index] = dataCopy[j + 1][index];
+                            if (dataCopy[j][i] === null || dataCopy[j][i] === '') {
+                                dataCopy[j][i] = dataCopy[j + 1][i];
                             }
                         }
                         break;
@@ -473,22 +504,22 @@
                         let sum = 0;
                         let count = 0;
                         for (let j = 0; j < dataCopy.length; j++) {
-                            if (dataCopy[j][index] !== null && dataCopy[j][index] !== '') {
-                                sum += parseFloat(dataCopy[j][index]);
+                            if (dataCopy[j][i] !== null && dataCopy[j][i] !== '') {
+                                sum += parseFloat(dataCopy[j][i]);
                                 count++;
                             }
                         }
                         const average = sum / count;
                         for (let j = 0; j < dataCopy.length; j++) {
-                            if (dataCopy[j][index] === null || dataCopy[j][index] === '') {
-                                dataCopy[j][index] = average;
+                            if (dataCopy[j][i] === null || dataCopy[j][i] === '') {
+                                dataCopy[j][i] = average;
                             }
                         }
                         break;
                     case 'zero':
                         for (let j = 0; j < dataCopy.length; j++) {
-                            if (dataCopy[j][index] === null || dataCopy[j][index] === '') {
-                                dataCopy[j][index] = 0;
+                            if (dataCopy[j][i] === null || dataCopy[j][i] === '') {
+                                dataCopy[j][i] = 0;
                             }
                         }
                         break;
@@ -498,6 +529,10 @@
             tempData = dataCopy;
         }
 
+
+
+
+
         document.querySelectorAll('input[name="fill-method"]').forEach(input => {
             input.addEventListener('change', () => {
                 if (activeIndex !== null) {
@@ -505,11 +540,13 @@
                     fillMissingValues(method, activeIndex);
                     const label = headers[activeIndex];
                     const values = tempData.map(row => parseFloat(row[activeIndex]) || null);
-                    const dates = tempData.map(row => formatDate(row[0]));
+                    const dates = tempData.map(row => convertDate(row[0]));
                     showChart(label, dates, values);
                 }
             });
         });
+
+
 
         function convertToCSV(headers, data) {
             const csvRows = [];
@@ -532,13 +569,24 @@
             downloadLink.style.display = 'block';
         }
 
-        function formatDate(dateStr) {
-            const dateParts = dateStr.split('/');
-            if (dateParts.length === 3) {
-                const [month, day, year] = dateParts;
-                return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-            }
-            return dateStr;
+        // function formatDate(dateStr) {
+        //     const dateParts = dateStr.split('/');
+        //     if (dateParts.length === 3) {
+        //         // Assuming the format is M/D/YYYY
+        //         const [month, day, year] = dateParts;
+        //         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        //     }
+        //     return dateStr; // If it's already in the correct format
+        // }
+
+
+        function convertDate(inputDate) {
+            // Parse the input date string into a Date object
+            const parsedDate = new Date(inputDate);
+
+            // Format the date as MM/dd/yyyy (full year format)
+            const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
+            return formattedDate;
         }
 
         document.getElementById('submit-button').addEventListener('click', () => {
@@ -546,7 +594,7 @@
             let finalData = JSON.parse(JSON.stringify(data));
 
             headers.forEach((header, index) => {
-                if (index > 0) {
+                if (index > 0) { // Skip the date column
                     let method = fillMethods[index] || 'forward';
                     fillMissingValues(method, index);
                 }
@@ -554,37 +602,54 @@
 
             const csvData = convertToCSV(headers, tempData);
 
+            //extract the additional data from the controller. 
             const type = @json($type);
             const freq = @json($freq);
             const description = @json($description);
             const filename = @json($filename);
 
+
+
+            // Create a FormData object to send the CSV and other data
             const formData = new FormData();
             formData.append('csv_file', new Blob([csvData], {
                 type: 'text/csv'
             }), 'data.csv');
+
 
             formData.append('type', type);
             formData.append('freq', freq);
             formData.append('description', description);
             formData.append('filename', filename);
 
+            // Inspect FormData
+            for (let [key, value] of formData.entries()) {
+                console.log(key, value);
+            }
+
+
+            // Send the data using AJAX
             $.ajax({
-                url: '{{ route('save') }}',
+                url: '{{ route('save') }}', // URL to your Laravel route
                 type: 'POST',
                 data: formData,
-                processData: false,
-                contentType: false,
+                processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                contentType: false, // Let the browser set the content type
                 success: function(response) {
                     console.log('Data saved successfully:', response);
+
+                    // Redirect the user manually
                     window.location.href = response.redirect_url;
                 },
                 error: function(xhr, status, error) {
                     console.error('Error saving data:', error);
+                    // Handle error response
                 }
             });
+
+
         });
     </script>
 </body>
 
-</html> --}}
+</html>
