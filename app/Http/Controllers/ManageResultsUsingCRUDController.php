@@ -16,25 +16,27 @@ class ManageResultsUsingCRUDController extends Controller
 {
     public function show()
     {
-        // $files = DB::table('files')
-        //     ->leftJoin('file_associations', 'files.file_id', '=', 'file_associations.file_id')
-        //     ->where('files.user_id', Auth::id())
-        //     ->select(
-        //         'files.file_id',
-        //         'files.filename',
-        //         'files.filepath',
-        //         'file_associations.file_assoc_id',
-        //         'file_associations.assoc_filename',
-        //         'file_associations.associated_file_path',
-        //         'file_associations.operation'
-        //     )
-        //     ->get();
 
-        $files = File::where('user_id', Auth::id())->get();
+        $files_input = File::where('user_id', Auth::id())->get();
+
+        $files = DB::table('files')
+            ->leftJoin('file_associations', 'files.file_id', '=', 'file_associations.file_id')
+            ->where('files.user_id', Auth::id())
+            ->select(
+                'files.file_id',
+                'files.filename',
+                'files.filepath',
+                'file_associations.file_assoc_id',
+                'file_associations.assoc_filename',
+                'file_associations.associated_file_path',
+                'file_associations.operation'
+            )
+            ->get();
         $files_assoc = FileAssociation::where('user_id', Auth::id())->get();
 
 
-        return view('CRUD.index', compact('files_assoc', 'files'));
+        // the file_assoc contains the results, files contains the input files and results, and files_input contains the file inputs
+        return view('CRUD.index', compact('files_assoc', 'files', 'files_input'));
     }
 
 

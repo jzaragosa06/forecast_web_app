@@ -102,7 +102,6 @@
 
                 <div>
                     <h5>List of Input Time Series Data</h5>
-
                     <!-- Loop through the files and display each inside a Bootstrap card -->
                     @foreach (Auth::user()->files as $file)
                         <div class="card mb-3">

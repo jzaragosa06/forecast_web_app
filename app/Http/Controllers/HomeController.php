@@ -29,41 +29,16 @@ class HomeController extends Controller
 
     public function index()
     {
-        $files = DB::table('files')
-            ->leftJoin('file_associations', 'files.file_id', '=', 'file_associations.file_id')
-            ->where('files.user_id', Auth::id())
-            ->select(
-                'files.file_id',
-                'files.filename',
-                'files.filepath',
-                'file_associations.file_assoc_id',
-                'file_associations.assoc_filename',
-                'file_associations.associated_file_path',
-                'file_associations.operation'
-            )
-            ->get();
 
-        return view('home', compact('files'));
+
+
+
+        return view('home');
     }
 
-    public function manage_result_files()
-    {
-        $files = DB::table('files')
-            ->leftJoin('file_associations', 'files.file_id', '=', 'file_associations.file_id')
-            ->where('files.user_id', Auth::id())
-            ->select(
-                'files.file_id',
-                'files.filename',
-                'files.filepath',
-                'file_associations.file_assoc_id',
-                'file_associations.assoc_filename',
-                'file_associations.associated_file_path',
-                'file_associations.operation'
-            )
-            ->get();
 
 
-        return view('CRUD.results_in_table', compact('files'));
-    }
+
+
 
 }

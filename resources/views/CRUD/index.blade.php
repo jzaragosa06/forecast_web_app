@@ -79,7 +79,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($files as $file)
+                                @foreach ($files_input as $file)
                                     <tr>
                                         <td>{{ $file->file_id }}</td>
                                         <td>{{ $file->filename }}</td>
