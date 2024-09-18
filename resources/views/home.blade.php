@@ -39,10 +39,10 @@
                         <a class="nav-link active" href="#">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Profile</a>
+                        <a class="nav-link" href="{{ route('profile.index') }}">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('crud.show') }}">Manage Results</a>
+                        <a class="nav-link" href="{{ route('crud.index') }}">Manage Results</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Settings</a>

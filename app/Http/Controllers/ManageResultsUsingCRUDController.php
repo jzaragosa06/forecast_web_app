@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ManageResultsUsingCRUDController extends Controller
 {
-    public function show()
+    public function index()
     {
 
         $files_input = File::where('user_id', Auth::id())->get();

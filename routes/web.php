@@ -5,6 +5,7 @@ use App\Http\Controllers\ManageOperationsController;
 use App\Http\Controllers\ManageResultsUsingCRUDController;
 use App\Http\Controllers\ManageShowResultsController;
 use App\Http\Controllers\PreprocessInputFileController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaveInputController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,10 +31,12 @@ Route::post('upload/ts', [PreprocessInputFileController::class, 'preprocess_fill
 Route::post('save/ts', [SaveInputController::class, 'save'])->name('save');
 Route::post('manage/operations', action: [ManageOperationsController::class, 'manage'])->name('manage.operations');
 Route::post('manage/results/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results');
-Route::get('/manage/results/crud/show', action: [ManageResultsUsingCRUDController::class, 'show'])->name('crud.show');
+Route::get('/manage/results/crud/show', action: [ManageResultsUsingCRUDController::class, 'index'])->name('crud.index');
 // Route::post('/manage/results/crud/view/{file_assoc_id}', action: [ManageResultsUsingCRUDController::class, 'view'])->name('crud.view');
 Route::post('/manage/results/crud/delete/file_assoc/{file_assoc_id}', action: [ManageResultsUsingCRUDController::class, 'delete_file_assoc'])->name('crud.delete.file_assoc');
 Route::post('/manage/results/crud/delete/file/{file_id}', action: [ManageResultsUsingCRUDController::class, 'delete_file'])->name('crud.delete.file');
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+Route::post('/profile/update/photo', [ProfileController::class, 'update_photo'])->name('profile.update.photo');
 
 
 Route::get('/test_date_parse', function () {
