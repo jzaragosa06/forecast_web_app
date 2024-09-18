@@ -101,8 +101,69 @@
                     </div>
                 </div>
                 <hr>
+                {{-- <div>
+                    <h5>List of Input Time Series Data</h5>
+                    <!-- Loop through the files and display each inside a Bootstrap card -->
+                    @foreach (Auth::user()->files as $file)
+                        <div class="card mb-3">
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <!-- File information -->
+                                        <h5 class="card-title">{{ $file->filename }}</h5>
+                                        <p class="card-text">Type: {{ $file->type }}</p>
+                                        <p class="card-text">Frequency: {{ $file->freq }}</p>
+                                        <p class="card-text">Description: {{ $file->description }}</p>
+
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <!-- Placeholder for graph (can be replaced with an actual graph later) -->
 
 
+
+                                        <div class="graph-placeholder mt-4"
+                                            style="height: 200px; background-color: #f7f7f7;">
+                                            <!-- Graph will be added here later -->
+                                            <p class="text-center text-muted" style="line-height: 200px;">Graph
+                                                Placeholder</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div> --}}
+
+                @php
+                    $files = Auth::user()->files; // Fetch files related to the authenticated user
+                @endphp
+
+
+
+                {{-- <div>
+                    <h5>List of Input Time Series Data</h5>
+                    <!-- Loop through the time series data -->
+                    @foreach ($timeSeriesData as $index => $fileData)
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <!-- File information -->
+                                        <h5 class="card-title">{{ $fileData['filename'] }}</h5>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="graph-container mt-4" style="height: 300px;">
+                                            <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div> --}}
 
 
                 {{-- we're going to iterate through files by using index instead of loop.  --}}
@@ -395,6 +456,54 @@
 
             // =======================================================================================
             // Iterate over each file data to create corresponding graphs
+            // @foreach ($timeSeriesData as $index => $fileData)
+            //     var ctx = document.getElementById('graph-{{ $index }}').getContext('2d');
+            //     var labels = {!! json_encode(array_column($fileData['data'], 'date')) !!};
+            //     var datasets = [];
+
+            //     @for ($i = 1; $i < count($fileData['header']); $i++)
+            //         datasets.push({
+            //             label: '{{ $fileData['header'][$i] }}',
+            //             data: {!! json_encode(array_column($fileData['data'], 'values')[$i - 1]) !!},
+            //             borderColor: getRandomColor(),
+            //             fill: false,
+            //             tension: 0.1
+            //         });
+            //     @endfor
+
+            //     console.log(ctx);
+            //     console.log(labels);
+            //     console.log(datasets);
+
+            //     // new Chart(ctx, {
+            //     //     type: 'line',
+            //     //     data: {
+            //     //         labels: labels,
+            //     //         datasets: datasets
+            //     //     },
+            //     //     options: {
+            //     //         scales: {
+            //     //             x: {
+            //     //                 type: 'time',
+            //     //                 time: {
+            //     //                     unit: 'day',
+            //     //                     tooltipFormat: 'YYYY-MM-DD',
+            //     //                 }
+            //     //             }
+            //     //         }
+            //     //     }
+            //     // });
+            // @endforeach
+
+            // // Helper function to get random color for the lines
+            // function getRandomColor() {
+            //     var letters = '0123456789ABCDEF'.split('');
+            //     var color = '#';
+            //     for (var i = 0; i < 6; i++) {
+            //         color += letters[Math.floor(Math.random() * 16)];
+            //     }
+            //     return color;
+            // }
 
             // Iterate over each file data to create corresponding graphs
 
@@ -423,7 +532,21 @@
                         categories: {!! json_encode(array_column($fileData['data'], 'date')) !!},
                         type: 'datetime'
                     },
-
+                    // yaxis: [
+                    //     @for ($i = 1; $i < count($fileData['header']); $i++)
+                    //         {
+                    //             title: {
+                    //                 text: '{{ $fileData['header'][$i] }}'
+                    //             },
+                    //             opposite: {{ $i % 2 == 0 ? 'true' : 'false' }}, // Alternating Y-axis positions (left and right)
+                    //             labels: {
+                    //                 formatter: function(val) {
+                    //                     return val.toFixed(2); // Customize number formatting
+                    //                 }
+                    //             }
+                    //         },
+                    //     @endfor
+                    // ],
                     yaxis: [
                         @for ($i = 1; $i < count($fileData['header']); $i++)
                             {
@@ -436,14 +559,24 @@
                                 axisTicks: {
                                     show: false,
                                 },
-
+                                //  title: {
+                                //     text: '{{ $fileData['header'][$i] }}'
+                                // },
+                                // labels: {
+                                //     formatter: function(val) {
+                                //         return val.toFixed(2); // Customize number formatting
+                                //     }
+                                // }
                             },
                         @endfor
                     ],
                     stroke: {
                         curve: 'smooth'
                     },
-
+                    // title: {
+                    //     text: '{{ $fileData['filename'] }}',
+                    //     align: 'center'
+                    // },
                     grid: {
                         show: false,
                     }
@@ -629,6 +762,24 @@
                     }
 
 
+
+                    // Send the data using AJAX
+                    // $.ajax({
+                    //     url: '{{ route('save') }}', // URL to your Laravel route
+                    //     type: 'POST',
+                    //     data: formData,
+                    //     processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                    //     contentType: false, // Let the browser set the content type
+                    //     success: function(response) {
+                    //         console.log('Data saved successfully:');
+
+                    //         // Redirect the user manually
+                    //         window.location.href = response.redirect_url;
+                    //     },
+                    //     error: function(xhr, status, error) {
+                    //         console.error('Error saving data:', error);
+                    //     }
+                    // });
 
                     $.ajax({
                         url: '{{ route('save') }}', // URL to your Laravel route
