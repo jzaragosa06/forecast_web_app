@@ -18,14 +18,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <script>
-        $(document).ready(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-        });
+
     </script>
 
 </head>
@@ -272,6 +265,10 @@
                 $.ajax({
                     url: '{{ route('save') }}', // URL to your Laravel route
                     type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content') // Add CSRF token here
+                    },
                     data: formData,
                     processData: false, // Prevent jQuery from automatically transforming the data into a query string
                     contentType: false, // Let the browser set the content type
