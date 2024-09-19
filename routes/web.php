@@ -45,6 +45,15 @@ Route::post('/profile/update/photo', [ProfileController::class, 'update_photo'])
 Route::get('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.get');
 Route::post('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.post');
 
+Route::get('/test_base', function () {
+    return view('test_base');
+});
+
+Route::get('/test_child', function () {
+    return view('child_test');
+});
+
+
 Route::get('/test_date_parse', function () {
     return view('uploadData.draft_test_parse_date');
 });
