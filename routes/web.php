@@ -31,7 +31,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::post('upload/ts', [PreprocessInputFileController::class, 'preprocess_fillna'])->name('upload.ts');
 Route::post('save/ts', [SaveInputController::class, 'save'])->name('save');
 Route::post('manage/operations', action: [ManageOperationsController::class, 'manage'])->name('manage.operations');
-Route::post('manage/results/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results');
+Route::post('manage/results/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results.post');
+Route::get('manage/results/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results.get');
+
+
 Route::get('/manage/results/crud/show', action: [ManageResultsUsingCRUDController::class, 'index'])->name('crud.index');
 // Route::post('/manage/results/crud/view/{file_assoc_id}', action: [ManageResultsUsingCRUDController::class, 'view'])->name('crud.view');
 Route::post('/manage/results/crud/delete/file_assoc/{file_assoc_id}', action: [ManageResultsUsingCRUDController::class, 'delete_file_assoc'])->name('crud.delete.file_assoc');

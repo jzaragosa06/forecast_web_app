@@ -35,6 +35,7 @@ class HomeController extends Controller
         // Get the files associated with the authenticated user
         // $files = File::where('user_id', Auth::id())->get();
         $files = Auth::user()->files;
+        $file_assocs = FileAssociation::where('user_id', Auth::id())->get();
 
         // Prepare an array to store time series data
         $timeSeriesData = [];
@@ -67,7 +68,7 @@ class HomeController extends Controller
         }
 
         // Pass the time series data to the view
-        return view('home', compact('timeSeriesData', 'files'));
+        return view('home', compact('timeSeriesData', 'files', 'file_assocs'));
     }
 
 

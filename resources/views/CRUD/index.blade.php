@@ -45,7 +45,8 @@
                             @if ($file->assoc_filename)
                                 <li>
                                     <p>{{ $file->assoc_filename }}</p>
-                                    <form action="{{ route('manage.results', $file->file_assoc_id) }}" method="post">
+                                    <form action="{{ route('manage.results.post', $file->file_assoc_id) }}"
+                                        method="post">
                                         @csrf
                                         <button type="submit">View</button>
                                     </form>
@@ -125,7 +126,8 @@
                                         <td>{{ $file_assoc->assoc_filename }}</td>
                                         <td>{{ $file_assoc->operation }}</td>
                                         <td>
-                                            <form action="{{ route('manage.results', $file_assoc->file_assoc_id) }}"
+                                            <form
+                                                action="{{ route('manage.results.post', $file_assoc->file_assoc_id) }}"
                                                 method="post" style="display: inline-block;">
                                                 @csrf
                                                 <button type="submit" class="btn btn-primary btn-sm">View</button>

@@ -56,7 +56,7 @@
             <div class="col-md-9">
                 <div class="contaner">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="container border bg-light w-100 h-100">
                                 <h4>Analyze</h4>
                                 <form action="{{ route('manage.operations') }}" method="post">
@@ -84,7 +84,7 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="container border bg-light w-100 h-100">
                                 <h4>Add Data</h4>
                                 <!-- Buttons to add more data -->
@@ -96,6 +96,21 @@
                                     data-toggle="modal" data-target="#ts-add-via-api-open-meteo-modal">
                                     Add data from Open-Meteo
                                 </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="container border bg-light w-100 h-100">
+                                <h4>Recent REsults</h4>
+                                <ul>
+                                    @foreach ($file_assocs as $file_assoc)
+                                        <li>
+                                            <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}">
+                                                <p>{{ $file_assoc->assoc_filename }}</p>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+
                             </div>
                         </div>
                     </div>
