@@ -51,6 +51,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'contact_num' => ['required'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'profile_photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
 
@@ -70,6 +71,7 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'contact_num' => $data['contact_num'],
             'password' => Hash::make($data['password']),
             'profile_photo' => $profilePhotoPath,
 

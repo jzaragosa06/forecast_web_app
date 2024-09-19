@@ -76,7 +76,8 @@
             let originalDataIndex = data.data.entire_data.index;
             let full_index = [...originalDataIndex, ...forecastIndex];
 
-            let forecastData_null = [...Array(originalDataIndex.length).fill(null), ...data.forecast.pred_out[`${colname}`]];
+            let forecastData_null = [...Array(originalDataIndex.length).fill(null), ...data.forecast.pred_out[
+            `${colname}`]];
             let origDataValue = data.data.entire_data[`${colname}`];
 
 

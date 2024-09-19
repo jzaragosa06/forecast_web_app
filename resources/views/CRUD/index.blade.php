@@ -13,8 +13,8 @@
     <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
 </head>
 
-<body>
 
+<body>
     <div class="container">
         <div class="row">
 
