@@ -13,7 +13,7 @@ class ProfileController extends Controller
         $user = User::where('id', Auth::id())->firstOrFail();
 
         return view('profile.index', compact('user'));
-
+        
 
     }
 

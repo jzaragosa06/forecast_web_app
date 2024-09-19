@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InputFileGraphController;
 use App\Http\Controllers\ManageOperationsController;
 use App\Http\Controllers\ManageResultsUsingCRUDController;
 use App\Http\Controllers\ManageShowResultsController;
@@ -38,6 +39,8 @@ Route::post('/manage/results/crud/delete/file/{file_id}', action: [ManageResults
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 Route::post('/profile/update/photo', [ProfileController::class, 'update_photo'])->name('profile.update.photo');
 
+Route::get('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.get');
+Route::post('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.post');
 
 Route::get('/test_date_parse', function () {
     return view('uploadData.draft_test_parse_date');

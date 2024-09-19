@@ -85,9 +85,11 @@
                                         <td>{{ $file->filename }}</td>
                                         <td>{{ $file->type }}</td>
                                         <td>
-                                            <form action="" method="post" style="display: inline-block;">
+                                            <form action="{{ route('input.file.graph.view.post', $file->file_id) }}"
+                                                method="post" style="display: inline-block;">
                                                 @csrf
                                                 <button type="submit" class="btn btn-primary btn-sm">View</button>
+
                                             </form>
 
                                             <form action="{{ route('crud.delete.file', $file->file_id) }}"
