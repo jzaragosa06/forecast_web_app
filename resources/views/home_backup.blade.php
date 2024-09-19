@@ -6,19 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+
+
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHELiMiSckEBBGpn5KaM9TZVlYGevcKTg&libraries=places">
     </script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
 </head>
 
 <body>
@@ -56,7 +57,7 @@
             <div class="col-md-9">
                 <div class="contaner">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="container border bg-light w-100 h-100">
                                 <h4>Analyze</h4>
                                 <form action="{{ route('manage.operations') }}" method="post">
@@ -84,7 +85,7 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="container border bg-light w-100 h-100">
                                 <h4>Add Data</h4>
                                 <!-- Buttons to add more data -->
@@ -96,6 +97,21 @@
                                     data-toggle="modal" data-target="#ts-add-via-api-open-meteo-modal">
                                     Add data from Open-Meteo
                                 </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="container border bg-light w-100 h-100">
+                                <h4>Recent REsults</h4>
+                                <ul>
+                                    @foreach ($file_assocs as $file_assoc)
+                                        <li>
+                                            <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}">
+                                                <p>{{ $file_assoc->assoc_filename }}</p>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+
                             </div>
                         </div>
                     </div>

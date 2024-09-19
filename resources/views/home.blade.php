@@ -1,406 +1,356 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.base')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+@section('title', 'Home Page')
 
-
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-        
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHELiMiSckEBBGpn5KaM9TZVlYGevcKTg&libraries=places">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-</head>
-
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Left Side Panel -->
-            <div class="col-md-3 bg-light p-3 min-vh-100 border-end">
-                <!-- User Information -->
-                <div class="text-center mb-4">
-                    <img src="{{ Storage::url(Auth::user()->profile_photo) }}" class="rounded-circle"
-                        alt="Profile Photo" width="150" height="150">
-                    <h4>{{ Auth::user()->name }}</h4>
-                    <p class="text-muted">{{ Auth::user()->email }}</p>
-                </div>
-                <!-- Links -->
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('profile.index') }}">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('crud.index') }}">Manage Results</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Settings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- Right Side Content -->
-            <div class="col-md-9">
-                <div class="contaner">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="container border bg-light w-100 h-100">
-                                <h4>Analyze</h4>
-                                <form action="{{ route('manage.operations') }}" method="post">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label for="file_id">Select File</label>
-                                        <select name="file_id" id="file_id" class="form-control">
-                                            @foreach (Auth::user()->files as $file)
-                                                <option value="{{ $file->file_id }}">{{ $file->filename }}</option>
-                                            @endforeach
-                                            <option value="" id="add-more-from-option"> Add more data +</option>
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label for="operation">Select Operation</label>
-                                        <select name="operation" id="operation" class="form-control">
-                                            <option value="trend">Trend</option>
-                                            <option value="seasonality">Seasonality</option>
-                                            <option value="forecast">Forecast</option>
-                                        </select>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-secondary">Analyze</button>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="container border bg-light w-100 h-100">
-                                <h4>Add Data</h4>
-                                <!-- Buttons to add more data -->
-                                <button type="button" id="ts-info" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#ts-info-form">
-                                    Add More data via upload
-                                </button>
-                                <button type="button" id="ts-add-via-api-open-meteo-btn" class="btn btn-primary"
-                                    data-toggle="modal" data-target="#ts-add-via-api-open-meteo-modal">
-                                    Add data from Open-Meteo
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="container border bg-light w-100 h-100">
-                                <h4>Recent REsults</h4>
-                                <ul>
-                                    @foreach ($file_assocs as $file_assoc)
-                                        <li>
-                                            <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}">
-                                                <p>{{ $file_assoc->assoc_filename }}</p>
-                                            </a>
-                                        </li>
+@section('content')
+    <div>
+        <div class="container mx-auto p-4">
+            <div class="flex space-x-4">
+                <div class="w-full md:w-1/3">
+                    <div class="border bg-white p-4 rounded-lg shadow-md">
+                        <h4 class="text-lg font-semibold mb-4">Analyze</h4>
+                        <form action="{{ route('manage.operations') }}" method="post">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="file_id" class="block text-sm font-medium mb-1">Select File</label>
+                                <select name="file_id" id="file_id"
+                                    class="form-select block w-full border-gray-300 rounded-md shadow-sm">
+                                    @foreach (Auth::user()->files as $file)
+                                        <option value="{{ $file->file_id }}">{{ $file->filename }}</option>
                                     @endforeach
-                                </ul>
+                                    <option value="" id="add-more-from-option">Add more data +</option>
+                                </select>
+                            </div>
 
+                            <div class="mb-4">
+                                <label for="operation" class="block text-sm font-medium mb-1">Select Operation</label>
+                                <select name="operation" id="operation"
+                                    class="form-select block w-full border-gray-300 rounded-md shadow-sm">
+                                    <option value="trend">Trend</option>
+                                    <option value="seasonality">Seasonality</option>
+                                    <option value="forecast">Forecast</option>
+                                </select>
+                            </div>
+
+                            <button type="submit"
+                                class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">Analyze</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/3">
+                    <div class="border bg-white p-4 rounded-lg shadow-md">
+                        <h4 class="text-lg font-semibold mb-4">Add Data</h4>
+                        <!-- Buttons to add more data -->
+                        <button type="button" id="ts-info"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md mb-2 hover:bg-blue-700" data-toggle="modal"
+                            data-target="#ts-info-form">
+                            Add More data via upload
+                        </button>
+                        <button type="button" id="ts-add-via-api-open-meteo-btn"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" data-toggle="modal"
+                            data-target="#ts-add-via-api-open-meteo-modal">
+                            Add data from Open-Meteo
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/3">
+                    <div class="border bg-white p-4 rounded-lg shadow-md">
+                        <h4 class="text-lg font-semibold mb-4">Recent Results</h4>
+                        <ul class="list-disc pl-5">
+                            @foreach ($file_assocs as $file_assoc)
+                                <li class="mb-2">
+                                    <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
+                                        class="text-blue-600 hover:underline">
+                                        <p>{{ $file_assoc->assoc_filename }}</p>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4">
+
+        {{-- we're going to iterate through files by using index instead of loop. --}}
+        <div class="container mx-auto p-4">
+            <h5 class="text-xl font-semibold mb-4">List of Input Time Series Data</h5>
+            <!-- Loop through the time series data -->
+            @foreach ($timeSeriesData as $index => $fileData)
+                <div class="bg-white border rounded-lg shadow-md mb-4">
+                    <div class="p-4">
+                        <div class="flex">
+                            <div class="w-full lg:w-1/3">
+                                <!-- File information -->
+                                <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
+                                <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
+                                <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
+                                <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
+                            </div>
+                            <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
+                                <div class="graph-container mt-4" style="height: 300px;">
+                                    <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <hr>
-
-
-
-
-                {{-- we're going to iterate through files by using index instead of loop.  --}}
-                <div>
-                    <h5>List of Input Time Series Data</h5>
-                    <!-- Loop through the time series data -->
-                    @foreach ($timeSeriesData as $index => $fileData)
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <!-- File information -->
-                                        {{-- <h5 class="card-title">{{ $fileData['filename'] }}</h5> --}}
-                                        <h5 class="card-title">{{ $files[$index]->filename }}</h5>
-                                        <p class="card-text">Type: {{ $files[$index]->type }}</p>
-                                        <p class="card-text">Frequency: {{ $files[$index]->freq }}</p>
-                                        <p class="card-text">Description: {{ $files[$index]->description }}</p>
-
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="graph-container mt-4" style="height: 300px;">
-                                            <div id="graph-{{ $index }}" style="height: 100%;"></div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-
-            </div>
-
+            @endforeach
         </div>
     </div>
 
-
-
-    <div class="modal fade" id="ts-info-form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Information About the Time Series Data</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('upload.ts') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="form-group">
-                            <label for="file">Upload from Device</label>
-                            <input type="file" name="file" id="file" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="type">Type:</label>
-                            <select name="type" class="form-control" required>
-                                <option value="univariate">Univariate</option>
-                                <option value="multivariate">Multivariate</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="freq">Frequency:</label>
-                            <select name="freq" class="form-control" required>
-                                <option value="D">Day</option>
-                                <option value="W">Week</option>
-                                <option value="M">Month</option>
-                                <option value="Q">Quarter</option>
-                                <option value="Y">Yearly</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Description:</label>
-                            <input type="text" name="description" class="form-control">
-                        </div>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                        <button type="submit" class="btn btn-primary">Upload</button>
-                    </form>
-                </div>
-
+    <div class="fixed inset-0 flex items-center justify-center z-50" id="ts-info-form" style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Information About the Time Series Data</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('upload.ts') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-4">
+                        <label for="file" class="block text-sm font-medium mb-1">Upload from Device</label>
+                        <input type="file" name="file" id="file"
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div class="mb-4">
+                        <label for="type" class="block text-sm font-medium mb-1">Type:</label>
+                        <select name="type" class="form-select block w-full border-gray-300 rounded-md shadow-sm"
+                            required>
+                            <option value="univariate">Univariate</option>
+                            <option value="multivariate">Multivariate</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="freq" class="block text-sm font-medium mb-1">Frequency:</label>
+                        <select name="freq" class="form-select block w-full border-gray-300 rounded-md shadow-sm"
+                            required>
+                            <option value="D">Day</option>
+                            <option value="W">Week</option>
+                            <option value="M">Month</option>
+                            <option value="Q">Quarter</option>
+                            <option value="Y">Yearly</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="description" class="block text-sm font-medium mb-1">Description:</label>
+                        <input type="text" name="description"
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div class="flex justify-between">
+                        <button type="button" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
+                            data-dismiss="modal">Close</button>
+                        <button type="submit"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Upload</button>
+                    </div>
+                </form>
             </div>
         </div>
-
     </div>
-
-
-
 
     <!-- Forecast Modal -->
-    <div class="modal fade" id="forecast-modal" tabindex="-1" role="dialog" aria-labelledby="forecastModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="forecastModalLabel">Forecast Settings</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('manage.operations') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="file_id" id="modal_file_id">
-                        <input type="hidden" name="operation" value="forecast">
+    <div class="fixed inset-0 flex items-center justify-center z-50" id="forecast-modal" style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Forecast Settings</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('manage.operations') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="file_id" id="modal_file_id">
+                    <input type="hidden" name="operation" value="forecast">
 
-                        <div class="form-group">
-                            <label for="horizon">Forecast Horizon</label>
-                            <input type="number" name="horizon" id="horizon" class="form-control" required>
+                    <div class="mb-4">
+                        <label for="horizon" class="block text-sm font-medium mb-1">Forecast Horizon</label>
+                        <input type="number" name="horizon" id="horizon"
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium mb-1">Forecast Method</label>
+                        <div class="flex items-center">
+                            <input type="radio" name="method" value="with_refit" id="with_refit" class="mr-2">
+                            <label for="with_refit" class="text-sm">With Refit</label>
                         </div>
-                        <div class="form-group">
-                            <label for="method">Forecast Method</label><br>
-                            <input type="radio" name="method" value = "with_refit">With
-                            Refit<br>
-                            <input type="radio" name="method" value = "without_refit">Without
-                            Refit <br>
+                        <div class="flex items-center mt-1">
+                            <input type="radio" name="method" value="without_refit" id="without_refit"
+                                class="mr-2">
+                            <label for="without_refit" class="text-sm">Without Refit</label>
                         </div>
-                        <button type="submit" class="btn btn-primary">Run Forecast</button>
-                    </form>
-                </div>
+                    </div>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Run
+                        Forecast</button>
+                </form>
             </div>
         </div>
     </div>
 
-    {{-- fetch data from open-meteo modal --}}
-    <div class="modal fade" id="ts-add-via-api-open-meteo-modal" tabindex="-1" role="dialog"
-        aria-labelledby="forecastModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="forecastModalLabel">Open Meteo</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="" method="POST">
-                        @csrf
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="weather_code_daily" name="daily" value="weather_code"> <label
-                                            class="form-check-label" for="weather_code_daily">Weather code</label>
-                                    </div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="temperature_2m_max_daily" name="daily" value="temperature_2m_max">
-                                        <label class="form-check-label" for="temperature_2m_max_daily">Maximum
-                                            Temperature (2
-                                            m)</label>
-                                    </div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="temperature_2m_min_daily" name="daily" value="temperature_2m_min">
-                                        <label class="form-check-label" for="temperature_2m_min_daily">Minimum
-                                            Temperature (2
-                                            m)</label>
-                                    </div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="temperature_2m_mean_daily" name="daily"
-                                            value="temperature_2m_mean"> <label class="form-check-label"
-                                            for="temperature_2m_mean_daily">Mean Temperature (2
-                                            m)</label></div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="apparent_temperature_max_daily" name="daily"
-                                            value="apparent_temperature_max"> <label class="form-check-label"
-                                            for="apparent_temperature_max_daily">Maximum Apparent Temperature (2
-                                            m)</label>
-                                    </div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="apparent_temperature_min_daily" name="daily"
-                                            value="apparent_temperature_min"> <label class="form-check-label"
-                                            for="apparent_temperature_min_daily">Minimum Apparent Temperature (2
-                                            m)</label>
-                                    </div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="apparent_temperature_mean_daily" name="daily"
-                                            value="apparent_temperature_mean"> <label class="form-check-label"
-                                            for="apparent_temperature_mean_daily">Mean Apparent Temperature (2
-                                            m)</label></div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="sunrise_daily" name="daily" value="sunrise"> <label
-                                            class="form-check-label" for="sunrise_daily">Sunrise</label></div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="sunset_daily" name="daily" value="sunset"> <label
-                                            class="form-check-label" for="sunset_daily">Sunset</label></div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="daylight_duration_daily" name="daily" value="daylight_duration">
-                                        <label class="form-check-label" for="daylight_duration_daily">Daylight
-                                            Duration</label>
-                                    </div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="sunshine_duration_daily" name="daily" value="sunshine_duration">
-                                        <label class="form-check-label" for="sunshine_duration_daily">Sunshine
-                                            Duration</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="precipitation_sum_daily" name="daily" value="precipitation_sum">
-                                        <label class="form-check-label" for="precipitation_sum_daily">Precipitation
-                                            Sum</label>
-                                    </div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="rain_sum_daily" name="daily" value="rain_sum"> <label
-                                            class="form-check-label" for="rain_sum_daily">Rain Sum</label></div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="snowfall_sum_daily" name="daily" value="snowfall_sum"> <label
-                                            class="form-check-label" for="snowfall_sum_daily">Snowfall Sum</label>
-                                    </div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="precipitation_hours_daily" name="daily"
-                                            value="precipitation_hours"> <label class="form-check-label"
-                                            for="precipitation_hours_daily">Precipitation
-                                            Hours</label></div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="wind_speed_10m_max_daily" name="daily" value="wind_speed_10m_max">
-                                        <label class="form-check-label" for="wind_speed_10m_max_daily">Maximum Wind
-                                            Speed (10
-                                            m)</label>
-                                    </div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="wind_gusts_10m_max_daily" name="daily" value="wind_gusts_10m_max">
-                                        <label class="form-check-label" for="wind_gusts_10m_max_daily">Maximum Wind
-                                            Gusts (10
-                                            m)</label>
-                                    </div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="wind_direction_10m_dominant_daily" name="daily"
-                                            value="wind_direction_10m_dominant"> <label class="form-check-label"
-                                            for="wind_direction_10m_dominant_daily">Dominant Wind Direction (10
-                                            m)</label>
-                                    </div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="shortwave_radiation_sum_daily" name="daily"
-                                            value="shortwave_radiation_sum"> <label class="form-check-label"
-                                            for="shortwave_radiation_sum_daily">Shortwave Radiation Sum</label></div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox"
-                                            id="et0_fao_evapotranspiration_daily" name="daily"
-                                            value="et0_fao_evapotranspiration"> <label class="form-check-label"
-                                            for="et0_fao_evapotranspiration_daily">Reference Evapotranspiration
-                                            (ET₀)</label>
-                                    </div>
-                                </div>
+    {{-- Fetch data from open-meteo modal --}}
+    <div class="fixed inset-0 flex items-center justify-center z-50" id="ts-add-via-api-open-meteo-modal"
+        style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-2/3">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Open Meteo</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST">
+                    @csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="weather_code_daily" name="daily"
+                                    value="weather_code">
+                                <label class="ml-2" for="weather_code_daily">Weather code</label>
                             </div>
-
-                        </div>
-
-                        <div class="container mt-3">
-                            <!-- Date Pickers -->
-                            <div class="form-group">
-                                <label for="start-date">Start Date</label>
-                                <input type="date" id="start-date" class="form-control" required>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="temperature_2m_max_daily"
+                                    name="daily" value="temperature_2m_max">
+                                <label class="ml-2" for="temperature_2m_max_daily">Maximum Temperature (2 m)</label>
                             </div>
-
-                            <div class="form-group">
-                                <label for="end-date">End Date</label>
-                                <input type="date" id="end-date" class="form-control" required>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="temperature_2m_min_daily"
+                                    name="daily" value="temperature_2m_min">
+                                <label class="ml-2" for="temperature_2m_min_daily">Minimum Temperature (2 m)</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="temperature_2m_mean_daily"
+                                    name="daily" value="temperature_2m_mean">
+                                <label class="ml-2" for="temperature_2m_mean_daily">Mean Temperature (2 m)</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="apparent_temperature_max_daily"
+                                    name="daily" value="apparent_temperature_max">
+                                <label class="ml-2" for="apparent_temperature_max_daily">Maximum Apparent Temperature (2
+                                    m)</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="apparent_temperature_min_daily"
+                                    name="daily" value="apparent_temperature_min">
+                                <label class="ml-2" for="apparent_temperature_min_daily">Minimum Apparent Temperature (2
+                                    m)</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="apparent_temperature_mean_daily"
+                                    name="daily" value="apparent_temperature_mean">
+                                <label class="ml-2" for="apparent_temperature_mean_daily">Mean Apparent Temperature (2
+                                    m)</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="sunrise_daily" name="daily"
+                                    value="sunrise">
+                                <label class="ml-2" for="sunrise_daily">Sunrise</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="sunset_daily" name="daily"
+                                    value="sunset">
+                                <label class="ml-2" for="sunset_daily">Sunset</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="daylight_duration_daily" name="daily"
+                                    value="daylight_duration">
+                                <label class="ml-2" for="daylight_duration_daily">Daylight Duration</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="sunshine_duration_daily" name="daily"
+                                    value="sunshine_duration">
+                                <label class="ml-2" for="sunshine_duration_daily">Sunshine Duration</label>
                             </div>
                         </div>
-
-
-                        <div class="container">
-                            <!-- Map Display -->
-                            <button type="button" id="use-current-loc-btn">Use Current Location</button>
-                            <button type="button" id="get-from-maps-btn">Open Map</button>
-
-                            <div id="map" class="mt-3" style="height: 400px; display: none;"></div>
-                            <p id="selected-location" class="mt-2">Latitude: <span id="lat"></span>,
-                                Longitude: <span id="long"></span></p>
+                        <div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="precipitation_sum_daily" name="daily"
+                                    value="precipitation_sum">
+                                <label class="ml-2" for="precipitation_sum_daily">Precipitation Sum</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="rain_sum_daily" name="daily"
+                                    value="rain_sum">
+                                <label class="ml-2" for="rain_sum_daily">Rain Sum</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="snowfall_sum_daily" name="daily"
+                                    value="snowfall_sum">
+                                <label class="ml-2" for="snowfall_sum_daily">Snowfall Sum</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="precipitation_hours_daily"
+                                    name="daily" value="precipitation_hours">
+                                <label class="ml-2" for="precipitation_hours_daily">Precipitation Hours</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="wind_speed_10m_max_daily"
+                                    name="daily" value="wind_speed_10m_max">
+                                <label class="ml-2" for="wind_speed_10m_max_daily">Maximum Wind Speed (10 m)</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="wind_gusts_10m_max_daily"
+                                    name="daily" value="wind_gusts_10m_max">
+                                <label class="ml-2" for="wind_gusts_10m_max_daily">Maximum Wind Gusts (10 m)</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="wind_direction_10m_dominant_daily"
+                                    name="daily" value="wind_direction_10m_dominant">
+                                <label class="ml-2" for="wind_direction_10m_dominant_daily">Dominant Wind Direction (10
+                                    m)</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="shortwave_radiation_sum_daily"
+                                    name="daily" value="shortwave_radiation_sum">
+                                <label class="ml-2" for="shortwave_radiation_sum_daily">Shortwave Radiation Sum</label>
+                            </div>
+                            <div class="flex items-center mb-2">
+                                <input class="form-checkbox" type="checkbox" id="et0_fao_evapotranspiration_daily"
+                                    name="daily" value="et0_fao_evapotranspiration">
+                                <label class="ml-2" for="et0_fao_evapotranspiration_daily">Reference Evapotranspiration
+                                    (ET₀)</label>
+                            </div>
                         </div>
+                    </div>
 
+                    <div class="mb-4">
+                        <!-- Date Pickers -->
+                        <label for="start-date" class="block text-sm font-medium mb-1">Start Date</label>
+                        <input type="date" id="start-date"
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
+                    </div>
 
-                        <button type="submit" id="fetch-data-open-meteo-btn" class="btn btn-primary">Fetch</button>
-                    </form>
-                </div>
+                    <div class="mb-4">
+                        <label for="end-date" class="block text-sm font-medium mb-1">End Date</label>
+                        <input type="date" id="end-date"
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <!-- Map Display -->
+                        <button type="button" id="use-current-loc-btn"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Use Current
+                            Location</button>
+                        <button type="button" id="get-from-maps-btn"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Open Map</button>
+
+                        <div id="map" class="mt-4 h-96 hidden"></div>
+                        <p id="selected-location" class="mt-2 text-sm">Latitude: <span id="lat"></span>, Longitude:
+                            <span id="long"></span></p>
+                    </div>
+
+                    <button type="submit" id="fetch-data-open-meteo-btn"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch</button>
+                </form>
             </div>
         </div>
     </div>
+@endsection
 
+@section('scripts')
     <script>
         $(document).ready(function() {
             let map;
@@ -702,8 +652,4 @@
 
         });
     </script>
-</body>
-
-
-
-</html>
+@endsection

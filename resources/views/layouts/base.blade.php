@@ -192,7 +192,8 @@
                 </div>
             </div>
 
-            <div class="mt-6 bg-white border border-gray-200 rounded-lg h-96 flex items-center justify-center">
+
+            <div class="mt-6 bg-white border border-gray-200 rounded-lg h-300 flex items-center justify-center">
                 @yield('content')
             </div>
         </div>

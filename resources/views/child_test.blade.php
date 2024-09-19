@@ -15,3 +15,6 @@
         console.log('script is working');
     </script>
 @endsection
+
+
+
