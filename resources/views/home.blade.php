@@ -99,7 +99,8 @@
         </div>
     </div>
 
-    <div class="fixed inset-0 flex items-center justify-center z-50" id="ts-info-form" style="display:none;">
+    <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="ts-info-form"
+        style="display:none;">
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
             <div class="flex justify-between items-center border-b pb-2 mb-2">
                 <h5 class="text-lg font-semibold">Information About the Time Series Data</h5>
@@ -151,7 +152,8 @@
     </div>
 
     <!-- Forecast Modal -->
-    <div class="fixed inset-0 flex items-center justify-center z-50" id="forecast-modal" style="display:none;">
+    <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="forecast-modal"
+        style="display:none;">
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
             <div class="flex justify-between items-center border-b pb-2 mb-2">
                 <h5 class="text-lg font-semibold">Forecast Settings</h5>
@@ -191,8 +193,8 @@
     </div>
 
     {{-- Fetch data from open-meteo modal --}}
-    <div class="fixed inset-0 flex items-center justify-center z-50" id="ts-add-via-api-open-meteo-modal"
-        style="display:none;">
+    <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden"
+        id="ts-add-via-api-open-meteo-modal" style="display:none;">
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-2/3">
             <div class="flex justify-between items-center border-b pb-2 mb-2">
                 <h5 class="text-lg font-semibold">Open Meteo</h5>
@@ -339,7 +341,8 @@
 
                         <div id="map" class="mt-4 h-96 hidden"></div>
                         <p id="selected-location" class="mt-2 text-sm">Latitude: <span id="lat"></span>, Longitude:
-                            <span id="long"></span></p>
+                            <span id="long"></span>
+                        </p>
                     </div>
 
                     <button type="submit" id="fetch-data-open-meteo-btn"
@@ -360,10 +363,47 @@
 
 
             // =======================================================================================
-            // Iterate over each file data to create corresponding graphs
 
-            // Iterate over each file data to create corresponding graphs
+            // Open modals
+            // $('#ts-info').click(function() {
+            //     $('#ts-info-form').css('display', 'flex');
+            //     $('#ts-info-form').css();
 
+            // });
+            $('#ts-info').click(function() {
+                $('#ts-info-form').removeClass('hidden').hide().fadeIn(200);
+                $('#ts-info-form > div').removeClass('scale-95').addClass('scale-100');
+            });
+
+            // $('#ts-add-via-api-open-meteo-btn').click(function() {
+            //     $('#ts-add-via-api-open-meteo-modal').css('display', 'flex');
+            // });
+
+
+            $('#ts-add-via-api-open-meteo-btn').click(function() {
+                $('#ts-add-via-api-open-meteo-modal').removeClass('hidden').hide().fadeIn(200);
+                $('#ts-add-via-api-open-meteo-modal > div').removeClass('scale-95').addClass('scale-100');
+            });
+
+            // Close modals
+            $('[data-dismiss="modal"]').click(function() {
+                $(this).closest('.fixed').css('display', 'none');
+            });
+
+            // Close modals when clicking outside the modal content
+            $('.fixed').click(function(e) {
+                if ($(e.target).is(this)) {
+                    $(this).fadeOut(200, function() {
+                        $(this).addClass('hidden');
+                    });
+                }
+            });
+            // =======================================================================================
+
+
+
+            // =======================================================================================
+            // Iterate over each file data to create corresponding graphs
             @foreach ($timeSeriesData as $index => $fileData)
                 var options = {
                     chart: {
@@ -471,9 +511,13 @@
 
             $('#operation').on('change', function() {
                 if ($(this).val() === 'forecast') {
-                    $('#forecast-modal').modal('show');
+                    $('#forecast-modal').removeClass('hidden').hide().fadeIn(200);
+                    $('#forecast-modal > div').removeClass('scale-95').addClass('scale-100');
                     $('#modal_file_id').val($('#file_id').val());
                 }
+
+
+
             });
 
 

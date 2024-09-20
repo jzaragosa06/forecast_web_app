@@ -122,7 +122,8 @@
     <!-- Bootstrap CDN -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 
-
+    <!-- Include Alpine.js CDN -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 
 </head>
@@ -191,7 +192,6 @@
                     </a>
                 </div>
             </div>
-
 
             <div class="mt-6 bg-white border border-gray-200 rounded-lg h-300 flex items-center justify-center">
                 @yield('content')
