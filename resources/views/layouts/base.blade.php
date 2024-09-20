@@ -22,8 +22,6 @@
     </script>
     <!-- Apexchart CDN -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <!-- Bootstrap CDN -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- Include Alpine.js CDN -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -39,7 +37,7 @@
             <div class="text-indigo-500 text-3xl font-bold mb-8">TS</div>
 
             <!-- Sidebar Icons -->
-            <nav class="flex flex-col space-y-8">
+            {{-- <nav class="flex flex-col space-y-8">
                 <a href="#" class="text-gray-600 hover:text-indigo-500">
                     <i class="fas fa-house-user text-xl"></i>
                 </a>
@@ -55,7 +53,40 @@
                 <a href="#" class="text-gray-600 hover:text-indigo-500">
                     <i class="fas fa-calendar-alt text-xl"></i>
                 </a>
+            </nav> --}}
+
+
+
+            <nav class="flex flex-col space-y-8">
+                <div class="relative group">
+                    <a href="{{ route('home') }}" class="text-gray-600 hover:text-indigo-500">
+                        <i class="fas fa-tachometer-alt text-xl"></i>
+                    </a>
+                    <span
+                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Dashboard
+                    </span>
+                </div>
+                <div class="relative group">
+                    <a href="{{ route('crud.index') }}" class="text-gray-600 hover:text-indigo-500">
+                        <i class="fas fa-tasks text-xl"></i>
+                    </a>
+                    <span
+                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Manage Results
+                    </span>
+                </div>
+                <div class="relative group">
+                    <a href="{{ route('profile.index') }}" class="text-gray-600 hover:text-indigo-500">
+                        <i class="fas fa-user-circle text-xl"></i>
+                    </a>
+                    <span
+                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Profile
+                    </span>
+                </div>
             </nav>
+
 
             <!-- Settings Icon (at bottom) -->
             <div class="mt-auto">
@@ -88,27 +119,7 @@
                         <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
                     </div>
 
-                    <!-- Profile Icon -->
-                    {{-- <a href="#" class="text-gray-600 hover:text-indigo-500">
-                        <i class="fas fa-user-circle text-xl"></i>
-                    </a> --}}
-                    {{-- <div class="relative">
-                        <button id="profileDropdownButton"
-                            class="text-gray-600 hover:text-indigo-500 focus:outline-none">
-                            <i class="fas fa-user-circle text-xl"></i>
-                        </button>
-                        <div id="profileDropdown"
-                            class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg">
-                            <a class="block px-4 py-2 text-gray-800 hover:bg-gray-100" href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </div>
-                    </div> --}}
+
                     <!-- Profile Icon with Dropdown -->
                     <div class="relative">
                         <button id="profileDropdownButton"
@@ -130,7 +141,11 @@
                 </div>
             </div>
 
-            <div class="mt-6 bg-white border border-gray-200 rounded-lg h-300 flex items-center justify-center">
+            {{-- <div class="mt-6 bg-white border border-gray-200 rounded-lg h-300 flex items-center justify-center">
+                @yield('content')
+            </div> --}}
+
+            <div class="mt-6 bg-white border border-gray-200 rounded-lg flex items-center justify-center p-6">
                 @yield('content')
             </div>
         </div>

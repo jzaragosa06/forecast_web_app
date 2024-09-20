@@ -1,98 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
+{{-- @extends('layouts.base')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <style>
-        .profile-container {
-            position: relative;
-            width: 100%;
-            max-width: 150px;
-        }
+@section('title', 'Profile')
 
-        .profile-container img {
-            width: 100%;
-        }
-
-        .edit-icon {
-            position: absolute;
-            top: 0;
-            right: 0;
-            display: none;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            padding: 5px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .profile-container:hover .edit-icon {
-            display: block;
-        }
-
-        .edit-form {
-            display: none;
-            margin-top: 10px;
-        }
-
-        .edit-form.active {
-            display: block;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="profile-container">
+@section('content')
+    <div class="container mx-auto mt-10">
+        <div class="flex flex-wrap">
+            <!-- Profile Card -->
+            <div class="w-full md:w-1/3">
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <div class="relative group">
                         <img id="profileImage"
                             src="{{ $user->profile_photo ? asset('storage/' . $user->profile_photo) : 'https://via.placeholder.com/150' }}"
-                            class="card-img-top" alt="Profile Photo">
-                        <span class="edit-icon">&#9998;</span> <!-- Edit Icon -->
+                            class="w-full" alt="Profile Photo">
+                        <span
+                            class="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer hidden group-hover:block"
+                            onclick="showEditForm()">&#9998;</span> <!-- Edit Icon -->
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $user->name }}</h5>
-                        <p class="card-text">{{ $user->email }}</p>
-                        <p class="card-text">{{ $user->contact_num }}</p>
-                        <p class="card-text"><small class="text-muted">Member since
-                                {{ $user->created_at->format('F Y') }}</small></p>
+
+                    <div class="p-4">
+                        <h5 class="text-lg font-semibold">{{ $user->name }}</h5>
+                        <p class="text-gray-600">{{ $user->email }}</p>
+                        <p class="text-gray-600">{{ $user->contact_num }}</p>
+                        <p class="text-sm text-gray-500">Member since {{ $user->created_at->format('F Y') }}</p>
 
                         <!-- Hidden Form for Image Upload -->
-                        {{-- <form id="editForm" class="edit-form" action="{{ route('profile.update', $user->id) }}"
-                            method="POST" enctype="multipart/form-data"> --}}
-                        <form id="editForm" class="edit-form" action="{{ route('profile.update.photo') }}"
-                            method="POST" enctype="multipart/form-data">
+                        <form id="editForm" class="hidden mt-4" action="" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
-                            <div class="form-group">
-                                <input type="file" name="new_profile_photo" id="profilePhotoInput" accept="image/*"
-                                    class="form-control">
+                            @method('PUT')
+                            <div class="mb-4">
+                                <input type="file" name="profile_photo" id="profilePhotoInput" accept="image/*"
+                                    class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                             </div>
-                            <button type="submit" class="btn btn-success">Finish</button>
-                            <button type="button" id="cancel-edit-btn" class="btn btn-secondary">Cancel</button>
+                            <div class="flex gap-2">
+                                <button type="submit"
+                                    class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Finish</button>
+                                <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                                    onclick="hideEditForm()">Cancel</button>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        User Information
+
+            <!-- User Information Card -->
+            <div class="w-full md:w-2/3 mt-5 md:mt-0">
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <div class="bg-gray-200 p-4">
+                        <h5 class="font-semibold">User Information</h5>
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>ID:</strong> {{ $user->id }}</li>
-                        <li class="list-group-item"><strong>Name:</strong> {{ $user->name }}</li>
-                        <li class="list-group-item"><strong>Email:</strong> {{ $user->email }}</li>
-                        <li class="list-group-item"><strong>Contact Number:</strong> {{ $user->contact_num }}</li>
-                        <li class="list-group-item"><strong>Created At:</strong>
-                            {{ $user->created_at->format('F j, Y, g:i a') }}</li>
-                        <li class="list-group-item"><strong>Updated At:</strong>
+                    <ul class="divide-y divide-gray-200">
+                        <li class="p-4"><strong>ID:</strong> {{ $user->id }}</li>
+                        <li class="p-4"><strong>Name:</strong> {{ $user->name }}</li>
+                        <li class="p-4"><strong>Email:</strong> {{ $user->email }}</li>
+                        <li class="p-4"><strong>Contact Number:</strong> {{ $user->contact_num }}</li>
+                        <li class="p-4"><strong>Created At:</strong> {{ $user->created_at->format('F j, Y, g:i a') }}
+                        </li>
+                        <li class="p-4"><strong>Updated At:</strong>
                             {{ $user->updated_at->format('F j, Y, g:i a') }}</li>
                     </ul>
                 </div>
@@ -100,22 +64,99 @@
         </div>
     </div>
 
+@endsection
+
+
+
+@section('scripts')
     <script>
-        $(document).ready(function() {
-            $('.edit-icon').on('click', function() {
-                document.getElementById('editForm').classList.add('active');
+        function showEditForm() {
+            document.getElementById('editForm').classList.remove('hidden');
+        }
 
-            });
-            $('#cancel-edit-btn').on('click', function() {
-                document.getElementById('editForm').classList.remove('active');
-
-            });
-        });
+        function hideEditForm() {
+            document.getElementById('editForm').classList.add('hidden');
+        }
     </script>
+@endsection --}}
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
 
-</html>
+@extends('layouts.base')
+
+@section('title', 'Profile')
+
+@section('content')
+    <div class="container mx-auto mt-10 px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Profile Card -->
+            <div class="col-span-1 mb-6">
+                <div class="bg-white shadow-md rounded-lg overflow-hidden h-full">
+                    <div class="relative group">
+                        <div class="flex justify-center p-6">
+                            <img id="profileImage"
+                                src="{{ $user->profile_photo ? asset('storage/' . $user->profile_photo) : 'https://via.placeholder.com/150' }}"
+                                class="w-32 h-32 object-cover rounded-full" alt="Profile Photo">
+                        </div>
+                        <span
+                            class="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer hidden group-hover:block"
+                            onclick="showEditForm()">&#9998;</span> <!-- Edit Icon -->
+                    </div>
+
+                    <div class="p-4 text-center">
+                        <h5 class="text-lg font-semibold">{{ $user->name }}</h5>
+                        <p class="text-gray-600">{{ $user->email }}</p>
+                        <p class="text-gray-600">{{ $user->contact_num }}</p>
+                        <p class="text-sm text-gray-500">Member since {{ $user->created_at->format('F Y') }}</p>
+
+                        <!-- Hidden Form for Image Upload -->
+                        <form id="editForm" class="hidden mt-4" action="{{ route('profile.update.photo') }}" method="POST"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-4">
+                                <input type="file" name="new_profile_photo" id="profilePhotoInput" accept="image/*"
+                                    class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                            </div>
+                            <div class="flex justify-center gap-2">
+                                <button type="submit"
+                                    class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Finish</button>
+                                <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                                    onclick="hideEditForm()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Information Card -->
+            <div class="col-span-2 mb-6">
+                <div class="bg-white shadow-md rounded-lg h-full">
+                    <div class="bg-gray-200 p-4">
+                        <h5 class="font-semibold">User Information</h5>
+                    </div>
+                    <ul class="divide-y divide-gray-200">
+                        <li class="p-4"><strong>ID:</strong> {{ $user->id }}</li>
+                        <li class="p-4"><strong>Name:</strong> {{ $user->name }}</li>
+                        <li class="p-4"><strong>Email:</strong> {{ $user->email }}</li>
+                        <li class="p-4"><strong>Contact Number:</strong> {{ $user->contact_num }}</li>
+                        <li class="p-4"><strong>Created At:</strong> {{ $user->created_at->format('F j, Y, g:i a') }}
+                        </li>
+                        <li class="p-4"><strong>Updated At:</strong> {{ $user->updated_at->format('F j, Y, g:i a') }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function showEditForm() {
+            document.getElementById('editForm').classList.remove('hidden');
+        }
+
+        function hideEditForm() {
+            document.getElementById('editForm').classList.add('hidden');
+        }
+    </script>
+@endsection
