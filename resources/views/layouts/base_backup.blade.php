@@ -41,10 +41,29 @@
             <div class="text-indigo-500 text-3xl font-bold mb-8">TS</div>
 
             <!-- Sidebar Icons -->
+            {{-- <nav class="flex flex-col space-y-8">
+                <a href="#" class="text-gray-600 hover:text-indigo-500">
+                    <i class="fas fa-house-user text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-600 hover:text-indigo-500">
+                    <i class="fas fa-user-circle text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-600 hover:text-indigo-500">
+                    <i class="fas fa-chart-line text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-600 hover:text-indigo-500">
+                    <i class="fas fa-wallet text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-600 hover:text-indigo-500">
+                    <i class="fas fa-calendar-alt text-xl"></i>
+                </a>
+            </nav> --}}
+
+
+
             <nav class="flex flex-col space-y-8">
                 <div class="relative group">
-                    <a href="{{ route('home') }}"
-                        class="{{ request()->routeIs('home') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
+                    <a href="{{ route('home') }}" class="text-gray-600 hover:text-indigo-500">
                         <i class="fas fa-tachometer-alt text-xl"></i>
                     </a>
                     <span
@@ -53,8 +72,7 @@
                     </span>
                 </div>
                 <div class="relative group">
-                    <a href="{{ route('crud.index') }}"
-                        class="{{ request()->routeIs('crud.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
+                    <a href="{{ route('crud.index') }}" class="text-gray-600 hover:text-indigo-500">
                         <i class="fas fa-tasks text-xl"></i>
                     </a>
                     <span
@@ -63,8 +81,7 @@
                     </span>
                 </div>
                 <div class="relative group">
-                    <a href="{{ route('profile.index') }}"
-                        class="{{ request()->routeIs('profile.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
+                    <a href="{{ route('profile.index') }}" class="text-gray-600 hover:text-indigo-500">
                         <i class="fas fa-user-circle text-xl"></i>
                     </a>
                     <span
@@ -73,6 +90,7 @@
                     </span>
                 </div>
             </nav>
+
 
             <!-- Settings Icon (at bottom) -->
             <div class="mt-auto">
@@ -87,7 +105,7 @@
             <!-- Navbar -->
             <div class="flex justify-between items-center bg-white shadow p-4 rounded-lg">
                 <!-- Title -->
-                <h1 class="text-lg font-semibold text-gray-700">@yield('page-title')</h1>
+                <h1 class="text-lg font-semibold text-gray-700">Page Name</h1>
 
                 <!-- Search Bar -->
                 <div class="relative w-1/3">
@@ -104,6 +122,7 @@
                         </a>
                         <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
                     </div>
+
 
                     <!-- Profile Icon with Dropdown -->
                     <div class="relative">
@@ -125,6 +144,10 @@
                     </div>
                 </div>
             </div>
+
+            {{-- <div class="mt-6 bg-white border border-gray-200 rounded-lg h-300 flex items-center justify-center">
+                @yield('content')
+            </div> --}}
 
             <div class="mt-6 bg-white border border-gray-200 rounded-lg flex items-center justify-center p-6">
                 @yield('content')

@@ -1,6 +1,9 @@
 @extends('layouts.base')
 
-@section('title', 'Dashbaord')
+@section('title', 'Dashboard')
+
+@section('page-title', 'Dashboard')
+
 
 @section('content')
     <div>
