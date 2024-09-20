@@ -56,7 +56,7 @@ class ManageResultsUsingCRUDController extends Controller
         // $fileAssociation->delete();
         DB::table('file_associations')->where('file_assoc_id', $file_assoc_id)->delete();
 
-        return redirect()->route('crud.show');
+        return redirect()->route('crud.index');
     }
 
     public function delete_file($file_id)
@@ -76,7 +76,7 @@ class ManageResultsUsingCRUDController extends Controller
         // $fileAssociation->delete();
         DB::table('files')->where('file_id', $file_id)->delete();
 
-        return redirect()->route('crud.show');
+        return redirect()->route('crud.index');
     }
 
 
