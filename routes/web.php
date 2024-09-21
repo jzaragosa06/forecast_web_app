@@ -62,6 +62,13 @@ Route::get('/fetch-data', function () {
     return view('fetchData.index');
 });
 
+Route::get('/landing', function () {
+    return view('landing');
+});
+
+
+
+
 
 
 

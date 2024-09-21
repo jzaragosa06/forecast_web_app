@@ -1,47 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.base')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $timeSeriesData['filename'] }} - Time Series Graph</title>
+@section('title', 'View File')
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+@section('page-title', 'Manage File')
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <!-- ApexCharts JS -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-</head>
 
-<body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Time Series Data: {{ $timeSeriesData['filename'] }} </h1>
+@section('content')
+    <div class="container mx-auto my-10">
+        <h1 class="text-2xl font-semibold mb-6">Time Series Data: {{ $timeSeriesData['filename'] }}</h1>
 
         <div id="chart"></div> <!-- Chart Container -->
 
-        <table class="table table-bordered mt-5">
+        <table class="min-w-full mt-8 border-collapse border border-gray-300">
             <thead>
-                <tr>
+                <tr class="bg-gray-200">
                     @foreach ($timeSeriesData['header'] as $column)
-                        <th>{{ $column }}</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">{{ $column }}</th>
                     @endforeach
                 </tr>
             </thead>
             <tbody>
                 @foreach ($timeSeriesData['data'] as $row)
-                    <tr>
-                        <td>{{ $row['date'] }}</td>
+                    <tr class="bg-white border-b">
+                        <td class="border border-gray-300 px-4 py-2">{{ $row['date'] }}</td>
                         @foreach ($row['values'] as $value)
-                            <td>{{ $value }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ $value }}</td>
                         @endforeach
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+@endsection
 
+
+
+
+
+@section('scripts')
     <script>
         $(document).ready(function() {
             var options = {
@@ -102,9 +98,4 @@
 
         });
     </script>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+@endsection
