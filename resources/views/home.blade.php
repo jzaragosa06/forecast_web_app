@@ -423,8 +423,6 @@
                                     }, $fileData['data']),
                                 ) !!},
                                 yaxis: {{ $i - 1 }}
-
-
                             },
                         @endfor
                     ],

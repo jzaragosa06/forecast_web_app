@@ -67,6 +67,12 @@ Route::get('/landing', function () {
 });
 
 
+Route::get('/flowchart', function () {
+    return view('flowchart_test');
+});
+
+
+
 
 
 

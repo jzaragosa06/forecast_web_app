@@ -4,7 +4,6 @@
 
 @section('page-title', 'Manage File')
 
-
 @section('content')
     <div class="container mx-auto my-10">
         <h1 class="text-2xl font-semibold mb-6">Time Series Data: {{ $timeSeriesData['filename'] }}</h1>
@@ -72,6 +71,11 @@
                             },
                             labels: {
                                 show: true,
+                                formatter: function(value) {
+                                    // Check if the value is a valid number before applying toFixed
+                                    return isNaN(value) ? value : value.toFixed(
+                                        2); // Safely format only valid numeric values
+                                }
                             },
                             axisBorder: {
                                 show: true,

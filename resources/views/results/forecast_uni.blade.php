@@ -1,83 +1,175 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.base')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+@section('title', 'Univariate Forecast')
 
-    <title>Document</title>
-</head>
+@section('page-title', 'Manage Results')
 
-<body>
 
-    <div class="container">
-        <h4>Forecast Result</h4>
+@section('content')
 
-        <div class="row">
-            <div class="col-md-8 border border-dark">
-                <div id="chart1"></div>
+    <div class="container mx-auto my-6">
+        <div class="flex flex-wrap">
+            <div class="w-full md:w-2/3 p-4">
+                <div class="bg-white shadow-md rounded-lg p-4 h-full">
+                    <div id="chart1"></div>
+                </div>
             </div>
-            <div class="col-md-4 border border-dark">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum.</p>
+            <div class="w-full md:w-1/3 p-4">
+                <div class="bg-white shadow-md rounded-lg p-4 h-full">
+                    <div class="mb-4">
+                        <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                    <div class="flex flex-wrap">
+                        <div class="w-1/2 mb-2">
+                            <div>
+                                <span class="font-semibold">Time Series Type:</span>
+                                <div id="tstype" class="text-gray-600"></div>
+                            </div>
+                            <div>
+                                <span class="font-semibold">Frequency:</span>
+                                <div id="freq" class="text-gray-600"></div>
+                            </div>
+                        </div>
+                        <div class="w-1/2 mb-2">
+                            <div>
+                                <span class="font-semibold">Forecast Horizon:</span>
+                                <div id="steps" class="text-gray-600"></div>
+                            </div>
+                            <div>
+                                <span class="font-semibold">Target:</span>
+                                <div id="target" class="text-gray-600"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap mt-4">
+                        {{-- <div id="detailed_result_button" class="w-1/2 pr-2">
+                            <button
+                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">Detailed
+                                Result</button>
+                        </div> --}}
+                        <div id="detailed_result_button" class="w-1/2 pr-2">
+                            <button id="toggleButton"
+                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                                Detailed Result</button>
+                        </div>
+                        <div class="w-1/2 pl-2">
+                            <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">Converse
+                                with AI</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <button id="detailed_result_button" class="btn btn-primary">Show Detailed Result</button>
-        <div id="detailed_result" style="display: none">
-            <h4>Detailed Forecast Result</h4>
-            <div class="row">
-                <div class="col-md-8 border border-dark">
-                    <div id="chart2"></div>
+        <div id="detailed_result" style="display: none;">
+            <div class="flex flex-wrap">
+                <div class="w-full md:w-2/3 p-4">
+                    <div class="bg-white shadow-md rounded-lg p-4 h-full">
+                        <div id="chart2"></div>
+                    </div>
                 </div>
-                <div class="col-md-4 border border-dark">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
-                        et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                        ut
-                        aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                        culpa qui officia deserunt mollit anim id est laborum.</p>
+                <div class="w-full md:w-1/3 p-4">
+                    <div class="bg-white shadow-md rounded-lg p-4 h-full">
+                        <div class="mb-4">
+                            <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <div class="w-1/2 mb-2">
+                                <div>
+                                    <span class="font-semibold">MAE:</span>
+                                    <div id="mae" class="text-gray-600"></div>
+                                </div>
+                                <div>
+                                    <span class="font-semibold">MSE:</span>
+                                    <div id="mse" class="text-gray-600"></div>
+                                </div>
+                            </div>
+                            <div class="w-1/2 mb-2">
+                                <div>
+                                    <span class="font-semibold">RSME:</span>
+                                    <div id="rsme" class="text-gray-600"></div>
+                                </div>
+                                <div>
+                                    <span class="font-semibold">MAPE:</span>
+                                    <div id="mape" class="text-gray-600"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-8 border border-dark">
-                    <div id="chart3"></div>
+            <div class="flex flex-wrap mt-4">
+                <div class="w-2/3 p-4">
+                    <div class="bg-white shadow-md rounded-lg p-5">
+                        <table id="forecastTable" class="min-w-full bg-white">
+                            <thead>
+                                <tr>
+                                    <th class="border px-4 py-2">Date</th>
+                                    <th class="border px-4 py-2">Forecasted Value</th>
+                                    <th class="border px-4 py-2">True Value</th>
+                                    <th class="border px-4 py-2">Error</th>
+                                </tr>
+                            </thead>
+                            <tbody id="forecastTableBody-test">
+                                <!-- Example rows (rendered dynamically) -->
+                                <tr>
+                                    <td class="border px-4 py-2">2024-01-01</td>
+                                    <td class="border px-4 py-2">100</td>
+                                    <td class="border px-4 py-2">90</td>
+                                    <td class="border px-4 py-2">10</td>
+                                </tr>
+                                <!-- Add more example rows here -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="col-md-4 border border-dark">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore
-                        et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                        ut
-                        aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                        culpa qui officia deserunt mollit anim id est laborum.</p>
+                <div class="w-1/3 p-4">
+                    <div class="bg-gray-50 border rounded-lg p-5 h-full">
+                        <!-- Placeholder for middle box content -->
+                    </div>
                 </div>
             </div>
         </div>
-
-
-
     </div>
+@endsection
 
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+@section('scripts')
     <script>
+        $(document).ready(function() {
+            $('#forecastTable').DataTable({
+                "pageLength": 10,
+                "ordering": true,
+                "searching": false, // Remove the search box
+                "lengthChange": false // Remove the entries dropdown
+            });
+        });
         // Fetch and parse JSON data from the server-side
         const jsonData = @json($data); // Server-side rendered data
         const data = JSON.parse(jsonData);
         const colname = data.metadata.colname;
 
-
         console.log(colname);
 
         renderChart1();
         renderChart2();
-        renderChart3();
+        // renderForecastTable_out();
+        renderForecastTable_test();
+
+        $('#mae').text(data.forecast.metrics.mae);
+        $('#mse').text(data.forecast.metrics.mse);
+        $('#rmse').text(data.forecast.metrics.rmse);
+        $('#mape').text(data.forecast.metrics.mape);
+
+
+        $('#tstype').text(data.metadata.tstype);
+        $('#freq').text(data.metadata.freq);
+        $('#description').text(data.metadata.description);
+        $('#steps').text(data.metadata.steps);
+        $('#target').text(data.metadata.colname);
 
         function renderChart1() {
             // Forecast index
@@ -88,9 +180,6 @@
             let forecastData_null = [...Array(originalDataIndex.length).fill(null), ...data.forecast.pred_out[
                 `${colname}`]];
             let origDataValue = data.data.entire_data[`${colname}`];
-
-
-
 
 
             // Initialize the first chart using ApexCharts
@@ -109,7 +198,26 @@
 
                 }],
                 xaxis: {
-                    categories: full_index
+                    categories: full_index,
+                    type: 'datetime'
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(value) {
+                            // Check if the value is a valid number before applying toFixed
+                            return isNaN(value) ? value : value.toFixed(
+                                2); // Safely format only valid numeric values
+                        }
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(value) {
+                            // Check if the value is a valid number before applying toFixed
+                            return isNaN(value) ? value : value.toFixed(
+                                2); // Safely format only valid numeric values
+                        }
+                    }
                 },
                 stroke: {
                     curve: 'smooth',
@@ -153,7 +261,26 @@
                     },
                 ],
                 xaxis: {
-                    categories: full_index
+                    categories: full_index,
+                    type: 'datetime',
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(value) {
+                            // Check if the value is a valid number before applying toFixed
+                            return isNaN(value) ? value : value.toFixed(
+                                2); // Safely format only valid numeric values
+                        }
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(value) {
+                            // Check if the value is a valid number before applying toFixed
+                            return isNaN(value) ? value : value.toFixed(
+                                2); // Safely format only valid numeric values
+                        }
+                    }
                 },
                 stroke: {
                     curve: 'smooth',
@@ -167,69 +294,95 @@
         }
 
 
-        function renderChart3() {
-            // Forecast index
-            let forecastIndex = data.forecast.pred_out.index;
-            let originalDataIndex = data.data.entire_data.index;
-            let full_index = [...originalDataIndex, ...forecastIndex];
 
-            let forecastData_null = [...Array(originalDataIndex.length).fill(null), ...data.forecast.pred_out[
-                `${colname}`]];
-            let origDataValue = data.data.entire_data[`${colname}`];
-
-
-
-
-
-            // Initialize the first chart using ApexCharts
-            let options3 = {
-                chart: {
-                    type: 'line',
-                    height: 300
-                },
-                series: [{
-                    name: 'orig data',
-                    data: origDataValue,
-
-                }, {
-                    name: 'Pred Out',
-                    data: forecastData_null,
-
-                }],
-                xaxis: {
-                    categories: full_index
-                },
-                stroke: {
-                    curve: 'smooth',
-                    width: 1,
-                },
-
-            };
-
-            let chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
-            chart3.render();
-        }
 
 
         // JavaScript to toggle the detailed result section visibility
+        // const detailedResultButton = document.getElementById("detailed_result_button");
+        // const detailedResultDiv = document.getElementById("detailed_result");
+
+        // detailedResultButton.addEventListener("click", function() {
+        //     if (detailedResultDiv.style.display === "none") {
+        //         detailedResultDiv.style.display = "block";
+        //         detailedResultButton.textContent = "Hide Detailed Result";
+        //     } else {
+        //         detailedResultDiv.style.display = "none";
+        //         detailedResultButton.textContent = "Show Detailed Result";
+        //     }
+        // });
+
         const detailedResultButton = document.getElementById("detailed_result_button");
         const detailedResultDiv = document.getElementById("detailed_result");
 
         detailedResultButton.addEventListener("click", function() {
-            if (detailedResultDiv.style.display === "none") {
+            // if (detailedResultDiv.style.display === "none" || detailedResultDiv.style.display === "") {
+            //     detailedResultDiv.style.display = "block";
+            //     detailedResultButton.textContent = "Hide Detailed Result";
+            //     detailedResultButton.classList.remove("bg-blue-500");
+            //     detailedResultButton.classList.add("bg-red-500"); // Change color when active
+            // } else {
+            //     detailedResultDiv.style.display = "none";
+            //     detailedResultButton.textContent = "Show Detailed Result";
+            //     detailedResultButton.classList.remove("bg-red-500");
+            //     detailedResultButton.classList.add("bg-blue-500"); // Revert color
+            // }
+
+            if (detailedResultDiv.style.display === "none" || detailedResultDiv.style.display === "") {
                 detailedResultDiv.style.display = "block";
-                detailedResultButton.textContent = "Hide Detailed Result";
+                toggleButton.textContent = "Hide Detailed Result";
+                toggleButton.classList.remove("bg-blue-500", "hover:bg-blue-600");
+                toggleButton.classList.add("bg-red-500", "hover:bg-red-600"); // Change to a different color
             } else {
                 detailedResultDiv.style.display = "none";
-                detailedResultButton.textContent = "Show Detailed Result";
+                toggleButton.textContent = "Show Detailed Result";
+                toggleButton.classList.remove("bg-red-500", "hover:bg-red-600");
+                toggleButton.classList.add("bg-blue-500", "hover:bg-blue-600"); // Revert to original color
             }
         });
+
+
+
+        function renderForecastTable_out() {
+            let forecastIndex = data.forecast.pred_out.index;
+            let forecastValues = data.forecast.pred_out[`${colname}`];
+            let tableBody = document.getElementById('forecastTableBody-out');
+
+            let rows = '';
+            forecastIndex.forEach((date, index) => {
+                const value = forecastValues[index];
+                rows += `
+                    <tr class="border-b border-gray-200">
+                        <td class="py-2 px-4">${date}</td>
+                        <td class="py-2 px-4">${value}</td>
+                    </tr>
+                `;
+            });
+
+            tableBody.innerHTML = rows;
+        }
+
+
+        function renderForecastTable_test() {
+
+            let forecastIndex = data.data.test_data.index;
+            let forecastValues = data.forecast.pred_test[`${colname}`];
+            let testValues = data.data.test_data[`${colname}`];
+            let tableBody = document.getElementById('forecastTableBody-test');
+
+            let rows = '';
+            forecastIndex.forEach((date, index) => {
+                const value = forecastValues[index];
+                rows += `
+                    <tr class="border-b border-gray-200">
+                        <td class="py-2 px-4">${date}</td>
+                        <td class="py-2 px-4">${value}</td>
+                         <td class="py-2 px-4">${testValues[index]}</td>
+                          <td class="py-2 px-4">${value - testValues[index]}</td>
+                    </tr>
+                `;
+            });
+
+            tableBody.innerHTML = rows;
+        }
     </script>
-
-
-
-
-
-</body>
-
-</html>
+@endsection
