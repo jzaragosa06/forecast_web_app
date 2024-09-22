@@ -1,58 +1,118 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.base')
 
-<head>
-    <title>Multivariate Data Processing</title>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://cdn.jsdelivr.net/npm/date-fns@latest"></script>
+@section('title', 'Upload Inputs')
 
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    </script>
-</head>
-
-<body>
-    <div class="container">
-        <h1>Multivariate Data Processing</h1>
-        <div class="row">
-            <div class="col-md-4">
-                <h3>Feature Variables</h3>
-                @foreach ($headers as $index => $header)
-                    @if ($index > 0)
-                        <button class="btn btn-info feature-btn"
-                            data-index="{{ $index }}">{{ $header }}</button><br>
-                    @endif
-                @endforeach
-            </div>
-            <div class="col-md-8">
+@section('content')
+    <div class="container mx-auto p-6">
+        <!-- Chart Card -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-white shadow-md rounded-lg p-4 w-full">
                 <div id="chart-container">
                     <div id="chart"></div>
-                </div>
-                <div id="processing-options" style="display: none;">
-                    <h3>Data Cleaning and Processing</h3>
-                    <form id="processing-form">
-                        <label>Fill Missing Value (NaN) with:</label><br>
-                        <input type="radio" name="fill-method" value="forward"> Forward Fill<br>
-                        <input type="radio" name="fill-method" value="backward"> Backward Fill<br>
-                        <input type="radio" name="fill-method" value="average"> Average of the series<br>
-                        <input type="radio" name="fill-method" value="zero"> Fill with zeros<br>
-                    </form>
                 </div>
             </div>
         </div>
 
-        <button type="button" id="submit-button" name="submit-button">Save</button>
+
+
+        <!-- Data Info and Processing Options Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Data Info Card -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <div class="mb-4">
+                    <label for="type" class="block text-sm font-medium text-gray-700">Time Series Type</label>
+                    <input type="text" id="type" name="type" value="{{ $type }}" readonly
+                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div class="mb-4">
+                    <label for="freq" class="block text-sm font-medium text-gray-700">Frequency</label>
+                    <input type="text" id="freq" name="freq" value="{{ $freq }}" readonly
+                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div class="mb-4">
+                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="description" name="description" rows="5"
+                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ $description }}</textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="filename" class="block text-sm font-medium text-gray-700">Filename</label>
+                    <input type="text" id="filename" name="filename" value="{{ $filename }}"
+                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+            </div>
+
+            <!-- Processing Options Card -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <div class="container mx-auto">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold mb-4">Feature Variables</h3>
+                            <div id="variable-buttons" class="space-y-2">
+                                @foreach ($headers as $index => $header)
+                                    @if ($index > 0)
+                                        <button
+                                            class="feature-btn px-4 py-2 rounded-md border border-gray-300 w-full text-left transition-colors hover:bg-indigo-500 hover:text-white"
+                                            data-index="{{ $index }}">{{ $header }}</button>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <form id="processing-form">
+                                <fieldset>
+                                    <legend class="text-sm font-medium text-gray-700 mb-4">Fill Missing Value (NaN) with:
+                                    </legend>
+                                    <div class="mb-2">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="fill-method" value="forward" checked
+                                                class="text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                            <span class="ml-2">Forward Fill</span>
+                                        </label>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="fill-method" value="backward"
+                                                class="text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                            <span class="ml-2">Backward Fill</span>
+                                        </label>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="fill-method" value="average"
+                                                class="text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                            <span class="ml-2">Average of the series</span>
+                                        </label>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" name="fill-method" value="zero"
+                                                class="text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                            <span class="ml-2">Fill with zeros</span>
+                                        </label>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="mt-6">
+                    <button type="button" id="submit-button"
+                        class="w-full inline-flex justify-center rounded-md bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
     </div>
+@endsection
 
 
-
+@section('scripts')
     <script>
         const data = @json($data);
         const headers = @json($headers);
@@ -62,31 +122,68 @@
         let chartInstance = null;
 
 
-        console.log(data);
-        console.log(headers);
 
-        document.querySelectorAll('.feature-btn').forEach(button => {
+        // ---------------
+        const featureButtons = document.querySelectorAll('.feature-btn');
+
+        // Highlight the first button initially
+        featureButtons[0].classList.add('bg-indigo-500', 'text-white');
+        // Display first variable immediately on page load
+        showVariableData(featureButtons[0].getAttribute('data-index'));
+
+        featureButtons.forEach(button => {
             button.addEventListener('click', () => {
-                activeIndex = button.getAttribute('data-index');
-                const label = headers[activeIndex];
-                let method = 'forward';
+                // Remove highlight from all buttons
+                featureButtons.forEach(btn => btn.classList.remove('bg-indigo-500', 'text-white'));
+                // Highlight the clicked button
+                button.classList.add('bg-indigo-500', 'text-white');
 
-                // Use the previously selected fill method if available
-                if (fillMethods[activeIndex]) {
-                    method = fillMethods[activeIndex];
+
+                // Display the chart and fill method for the clicked variable
+                const index = button.getAttribute('data-index');
+                showVariableData(index);
+            });
+        });
+
+        function showVariableData(index) {
+            activeIndex = index; // Update activeIndex here
+
+            let method = 'forward'; // Default fill method
+
+            // Use the previously selected fill method if available
+            if (fillMethods[activeIndex]) {
+                method = fillMethods[activeIndex];
+            }
+
+            fillMissingValues(method, index);
+
+            const label = headers[index];
+            const values = tempData.map(row => parseFloat(row[index]) || null);
+            const dates = tempData.map(row => convertDate(row[0]));
+
+            showChart(label, dates, values);
+            console.log(`${label} - ${fillMethods[index]}`);
+
+            // Check the corresponding fill method radio button
+            document.querySelector(`input[name="fill-method"][value="${method}"]`).checked = true;
+        }
+
+
+        // ----------
+
+        document.querySelectorAll('input[name="fill-method"]').forEach(input => {
+            input.addEventListener('change', () => {
+                if (activeIndex !== null) {
+                    const method = document.querySelector('input[name="fill-method"]:checked').value;
+                    console.log(`options - ${method}`)
+
+                    fillMissingValues(method, activeIndex);
+
+                    const label = headers[activeIndex];
+                    const values = tempData.map(row => parseFloat(row[activeIndex]) || null);
+                    const dates = tempData.map(row => convertDate(row[0]));
+                    showChart(label, dates, values);
                 }
-
-                // Fill missing values using the selected or default method
-                fillMissingValues(method, activeIndex);
-
-                const values = tempData.map(row => parseFloat(row[activeIndex]) || null);
-                const dates = tempData.map(row => convertDate(row[0]));
-
-                showChart(label, dates, values);
-                document.getElementById('processing-options').style.display = 'block';
-                // document.getElementById('next-button').style.display = 'block';
-
-                document.querySelector(`input[name="fill-method"][value="${method}"]`).checked = true;
             });
         });
 
@@ -139,6 +236,8 @@
 
         function fillMissingValues(method, index) {
             fillMethods[index] = method;
+            console.log(fillMethods);
+
             const dataCopy = JSON.parse(JSON.stringify(data)); // Make a copy of the original data
 
             for (const [i, row] of dataCopy.entries()) {
@@ -191,18 +290,6 @@
 
 
 
-        document.querySelectorAll('input[name="fill-method"]').forEach(input => {
-            input.addEventListener('change', () => {
-                if (activeIndex !== null) {
-                    const method = document.querySelector('input[name="fill-method"]:checked').value;
-                    fillMissingValues(method, activeIndex);
-                    const label = headers[activeIndex];
-                    const values = tempData.map(row => parseFloat(row[activeIndex]) || null);
-                    const dates = tempData.map(row => convertDate(row[0]));
-                    showChart(label, dates, values);
-                }
-            });
-        });
 
 
 
@@ -227,15 +314,6 @@
             downloadLink.style.display = 'block';
         }
 
-        // function formatDate(dateStr) {
-        //     const dateParts = dateStr.split('/');
-        //     if (dateParts.length === 3) {
-        //         // Assuming the format is M/D/YYYY
-        //         const [month, day, year] = dateParts;
-        //         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-        //     }
-        //     return dateStr; // If it's already in the correct format
-        // }
 
 
         function convertDate(inputDate) {
@@ -312,6 +390,4 @@
 
         });
     </script>
-</body>
-
-</html>
+@endsection
