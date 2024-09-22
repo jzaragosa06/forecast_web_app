@@ -140,8 +140,10 @@
                     </div>
                     <div class="mb-4">
                         <label for="description" class="block text-sm font-medium mb-1">Description:</label>
-                        <input type="text" name="description"
-                            class="form-input block w-full border-gray-300 rounded-md shadow-sm">
+                        {{-- <input type="text" name="description"
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm"> --}}
+                        <textarea name="description" id="description" cols="10" rows="5"
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm"></textarea>
                     </div>
                     <div class="flex justify-between">
                         <button type="button" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"

@@ -1,89 +1,135 @@
-{{-- 
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recreated Flowchart with Tooltips</title>
+    <title>Flowchart using Mermaid.js with Tailwind CSS</title>
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({
             startOnLoad: true
         });
     </script>
-    <style>
-        /* Tooltip styling */
-        .node rect {
-            transition: fill 0.3s ease;
-        }
-
-        .node:hover rect {
-            fill: #c6e2ff;
-            /* Change color on hover */
-        }
-    </style>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-
-    <h1>Flowchart Example</h1>
-
-    <!-- Mermaid flowchart definition -->
-    <div class="container">
-        <div class="mermaid">
-            graph TD
-            A[Dataset]:::hoverable --> B[Training dataset]
-            A --> C[Test dataset]
-            B --> D[Model]
-            C --> E[Evaluate]
-            D --> E
-            E -->|Error acceptable?| F{Error acceptable?}
-            F -->|Yes| G[Forecast]
-            F -->|No| H[Retrain Model]
-            H --> D
-            click A "https://example.com/dataset" "This is the dataset"
-            click B "https://example.com/training" "This is the training dataset"
-            click C "https://example.com/test" "This is the test dataset"
-            click D "https://example.com/model" "This is the model"
-            click E "https://example.com/evaluate" "This is the evaluation step"
-            click F "https://example.com/decision" "This is the decision point"
-            click G "https://example.com/forecast" "This is the forecasting step"
-            click H "https://example.com/retrain" "This is the retraining step"
+<body class="bg-gray-100">
+    <!-- Outermost Container -->
+    <div class="container mx-auto mt-10 p-4">
+        <!-- Row -->
+        <div class="flex flex-wrap justify-center">
+            <!-- Column -->
+            <div class="w-full lg:w-8/12 bg-white shadow-md rounded-lg p-6">
+                <!-- Another Row (Nested) -->
+                <div class="flex justify-center">
+                    <!-- Inner Column -->
+                    <div class="w-full">
+                        <h2 class="text-2xl font-bold text-center mb-4">Flowchart using Mermaid.js</h2>
+                        <!-- Mermaid Flowchart Container -->
+                        <div class="mermaid border-2 border-gray-300 rounded-lg p-6">
+                            graph TD;
+                            Dataset --> |Train| Training_Dataset;
+                            Dataset --> |Test| Test_Dataset;
+                            Training_Dataset --> Model;
+                            Test_Dataset --> Evaluate;
+                            Model --> Evaluate;
+                            Evaluate --> |Error Acceptable?| Decision;
+                            Decision --> |Yes| Forecast;
+                            Decision --> |No| Retrain_Model;
+                            Retrain_Model --> Model;
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
 </body>
 
 </html> --}}
 
 
-<html>
 
-<body>
-    Here is one mermaid diagram:
-    <pre class="mermaid">
-            graph TD
-            A[Client] --> B[Load Balancer]
-            B --> C[Server1]
-            B --> D[Server2]
-    </pre>
+<!DOCTYPE html>
+<html lang="en">
 
-    And here is another:
-    <pre class="mermaid">
-            graph TD
-            A[Client] -->|tcp_123| B
-            B(Load Balancer)
-            B -->|tcp_456| C[Server1]
-            B -->|tcp_456| D[Server2]
-    </pre>
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowchart using Mermaid.js with Tailwind CSS</title>
     <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({
-            startOnLoad: true
+            startOnLoad: true,
+            theme: "default", // You can change the theme
+            themeVariables: {
+                primaryColor: '#ffcc00',
+                edgeLabelBackground: '#ffffff'
+            },
+            flowchart: {
+                useMaxWidth: false, // Allow scaling
+            },
         });
     </script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .mermaid {
+            transform: scale(0.8);
+            /* Adjust scale here */
+            transform-origin: top left;
+            /* Make scaling behave properly */
+            max-width: 100%;
+            max-height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <div class="flex flex-wrap mt-4">
+        <div class="w-2/3 p-4">
+            <div class="bg-white shadow-md rounded-lg p-5">
+                <table id="forecastTable" class="min-w-full bg-white">
+                    <thead>
+                        <tr>
+                            <th class="border px-4 py-2">Date</th>
+                            <th class="border px-4 py-2">Forecasted Value</th>
+                            <th class="border px-4 py-2">True Value</th>
+                            <th class="border px-4 py-2">Error</th>
+                        </tr>
+                    </thead>
+                    <tbody id="forecastTableBody-test">
+                        <tr>
+                            <td class="border px-4 py-2">2024-01-01</td>
+                            <td class="border px-4 py-2">100</td>
+                            <td class="border px-4 py-2">90</td>
+                            <td class="border px-4 py-2">10</td>
+                        </tr>
+                        <!-- More dynamically rendered rows can be added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Mermaid Flowchart Container -->
+        <div class="w-1/3 p-4">
+            <div class="mermaid">
+                graph TD;
+                Dataset --> |Train| Training_Dataset;
+                Dataset --> |Test| Test_Dataset;
+                Training_Dataset --> Model;
+                Test_Dataset --> Evaluate;
+                Model --> Evaluate;
+                Evaluate --> |Error Acceptable?| Decision;
+                Decision --> |Yes| Forecast;
+                Decision --> |No| Retrain_Model;
+                Retrain_Model --> Model;
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

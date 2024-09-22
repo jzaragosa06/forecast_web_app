@@ -1,54 +1,110 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.base')
 
-<head>
-    <title>Univariate Data Processing</title>
+@section('title', 'Upload Inputs')
 
-
-
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://cdn.jsdelivr.net/npm/date-fns@latest"></script>
-
-
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-
-    </script>
-
-</head>
-
-<body>
-    <div class="container">
-        <h1>Univariate Data Processing</h1>
-        <div class="row">
-            <div class="col-md-12">
+@section('content')
+    <div class="container mx-auto p-6">
+        <!-- Chart Card -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-white shadow-md rounded-lg p-4 w-full">
                 <div id="chart-container">
-                    <canvas id="chart"></canvas>
-                </div>
-                <div id="processing-options">
-                    <h3>Data Cleaning and Processing</h3>
-                    <form id="processing-form">
-                        <label>Fill Missing Value (NaN) with:</label><br>
-                        <input type="radio" name="fill-method" value="forward"> Forward Fill<br>
-                        <input type="radio" name="fill-method" value="backward"> Backward Fill<br>
-                        <input type="radio" name="fill-method" value="average"> Average of the series<br>
-                        <input type="radio" name="fill-method" value="zero"> Fill with zeros<br>
-                    </form>
+                    <div id="chart"></div>
                 </div>
             </div>
         </div>
-        <button type="button" id="submit-button" name="submit-button">Save</button>
+
+        <!-- Data Info and Processing Options Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+            <!-- Data Info Card -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <div class="mb-4">
+                    <label for="type" class="block text-sm font-medium text-gray-700">
+
+                        Time Series Type
+                    </label>
+                    <input type="text" id="type" name="type" value="{{ $type }}" readonly
+                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div class="mb-4">
+                    <label for="freq" class="block text-sm font-medium text-gray-700">
+
+                        Frequency
+                    </label>
+                    <input type="text" id="freq" name="freq" value="{{ $freq }}" readonly
+                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div class="mb-4">
+                    <label for="description" class="block text-sm font-medium text-gray-700">
+
+                        Description
+                    </label>
+                    <textarea id="description" name="description" rows="5"
+                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ $description }}</textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="filename" class="block text-sm font-medium text-gray-700">
+
+                        Filename
+                    </label>
+                    <input type="text" id="filename" name="filename" value="{{ $filename }}"
+                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+            </div>
+
+
+            <!-- Processing Options Card -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <form id="processing-form">
+                    <fieldset>
+                        <legend class="text-sm font-medium text-gray-700 mb-4">Fill Missing Value (NaN) with:</legend>
+
+                        <div class="mb-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="fill-method" value="forward"
+                                    class="text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                <span class="ml-2">Forward Fill</span>
+                            </label>
+                        </div>
+                        <div class="mb-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="fill-method" value="backward"
+                                    class="text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                <span class="ml-2">Backward Fill</span>
+                            </label>
+                        </div>
+                        <div class="mb-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="fill-method" value="average"
+                                    class="text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                <span class="ml-2">Average of the series</span>
+                            </label>
+                        </div>
+                        <div class="mb-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="fill-method" value="zero"
+                                    class="text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                <span class="ml-2">Fill with zeros</span>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <!-- Save Button -->
+                    <div class="mt-6">
+                        <button type="button" id="submit-button" name="submit-button"
+                            class="w-full inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+@endsection
 
 
-
-
+@section('scripts')
     <script>
         $(document).ready(function() {
             const data = @json($data);
@@ -73,26 +129,7 @@
                 return formattedDate;
             }
 
-            // function convertDate(inputDate) {
-            //     const parseFormat = 'dd/MM/yyyy';
-            //     const outputFormat = 'MM/dd/yyyy';
-            //     let formattedDate;
-
-            //     try {
-            //         const parsedDate = new Date(inputDate);
-            //         const formattedDate = dateFns.parse(parsedDate, outputFormat);
-            //         console.log('first');
-            //     } catch (error) {
-            //         const parsedDate = dateFns.parse(inputDate, parseFormat, new Date());
-
-            //         // Formatting the date
-            //         formattedDate = dateFns.format(parsedDate, outputFormat);
-            //         console.log('second');
-            //     }
-            //     return formattedDate;
-            // }
-
-            const chartCanvas = document.getElementById('chart');
+            const chart = document.getElementById('chart');
 
             // Ensure that data is valid
             if (data && data.length > 0 && headers.length > 1) {
@@ -100,7 +137,6 @@
                 // const dates = originalData.map(row => new Date(row[0]));
                 // const dates = originalData.map(row => row[0]);
                 const dates = originalData.map(row => convertDate(row[0]));
-
 
                 console.log(dates);
                 const label = headers[1];
@@ -110,9 +146,6 @@
             } else {
                 console.error('Invalid data or headers');
             }
-
-
-
 
             function showChart(label, dates, values) {
                 // Destroy existing chart if it exists
@@ -150,6 +183,22 @@
                     yaxis: {
                         title: {
                             text: label
+                        },
+                        labels: {
+                            formatter: function(value) {
+                                // Check if the value is a valid number before applying toFixed
+                                return isNaN(value) ? value : value.toFixed(
+                                    2); // Safely format only valid numeric values
+                            }
+                        },
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function(value) {
+                                // Check if the value is a valid number before applying toFixed
+                                return isNaN(value) ? value : value.toFixed(
+                                    2); // Safely format only valid numeric values
+                            }
                         }
                     },
                     stroke: {
@@ -211,9 +260,6 @@
             }
 
 
-
-
-
             function generateCSV(data) {
                 let csvContent = "Date,Value\n"; // Header
                 data.forEach(row => {
@@ -238,8 +284,10 @@
                 //extract the additional data from the controller. 
                 const type = @json($type);
                 const freq = @json($freq);
-                const description = @json($description);
-                const filename = @json($filename);
+                // const description = @json($description);
+                // const filename = @json($filename);
+                const description = $('#description').val();
+                const filename = $('#filename').val();
 
 
 
@@ -289,6 +337,4 @@
 
         });
     </script>
-</body>
-
-</html>
+@endsection

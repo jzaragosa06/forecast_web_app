@@ -7,10 +7,39 @@
 
     <title>@yield('title')</title>
 
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: "default", // You can change the theme
+            themeVariables: {
+                primaryColor: '#ffcc00',
+                edgeLabelBackground: '#ffffff'
+            },
+            flowchart: {
+                useMaxWidth: false, // Allow scaling
+            },
+        });
+    </script>
+
+    <style>
+        .mermaid {
+            transform: scale(0.8);
+            /* Adjust scale here */
+            transform-origin: top left;
+            /* Make scaling behave properly */
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Tailwind Icons (Heroicons) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Date-FNS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@latest"></script>
+
     <!-- CSRF token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Jquery CDN -->
@@ -30,12 +59,7 @@
     <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
 
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({
-            startOnLoad: true
-        });
-    </script>
+
 
 </head>
 
