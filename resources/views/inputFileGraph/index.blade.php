@@ -43,6 +43,9 @@
                 chart: {
                     type: 'line',
                     height: 300,
+                    toolbar: {
+                        show: false,
+                    }
                 },
                 series: [
                     @for ($i = 1; $i < count($timeSeriesData['header']); $i++)

@@ -132,7 +132,10 @@
                 const options = {
                     chart: {
                         type: 'line',
-                        height: 350
+                        height: 350,
+                        toolbar: {
+                            show: false,
+                        }
                     },
                     series: [{
                         name: label,
