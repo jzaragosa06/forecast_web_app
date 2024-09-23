@@ -138,7 +138,6 @@
                 // Highlight the clicked button
                 button.classList.add('bg-indigo-500', 'text-white');
 
-
                 // Display the chart and fill method for the clicked variable
                 const index = button.getAttribute('data-index');
                 showVariableData(index);

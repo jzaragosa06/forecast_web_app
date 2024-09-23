@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InputFileGraphController;
+use App\Http\Controllers\LLMController;
 use App\Http\Controllers\ManageOperationsController;
 use App\Http\Controllers\ManageResultsUsingCRUDController;
 use App\Http\Controllers\ManageShowResultsController;
@@ -44,6 +45,9 @@ Route::post('/profile/update/photo', [ProfileController::class, 'update_photo'])
 
 Route::get('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.get');
 Route::post('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.post');
+Route::post('/llm/ask', [LLMController::class, 'ask'])->name('llm.ask');
+
+
 
 Route::get('/test_base', function () {
     return view('test_base');
