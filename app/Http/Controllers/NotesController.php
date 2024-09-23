@@ -12,7 +12,7 @@ class NotesController extends Controller
         $formattedContent = $request->get('notesContent');
         $file_assoc_id = $request->get('file_assoc_id');
 
-        $note = Note::where('file_assoc_id', $file_assoc_id)->firstOrFail();
+        $note = Note::where('file_assoc_id', $file_assoc_id)->first();
 
         if ($note) {
             $note->update([
@@ -27,8 +27,6 @@ class NotesController extends Controller
             ]);
 
             return response()->json(['message' => 'Note saved successfully!']);
-
-
 
         }
 
