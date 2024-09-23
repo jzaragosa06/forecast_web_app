@@ -59,6 +59,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Note;
 use Illuminate\Http\Request;
 use Auth;
 use Storage;
@@ -90,9 +91,10 @@ class ManageShowResultsController extends Controller
         // Handle different operations and file types
         if ($operation == "forecast") {
             if ($inputFileType == "univariate") {
-                return view('results.forecast_uni', ['data' => $jsonData]);
+                $note = Note::where('file_assoc_id', $file_assoc_id)->firstOrFail();
+                return view('results.forecast_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note]);
             } else {
-                return view('results.forecast_multi', ['data' => $jsonData]);
+                return view('results.forecast_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id]);
             }
         } elseif ($operation == "trend") {
             if ($inputFileType == "univariate") {

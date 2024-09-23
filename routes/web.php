@@ -6,6 +6,7 @@ use App\Http\Controllers\LLMController;
 use App\Http\Controllers\ManageOperationsController;
 use App\Http\Controllers\ManageResultsUsingCRUDController;
 use App\Http\Controllers\ManageShowResultsController;
+use App\Http\Controllers\NotesController;
 use App\Http\Controllers\PreprocessInputFileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaveInputController;
@@ -46,7 +47,7 @@ Route::post('/profile/update/photo', [ProfileController::class, 'update_photo'])
 Route::get('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.get');
 Route::post('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.post');
 Route::post('/llm/ask', [LLMController::class, 'ask'])->name('llm.ask');
-
+Route::post('/notes/save', [NotesController::class, 'save'])->name('notes.save');
 
 
 Route::get('/test_base', function () {
