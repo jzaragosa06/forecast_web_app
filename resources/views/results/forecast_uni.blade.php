@@ -1,8 +1,3 @@
-
-
-
-
-
 @extends('layouts.base')
 
 @section('title', 'Univariate Forecast')
@@ -72,7 +67,7 @@
         </div>
 
 
-       
+
 
         <div id="chatContainer" class="hidden mt-6">
             <div class="flex flex-wrap">
@@ -226,8 +221,6 @@
                 quill.root.innerHTML = `{!! $note->content !!}`;
             @endif
 
-            // Load previously stored content (if any)
-            quill.root.innerHTML = `{!! $note->content !!}`;
 
             // Save Notes button click event
             $('#saveNotes').click(function() {

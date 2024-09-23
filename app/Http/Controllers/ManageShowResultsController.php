@@ -87,27 +87,26 @@ class ManageShowResultsController extends Controller
         // Access the associated file content
         $json = Storage::get($file_assoc->associated_file_path);
         $jsonData = json_decode($json, true);
+        $note = Note::where('file_assoc_id', $file_assoc_id)->first();
 
         // Handle different operations and file types
         if ($operation == "forecast") {
             if ($inputFileType == "univariate") {
-                $note = Note::where('file_assoc_id', $file_assoc_id)->first();
                 return view('results.forecast_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note]);
             } else {
-                $note = Note::where('file_assoc_id', $file_assoc_id)->first();
                 return view('results.forecast_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note]);
             }
         } elseif ($operation == "trend") {
             if ($inputFileType == "univariate") {
-                return view('results.trend_uni', ['data' => $jsonData]);
+                return view('results.trend_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note]);
             } else {
-                return view('results.trend_multi', ['data' => $jsonData]);
+                return view('results.trend_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note]);
             }
         } else {
             if ($inputFileType == "univariate") {
-                return view('results.seasonality_uni', ['data' => $jsonData]);
+                return view('results.seasonality_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note]);
             } else {
-                return view('results.seasonality_multi', ['data' => $jsonData]);
+                return view('results.seasonality_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note]);
             }
         }
     }
