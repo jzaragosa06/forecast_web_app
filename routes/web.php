@@ -81,13 +81,7 @@ Route::get('/carousel', function () {
     return view('carousel');
 });
 
-
-
-
-
-
-
-
-
-
+Route::get('/alignment', function () {
+    return view('alignement');
+});
 
