@@ -6,7 +6,7 @@
 
 
 @section('content')
-    <div>
+    {{-- <div>
         <div class="container mx-auto p-4">
             <div class="flex space-x-4">
                 <div class="w-full md:w-1/3">
@@ -75,7 +75,6 @@
         </div>
         <hr class="my-4">
 
-        {{-- we're going to iterate through files by using index instead of loop. --}}
         <div class="container mx-auto p-4">
             <h5 class="text-xl font-semibold mb-4">List of Input Time Series Data</h5>
             <!-- Loop through the time series data -->
@@ -100,7 +99,109 @@
                 </div>
             @endforeach
         </div>
+    </div> --}}
+
+    <div>
+        <div class="container mx-auto p-4">
+            <div class="flex space-x-4">
+                <div class="w-full md:w-1/3">
+                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
+                        <h4 class="text-lg font-semibold mb-4">Analyze</h4>
+                        <form action="{{ route('manage.operations') }}" method="post" class="flex-grow">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="file_id" class="block text-sm font-medium mb-1">Select File</label>
+                                <select name="file_id" id="file_id"
+                                    class="form-select block w-full border-gray-300 rounded-md shadow-sm">
+                                    @foreach (Auth::user()->files as $file)
+                                        <option value="{{ $file->file_id }}">{{ $file->filename }}</option>
+                                    @endforeach
+                                    <option value="" id="add-more-from-option">Add more data +</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="operation" class="block text-sm font-medium mb-1">Select Operation</label>
+                                <select name="operation" id="operation"
+                                    class="form-select block w-full border-gray-300 rounded-md shadow-sm">
+                                    <option value="trend">Trend</option>
+                                    <option value="seasonality">Seasonality</option>
+                                    <option value="forecast">Forecast</option>
+                                </select>
+                            </div>
+
+                            <button type="submit"
+                                class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">Analyze</button>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="w-full md:w-1/3">
+                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
+                        <h4 class="text-lg font-semibold mb-4">Add Data</h4>
+                        <div class="flex-grow">
+                            <button type="button" id="ts-info"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md mb-2 hover:bg-blue-700"
+                                data-toggle="modal" data-target="#ts-info-form">
+                                Add More data via upload
+                            </button>
+                            <button type="button" id="ts-add-via-api-open-meteo-btn"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" data-toggle="modal"
+                                data-target="#ts-add-via-api-open-meteo-modal">
+                                Add data from Open-Meteo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="w-full md:w-1/3">
+                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
+                        <h4 class="text-lg font-semibold mb-4">Recent Results</h4>
+                        <div class="flex-grow">
+                            <ul class="list-disc pl-5">
+                                @foreach ($file_assocs as $file_assoc)
+                                    <li class="mb-2">
+                                        <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
+                                            class="text-blue-600 hover:underline">
+                                            <p>{{ $file_assoc->assoc_filename }}</p>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4">
+
+        <div class="container mx-auto p-4">
+            <h5 class="text-xl font-semibold mb-4">List of Input Time Series Data</h5>
+            @foreach ($timeSeriesData as $index => $fileData)
+                <div class="bg-white border rounded-lg shadow-md mb-4">
+                    <div class="p-4">
+                        <div class="flex">
+                            <div class="w-full lg:w-1/3">
+                                <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
+                                <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
+                                <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
+                                <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
+                            </div>
+                            <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
+                                <div class="graph-container mt-4" style="height: 300px;">
+                                    <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
+
 
     <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="ts-info-form"
         style="display:none;">

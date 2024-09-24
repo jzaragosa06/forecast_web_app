@@ -7,6 +7,13 @@
 
     <title>@yield('DataForesight')</title>
 
+    <!-- Include Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+
+    <!-- Include Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({
@@ -31,6 +38,10 @@
             max-width: 100%;
             max-height: 100%;
         }
+
+        /* .carousel {
+            transition: transform 0.5s ease;
+        } */
     </style>
     <!-- Quill CSS and JS CDN -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">

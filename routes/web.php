@@ -77,6 +77,13 @@ Route::get('/flowchart', function () {
 });
 
 
+Route::get('/carousel', function () {
+    return view('carousel');
+});
+
+
+
+
 
 
 
