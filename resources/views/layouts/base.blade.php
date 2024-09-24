@@ -39,9 +39,9 @@
             max-height: 100%;
         }
 
-        /* .carousel {
+        .carousel {
             transition: transform 0.5s ease;
-        } */
+        }
     </style>
     <!-- Quill CSS and JS CDN -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
@@ -129,7 +129,9 @@
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 p-6">
+        {{-- <div class="flex-1 p-6"> --}}
+        <div class="flex-1 flex flex-col">
+
             <!-- Navbar -->
             <div class="flex justify-between items-center bg-white shadow p-4 rounded-lg">
                 <!-- Title -->
@@ -172,11 +174,19 @@
                 </div>
             </div>
 
-            <div class="mt-6 bg-white border border-gray-200 rounded-lg flex items-center justify-center p-6">
+            {{-- <div class="mt-6 bg-white border border-gray-200 rounded-lg flex items-center justify-center p-6">
+                @yield('content')
+            </div> --}}
+
+            <div class="mt-6 bg-white border border-gray-200 rounded-lg flex-1 overflow-y-auto p-6">
                 @yield('content')
             </div>
+
+
         </div>
     </div>
+
+
 
     <!-- FontAwesome Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
