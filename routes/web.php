@@ -47,6 +47,8 @@ Route::post('/profile/update/photo', [ProfileController::class, 'update_photo'])
 Route::get('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.get');
 Route::post('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.post');
 Route::post('/llm/ask', [LLMController::class, 'ask'])->name('llm.ask');
+Route::post('/llm/save', [LLMController::class, 'save'])->name('llm.save');
+
 Route::post('/notes/save', [NotesController::class, 'save'])->name('notes.save');
 
 
@@ -84,4 +86,5 @@ Route::get('/carousel', function () {
 Route::get('/alignment', function () {
     return view('alignement');
 });
+
 
