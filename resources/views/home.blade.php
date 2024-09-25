@@ -6,8 +6,8 @@
 
 @section('content')
 <div class="container mx-auto p-4">
-    <div class="flex flex-wrap justify-center -mx-4">
-        <div class="w-full md:w-1/3 xl:w-1/4 p-4">
+    <div class="flex flex-wrap justify-center mx-4">
+        <div class="w-full md:w-1/3 xl:w-1/4 p-4 flex-1 flex">
             <div class="border bg-white p-4 rounded-lg shadow-md">
                 <h4 class="text-lg font-semibold mb-4">Analyze</h4>
                 <form action="{{ route('manage.operations') }}" method="post">
@@ -38,7 +38,7 @@
                 </form>
             </div>
         </div>
-        <div class="w-full md:w-1/3 xl:w-1/4 p-4">
+        <div class="w-full md:w-1/3 xl:w-1/4 p-4 flex-1 flex">
             <div class="border bg-white p-4 rounded-lg shadow-md">
                 <h4 class="text-lg font-semibold mb-4">Add Data</h4>
                 <button type="button" id="ts-info"
@@ -46,25 +46,41 @@
                     data-target="#ts-info-form">
                     Add More data via upload
                 </button>
+                <i class="fas fa-info-circle text-gray-500 hover:text-gray-900"
+                    title="You can add data from your local device by clicking this button."></i>
                 <button type="button" id="ts-add-via-api-open-meteo-btn"
-                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" data-toggle="modal"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-md mb-2 hover:bg-blue-700" data-toggle="modal"
                     data-target="#ts-add-via-api-open-meteo-modal">
                     Add data from Open-Meteo
                 </button>
+                <i class="fas fa-info-circle text-gray-500 hover:text-gray-900"
+                    title="You can add data from Open-Meteo by clicking this button."></i>
+                <button type="button" id="ts-add-via-api-open-meteo-btn"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" data-toggle="modal"
+                    data-target="#">
+                    Add data from Yahoo Finance
+                </button>
+                <i class="fas fa-info-circle text-gray-500 hover:text-gray-900"
+                    title="You can add data from Yahoo Finance by clicking this button."></i>
             </div>
         </div>
-        <div class="w-full md:w-1/3 xl:w-1/4 p-4">
+        <div class="w-full md:w-2/3 xl:w-3/4 p-4 flex-1 flex-grow recent-result">
             <div class="border bg-white p-4 rounded-lg shadow-md">
                 <h4 class="text-lg font-semibold mb-4">Recent Results</h4>
                 <ul class="list-disc pl-5">
-                    @foreach ($file_assocs as $file_assoc)
-                        <li class="mb-2">
-                            <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
-                                class="text-blue-600 hover:underline">
-                                <p>{{ $file_assoc->assoc_filename }}</p>
-                            </a>
-                        </li>
-                    @endforeach
+
+                    @if(count($file_assocs) > 0)
+                        @foreach ($file_assocs as $file_assoc)
+                            <li class="mb-2">
+                                <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
+                                    class="text-blue-600 hover:underline">
+                                    <p>{{ $file_assoc->assoc_filename }}</p>
+                                </a>
+                            </li>
+                        @endforeach
+                    @else
+                        <p>No results found.</p>
+                    @endif
                 </ul>
             </div>
         </div>
@@ -72,31 +88,47 @@
     <hr class="my-4">
 
     <div class="container mx-auto p-4">
-        <h 5 class="text-xl font-semibold mb-4">List of Input Time Series Data</h5>
-            @foreach ($timeSeriesData as $index => $fileData)
-                <div class="bg-white border rounded-lg shadow-md mb-4">
-                    <div class="p-4">
-                        <div class="flex flex-wrap justify-center -mx-4">
-                            <div class="w-full lg:w-1/3 p-4">
-                                <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
-                                <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
-                                <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
-                                <div class="description-container" style="max-width: 200px; word-wrap: break-word;">
-                                    <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
-                                </div>
-                            </div>
-                            <div class="w-full lg:w-2/3 p-4">
-                                <div class="graph-container mt-4" style="height: 300px;">
-                                    <div id="graph-{{ $index }}" style="height: 100%;"></div>
-                                </div>
-                            </div>
+    <h5 class="text-xl font-semibold mb-4">List of Input Time Series Data</h5>
+    @foreach ($timeSeriesData as $index => $fileData)
+        <div class="bg-white border rounded-lg shadow-md mb-4">
+            <div class="p-4">
+                <div class="flex flex-wrap justify-center -mx-4">
+                    <!-- Left section with filename and details -->
+                    <div class="w-full lg:w-1/3 p-4 relative">
+                        <!-- Dropdown in the top-right corner with margin adjustment -->
+                        <div class="absolute top-0 right-0 mt-2 mr-2">
+                            <select class="bg-gray-200 border border-gray-300 rounded-md py-2 pl-3 pr-10 text-sm">
+                                <option value="">Select</option>
+                                <option value="option1">Option 1</option>
+                                <option value="option2">Option 2</option>
+                                <option value="option3">Option 3</option>
+                                <option value="option4">Option 4</option>
+                            </select>
+                        </div>
+                        <!-- Content inside a single container -->
+                        <h5 class="text-lg font-semibold mb-2 pr-12">{{ $files[$index]->filename }}</h5>
+                        <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
+                        <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
+                        <div class="description-container bg-gray-200 p-2 rounded-md" style="max-width: 200px; word-wrap: break-word;">
+                            <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
+                        </div>
+                    </div>
+                    <!-- Right section with the graph -->
+                    <div class="w-full lg:w-2/3 p-4">
+                        <div class="graph-container mt-4" style="height: 300px;">
+                            <div id="graph-{{ $index }}" style="height: 100%;"></div>
                         </div>
                     </div>
                 </div>
-            @endforeach
-    </div>
+            </div>
+        </div>
+    @endforeach
 </div>
 
+
+</div>
+
+<!-- modals -->
 <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="ts-info-form"
     style="display:none;">
     <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2 xl:w-1/3 max-h-screen overflow-y-auto">
@@ -409,7 +441,7 @@
                 },
                 series: [
                     @for ($i = 1; $i < count($fileData['header']); $i++)
-                                            {
+                                                            {
                                     name: '{{ $fileData['header'][$i] }}',
                                     data: {!! json_encode(
                             array_map(function ($row) use ($i) {
@@ -417,7 +449,7 @@
                             }, $fileData['data']),
                         ) !!},
                                     yaxis: {{ $i - 1 }}
-                                            },
+                                                            },
                     @endfor
                 ],
                 xaxis: {
@@ -427,7 +459,7 @@
 
                 yaxis: [
                     @for ($i = 1; $i < count($fileData['header']); $i++)
-                                    {
+                                            {
                             labels: {
                                 show: false,
                             },
