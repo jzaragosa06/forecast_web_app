@@ -95,6 +95,10 @@
                                 <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
                                 <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
                                 <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
+                                <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
+                                    @csrf
+                                    <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq. Al.</button>
+                                </form>
                             </div>
                             <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
                                 <div class="graph-container mt-4" style="height: 300px;">

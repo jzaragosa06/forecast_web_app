@@ -10,6 +10,7 @@ use App\Http\Controllers\NotesController;
 use App\Http\Controllers\PreprocessInputFileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaveInputController;
+use App\Http\Controllers\TSSeqAlController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,7 +51,7 @@ Route::post('/llm/ask', [LLMController::class, 'ask'])->name('llm.ask');
 Route::post('/llm/save', [LLMController::class, 'save'])->name('llm.save');
 
 Route::post('/notes/save', [NotesController::class, 'save'])->name('notes.save');
-
+Route::post('/ts/seq_al/index/{file_id}', [TSSeqAlController::class, 'index'])->name('seqal.index');
 
 Route::get('/test_base', function () {
     return view('test_base');

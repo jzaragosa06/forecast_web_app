@@ -1,15 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\File;
-use Illuminate\Http\Request;
 use Storage;
 
-class InputFileGraphController extends Controller
+
+use Illuminate\Http\Request;
+
+class TSSeqAlController extends Controller
 {
     public function index($file_id)
     {
+
         $file = File::where('file_id', $file_id)->firstOrFail();
         $filepath = $file->filepath;
         $fileContent = Storage::get($filepath);
@@ -34,7 +36,6 @@ class InputFileGraphController extends Controller
             'header' => $header,
             'data' => $series,
         ];
-
-        return view('inputFileGraph.index', compact('timeSeriesData'));
+        return view('alignment.index', compact('timeSeriesData'));
     }
 }
