@@ -1,154 +1,4 @@
-{{-- 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <title>Seasonality Chart</title>
-</head>
-
-<body>
-    <div class="container">
-        <h4 class="text-center my-4">Multivariate Seasonality Result</h4>
-        <div id="chart-container" class="row">
-            <!-- Dynamic charts for each variable will be inserted here -->
-        </div>
-    </div>
-
-    <script>
-        // Mocked JSON data for demonstration, replace with your dynamic data
-        const jsonData = @json($data);
-        const data = JSON.parse(jsonData);
-
-        // Generate x-axis labels
-        const weeklyLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        const yearlyLabels = Array.from({
-            length: 365
-        }, (_, i) => `Day ${i + 1}`);
-
-        // Reference to the chart container
-        const chartContainer = document.getElementById('chart-container');
-
-        // Function to create chart
-        function createChart(chartDiv, title, labels, seriesData) {
-            const options = {
-                chart: {
-                    type: 'line',
-                    height: 350,
-                    animations: {
-                        enabled: true
-                    }
-                },
-                title: {
-                    text: title,
-                    align: 'center'
-                },
-                xaxis: {
-                    categories: labels
-                },
-                series: seriesData,
-                stroke: {
-                    curve: 'smooth',
-                    width: 1,
-                },
-                markers: {
-                    size: 0
-                },
-                tooltip: {
-                    shared: true,
-                    intersect: false
-                },
-                yaxis: {
-                    title: {
-                        text: 'Value'
-                    }
-                }
-            };
-
-            const chart = new ApexCharts(chartDiv, options);
-            chart.render();
-        }
-
-        // Function to create a Bootstrap card for each variable
-        function createCard(variableName) {
-            const cardDiv = document.createElement('div');
-            cardDiv.classList.add('col-md-12', 'mb-4');
-            cardDiv.innerHTML = `
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">${variableName}</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <!-- Weekly and Yearly charts will be inserted here -->
-                            <div id="${variableName}-weekly-chart" class="col-md-6"></div>
-                            <div id="${variableName}-yearly-chart" class="col-md-6"></div>
-                        </div>
-                    </div>
-                </div>`;
-            return cardDiv;
-        }
-
-        // Process data and create charts for each variable
-        const colnames = data.colnames;
-
-        if (data.seasonality_per_period && colnames) {
-            colnames.forEach(col => {
-                const seasonalityData = data.seasonality_per_period[col];
-                const card = createCard(col);
-                chartContainer.appendChild(card);
-
-                // Create weekly chart if available
-                if (seasonalityData.weekly) {
-                    const weeklyDiv = document.getElementById(`${col}-weekly-chart`);
-                    const weeklySeries = [{
-                            name: 'Value',
-                            data: seasonalityData.weekly.values
-                        },
-                        // {
-                        //     name: 'Lower Bound',
-                        //     data: seasonalityData.weekly.lower
-                        // },
-                        // {
-                        //     name: 'Upper Bound',
-                        //     data: seasonalityData.weekly.upper
-                        // }
-                    ];
-                    createChart(weeklyDiv, `${col} - Weekly Seasonality`, weeklyLabels, weeklySeries);
-                }
-
-                // Create yearly chart if available
-                if (seasonalityData.yearly) {
-                    const yearlyDiv = document.getElementById(`${col}-yearly-chart`);
-                    const yearlySeries = [{
-                            name: 'Value',
-                            data: seasonalityData.yearly.values
-                        },
-                        // {
-                        //     name: 'Lower Bound',
-                        //     data: seasonalityData.yearly.lower
-                        // },
-                        // {
-                        //     name: 'Upper Bound',
-                        //     data: seasonalityData.yearly.upper
-                        // }
-                    ];
-                    createChart(yearlyDiv, `${col} - Yearly Seasonality`, yearlyLabels, yearlySeries);
-                }
-            });
-        }
-    </script>
-
-</body>
-
-</html> --}}
-
-
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -169,21 +19,35 @@
     </div>
 
     <script>
-        // Mocked JSON data for demonstration, replace with your dynamic data
         const jsonData = @json($data);
         const data = JSON.parse(jsonData);
 
-        // Generate x-axis labels
+
+        // Generate x-axis labels for yearly seasonality as dates (Jan 1 to Dec 31 of an arbitrary year)
+        const generateYearlyLabels = () => {
+            const labels = [];
+            const arbitraryYear = 2020; // Arbitrary non-leap year
+            let currentDate = new Date(arbitraryYear, 0, 1); // Start at January 1
+
+            while (currentDate.getFullYear() === arbitraryYear) {
+                // Convert to timestamp for ApexCharts datetime x-axis
+                labels.push(currentDate.getTime());
+                // Increment by 1 day
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            return labels;
+        };
+
         const weeklyLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        const yearlyLabels = Array.from({
-            length: 365
-        }, (_, i) => `Day ${i + 1}`);
+        const yearlyLabels = generateYearlyLabels(); // Use the new function to generate date labels
+
 
         // Reference to the chart container
         const chartContainer = document.getElementById('chart-container');
 
         // Function to create a chart for each variable
-        function createChart(title, labels, seriesData) {
+        function createChart(title, labels, seriesData, isDatetime = false) {
             const chartDiv = document.createElement('div');
             chartDiv.classList.add('col-md-12', 'mb-4'); // Bootstrap styling for spacing
             chartContainer.appendChild(chartDiv);
@@ -201,7 +65,21 @@
                     align: 'center'
                 },
                 xaxis: {
-                    categories: labels
+                    type: isDatetime ? 'datetime' : 'category', // Use 'datetime' for yearly
+                    categories: labels,
+                    labels: {
+                        formatter: function(value, timestamp) {
+                            if (isDatetime) {
+                                // Format the datetime labels to only show month and day
+                                return new Date(timestamp).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric'
+                                });
+                            } else {
+                                return value;
+                            }
+                        }
+                    }
                 },
                 series: seriesData,
                 stroke: {
@@ -242,13 +120,14 @@
                 // Loop through the components (e.g., 'weekly', 'yearly')
                 data.components.forEach(component => {
                     if (seasonalityData[component]) {
-                        let labels, title;
+                        let labels, title, isDatetime = false;
                         if (component === 'weekly') {
                             labels = weeklyLabels;
                             title = `${col} - Weekly Seasonality`;
                         } else if (component === 'yearly') {
                             labels = yearlyLabels;
                             title = `${col} - Yearly Seasonality`;
+                            isDatetime = true;
                         }
 
                         // Prepare series data for ApexCharts
@@ -267,10 +146,187 @@
                         ];
 
                         // Create chart for each component (weekly/yearly)
-                        createChart(title, labels, seriesData);
+                        createChart(title, labels, seriesData, isDatetime);
                     }
                 });
             });
+        }
+    </script>
+
+</body>
+
+</html> --}}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <title>Seasonality Chart</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="chart-container" class="row">
+            <!-- Dynamic charts will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        const jsonData = @json($data);
+        const data = JSON.parse(jsonData);
+
+        // Generate x-axis labels for yearly seasonality as dates (Jan 1 to Dec 31 of an arbitrary year)
+        const generateYearlyLabels = () => {
+            const labels = [];
+            const arbitraryYear = 2020; // Arbitrary non-leap year
+            let currentDate = new Date(arbitraryYear, 0, 1); // Start at January 1
+
+            while (currentDate.getFullYear() === arbitraryYear) {
+                // Convert to timestamp for ApexCharts datetime x-axis
+                labels.push(currentDate.getTime());
+                // Increment by 1 day
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            return labels;
+        };
+
+        const weeklyLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        const yearlyLabels = generateYearlyLabels(); // Use the new function to generate date labels
+
+        // Reference to the chart container
+        const chartContainer = document.getElementById('chart-container');
+
+        // Function to create a combined chart for all variables
+        function createCombinedChart(title, labels, seriesData, isDatetime = false, yaxisOptions) {
+            const chartDiv = document.createElement('div');
+            chartDiv.classList.add('col-md-12', 'mb-4'); // Bootstrap styling for spacing
+            chartContainer.appendChild(chartDiv);
+
+            const options = {
+                chart: {
+                    type: 'line',
+                    height: 400,
+                    animations: {
+                        enabled: true
+                    }
+                },
+                title: {
+                    text: title,
+                    align: 'left'
+                },
+                xaxis: {
+                    type: isDatetime ? 'datetime' : 'category', // Use 'datetime' for yearly
+                    categories: labels,
+                    labels: {
+                        formatter: function(value, timestamp) {
+                            if (isDatetime) {
+                                // Format the datetime labels to only show month and day
+                                return new Date(timestamp).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric'
+                                });
+                            } else {
+                                return value;
+                            }
+                        }
+                    }
+                },
+                series: seriesData,
+                stroke: {
+                    curve: 'smooth',
+                    width: 2,
+                },
+                markers: {
+                    size: 0
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false
+                },
+                yaxis: yaxisOptions // Multiple y-axes for each variable
+            };
+
+            const chart = new ApexCharts(chartDiv, options);
+            chart.render();
+        }
+
+        // Combine all variables for yearly or weekly charts into one graph with different y-axis scales
+        const colnames = data.colnames;
+
+        if (data.seasonality_per_period && colnames.length) {
+            // Prepare data for combined yearly seasonality chart
+            let yearlySeries = [];
+            let yearlyYaxis = [];
+
+            let weeklySeries = [];
+            let weeklyYaxis = [];
+
+
+            colnames.forEach((col, index) => {
+                const seasonalityData = data.seasonality_per_period[col];
+
+                // Prepare series for yearly seasonality
+                if (seasonalityData['yearly']) {
+                    yearlySeries.push({
+                        name: col,
+                        data: seasonalityData['yearly'].values
+                    });
+
+                    // Add y-axis configuration for this variable
+                    yearlyYaxis.push({
+                        seriesName: col,
+                        title: {
+                            text: col
+                        },
+                        labels: {
+                            show: true,
+                            formatter: function(value) {
+                                return isNaN(value) ? value : value.toFixed(2);
+                            }
+                        },
+                    });
+                }
+
+                // Prepare series for weekly seasonality
+                if (seasonalityData['weekly']) {
+                    weeklySeries.push({
+                        name: col,
+                        data: seasonalityData['weekly'].values
+                    });
+
+                    // Add y-axis configuration for this variable
+                    weeklyYaxis.push({
+                        seriesName: col,
+                        title: {
+                            text: col
+                        },
+                        labels: {
+                            show: true,
+                            formatter: function(value) {
+                                return isNaN(value) ? value : value.toFixed(2);
+                            }
+                        },
+                    });
+                }
+            });
+
+            // Create combined chart for yearly seasonality
+            if (yearlySeries.length > 0) {
+                createCombinedChart('Combined Yearly Seasonality', yearlyLabels, yearlySeries, true, yearlyYaxis);
+            }
+
+            // Create combined chart for weekly seasonality
+            if (weeklySeries.length > 0) {
+                createCombinedChart('Combined Weekly Seasonality', weeklyLabels, weeklySeries, false, weeklyYaxis);
+            }
         }
     </script>
 
