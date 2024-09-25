@@ -302,7 +302,7 @@
                 series: seriesData,
                 stroke: {
                     curve: 'smooth',
-                    width: 1,
+                    width: 2,
                 },
                 markers: {
                     size: 0

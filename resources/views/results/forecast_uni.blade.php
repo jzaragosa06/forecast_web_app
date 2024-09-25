@@ -490,7 +490,7 @@
                 },
                 stroke: {
                     curve: 'smooth',
-                    width: 1,
+                    width: 2,
                 },
 
             };
@@ -556,7 +556,7 @@
                 },
                 stroke: {
                     curve: 'smooth',
-                    width: 1,
+                    width: 2,
                 },
 
             };
