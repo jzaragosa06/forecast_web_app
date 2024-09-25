@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>@yield('DataForesight')</title>
 
     <script type="module">
@@ -25,9 +24,7 @@
     <style>
         .mermaid {
             transform: scale(0.8);
-            /* Adjust scale here */
             transform-origin: top left;
-            /* Make scaling behave properly */
             max-width: 100%;
             max-height: 100%;
         }
@@ -43,12 +40,10 @@
     <!-- CSRF token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Jquery CDN -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <!-- Google Maps -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHELiMiSckEBBGpn5KaM9TZVlYGevcKTg&libraries=places">
-    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHELiMiSckEBBGpn5KaM9TZVlYGevcKTg&libraries=places"></script>
     <!-- Apexchart CDN -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- Include Alpine.js CDN -->
@@ -58,48 +53,39 @@
 
     <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
-
-
-
 </head>
 
 <body class="bg-gray-100">
 
-    <div class="flex h-screen">
+    <div class="flex">
         <!-- Sidebar -->
-        <div class="w-20 bg-white border-r flex flex-col items-center py-6">
+        <div class="w-20 bg-white border-r h-screen fixed top-0 left-0 flex flex-col items-center py-6">
             <!-- Logo -->
             <div class="text-indigo-500 text-3xl font-bold mb-8">TS</div>
 
             <!-- Sidebar Icons -->
             <nav class="flex flex-col space-y-8">
                 <div class="relative group">
-                    <a href="{{ route('home') }}"
-                        class="{{ request()->routeIs('home') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
+                    <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
                         <i class="fas fa-tachometer-alt text-xl"></i>
                     </a>
-                    <span
-                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <span class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         Dashboard
                     </span>
                 </div>
                 <div class="relative group">
-                    <a href="{{ route('crud.index') }}"
-                        class="{{ request()->routeIs('crud.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
+                    <a href="{{ route('crud.index') }}" class="{{ request()->routeIs('crud.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
                         <i class="fas fa-tasks text-xl"></i>
                     </a>
-                    <span
-                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <span class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         Manage Results
                     </span>
                 </div>
                 <div class="relative group">
-                    <a href="{{ route('profile.index') }}"
-                        class="{{ request()->routeIs('profile.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
+                    <a href="{{ route('profile.index') }}" class="{{ request()->routeIs('profile.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
                         <i class="fas fa-user-circle text-xl"></i>
                     </a>
-                    <span
-                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <span class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         Profile
                     </span>
                 </div>
@@ -114,7 +100,7 @@
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 p-6">
+        <div class="ml-20 flex-1 overflow-y-auto h-screen p-6">
             <!-- Navbar -->
             <div class="flex justify-between items-center bg-white shadow p-4 rounded-lg">
                 <!-- Title -->
@@ -122,8 +108,7 @@
 
                 <!-- Search Bar -->
                 <div class="relative w-1/3">
-                    <input type="text" placeholder="Search"
-                        class="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring focus:ring-indigo-200">
+                    <input type="text" placeholder="Search" class="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring focus:ring-indigo-200">
                 </div>
 
                 <!-- Notification and Profile -->
@@ -138,15 +123,11 @@
 
                     <!-- Profile Icon with Dropdown -->
                     <div class="relative">
-                        <button id="profileDropdownButton"
-                            class="flex items-center text-gray-600 hover:text-indigo-500 focus:outline-none">
+                        <button id="profileDropdownButton" class="flex items-center text-gray-600 hover:text-indigo-500 focus:outline-none">
                             <i class="fas fa-user-circle text-xl"></i>
                         </button>
-                        <div id="profileDropdown"
-                            class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
-                            <a class="block px-4 py-2 text-gray-800 hover:bg-gray-100" href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                document.getElementById('logout-form').submit();">
+                        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
+                            <a class="block px-4 py-2 text-gray-800 hover:bg-gray-100" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -175,8 +156,7 @@
         // Close dropdown if clicked outside
         window.addEventListener('click', function(e) {
             const dropdown = document.getElementById('profileDropdown');
-            if (!document.getElementById('profileDropdownButton').contains(e.target) && !dropdown.contains(e
-                    .target)) {
+            if (!document.getElementById('profileDropdownButton').contains(e.target) && !dropdown.contains(e.target)) {
                 dropdown.classList.add('hidden');
             }
         });
