@@ -681,7 +681,19 @@
             });
 
 
+            function convertDate(inputDate) {
+                // Parse the input date string into a Date object
+                const parsedDate = new Date(inputDate);
+
+                // Format the date as MM/dd/yyyy (full year format)
+                const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
+                return formattedDate;
+            }
+
+
             function generateCSV(data, selectedVariables) {
+
+
                 // Extract time array from the response
                 const timeArray = data.daily.time;
 
@@ -691,11 +703,22 @@
                 // Loop through each day (time array)
                 for (let i = 0; i < timeArray.length; i++) {
                     // Start each row with the time (date)
-                    let row = [timeArray[i]];
+                    // let row = [timeArray[i]];
+                    let row = [convertDate(timeArray[i])];
 
                     // For each selected variable, add the corresponding value to the row
                     selectedVariables.forEach(variable => {
+
+                        // if (typeof data.daily[variable][i] === "string") {
+                        //     row.push(convertDate(data.daily[variable][i]));
+                        //     alert('its a date string');
+                        // } else {
+                        //     row.push(data.daily[variable][i]);
+
+                        // }
                         row.push(data.daily[variable][i]);
+
+
                     });
 
                     // Add the row to CSV content
