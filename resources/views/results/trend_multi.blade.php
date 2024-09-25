@@ -27,6 +27,9 @@
                             <h2 class="font-semibold text-gray-700">Chat with AI</h2>
                             <div id="chatMessages" class="h-64 bg-gray-100 p-4 rounded overflow-y-auto">
                                 <!-- Chat messages go here -->
+                                @if ($history)
+                                    {!! $history->history !!}
+                                @endif
                             </div>
                         </div>
 
@@ -134,7 +137,30 @@
             });
         });
 
+        // ---------------------------------------
+        function saveChatHistory() {
+            let chatHistory = $('#chatMessages').html(); // Get the entire chat HTML
 
+            // Send updated chat history to Laravel
+            $.ajax({
+                url: '{{ route('llm.save') }}', // Laravel route for saving chat history
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token
+                },
+                data: {
+                    history: chatHistory, // Send the entire chat HTML as history
+                    file_assoc_id: '{{ $file_assoc_id }}',
+                },
+                success: function(response) {
+                    console.log("Chat history saved.");
+                },
+                error: function(error) {
+                    console.log("Error saving chat history:", error);
+                }
+            });
+        }
+        // ------------------------------------
 
         // ------------------------------------
 
@@ -190,6 +216,7 @@
 
                         // Scroll to the bottom of the chat
                         $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
+                        saveChatHistory();
                     },
                     error: function(error) {
                         alert("An error occurred. Please try again.");
