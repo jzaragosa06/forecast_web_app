@@ -298,6 +298,8 @@
             const csvRows = [];
             csvRows.push(headers.join(','));
             for (const row of data) {
+                // convert to desired format
+                row[0] = convertDate(row[0]);
                 csvRows.push(row.join(','));
             }
             return csvRows.join('\n');

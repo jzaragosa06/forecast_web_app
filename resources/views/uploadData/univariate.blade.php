@@ -138,6 +138,7 @@
                 // const dates = originalData.map(row => row[0]);
                 const dates = originalData.map(row => convertDate(row[0]));
 
+
                 console.log(dates);
                 const label = headers[1];
 
@@ -263,7 +264,7 @@
             function generateCSV(data) {
                 let csvContent = "Date,Value\n"; // Header
                 data.forEach(row => {
-                    csvContent += `${row[0]},${row[1]}\n`; // Correct interpolation
+                    csvContent += `${convertDate(row[0])},${row[1]}\n`; // Correct interpolation
                 });
                 return csvContent;
             }
@@ -278,8 +279,11 @@
 
 
             document.getElementById('submit-button').addEventListener('click', () => {
+                alert(tempData);
                 const csvData = generateCSV(tempData);
-                console.log('content of the csv data: ', csvData);
+
+
+                console.log('content of the csv data: look for the format', csvData);
 
                 //extract the additional data from the controller. 
                 const type = @json($type);
