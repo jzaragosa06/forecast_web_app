@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name', 'DataForesight') }}</title>
+    <title>{{ config('app.name', 'TagSalamisim') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes fade-in {
@@ -35,7 +35,7 @@
                     href="{{ url('/') }}">
                     <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-10 w-10">
                     <!-- Adjust the size as needed -->
-                    <span>{{ config('app.name', 'DataForesight') }}</span>
+                    <span>{{ config('app.name', 'TagSalamisim') }}</span>
                 </a>
                 <div class="flex md:order-2 space-x-3">
                     {{-- Show "Get Started" only on the landing page --}}

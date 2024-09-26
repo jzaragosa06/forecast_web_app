@@ -380,20 +380,13 @@
 
             // =======================================================================================
 
-            // Open modals
-            // $('#ts-info').click(function() {
-            //     $('#ts-info-form').css('display', 'flex');
-            //     $('#ts-info-form').css();
 
-            // });
             $('#ts-info').click(function() {
                 $('#ts-info-form').removeClass('hidden').hide().fadeIn(200);
                 $('#ts-info-form > div').removeClass('scale-95').addClass('scale-100');
             });
 
-            // $('#ts-add-via-api-open-meteo-btn').click(function() {
-            //     $('#ts-add-via-api-open-meteo-modal').css('display', 'flex');
-            // });
+
 
 
             $('#ts-add-via-api-open-meteo-btn').click(function() {

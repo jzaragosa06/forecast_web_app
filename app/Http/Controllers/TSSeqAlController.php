@@ -42,10 +42,6 @@ class TSSeqAlController extends Controller
         return view('alignment.index', compact('timeSeriesData'));
     }
 
-
-
-
-
     public function save_preprocess_fillna_seqal(Request $request)
     {
         // Log the incoming request to see if all data is present
@@ -64,29 +60,38 @@ class TSSeqAlController extends Controller
         \Log::info('Headers: ' . print_r($headers, true));
         \Log::info('Data: ' . print_r($data, true));
 
-        // Ensure the route exists and that the method matches the expected behavior
-        if (!route('seqal.to_graph')) {
-            \Log::error('Route  not found.');
-        }
+        // return view('uploadData.multivariate', data: compact(var_name: var_name: 'data', 'headers', 'type', 'freq', 'description', 'filename'));
 
         return response()->json([
-            'redirect_url' => route('seqal.to_graph', compact('data', 'headers', 'type', 'freq', 'description', 'filename'))
+            'redirect_url' => route('seqal.multi', [
+                'file_id' => $file_id,
+                'type' => $type,
+                'freq' => $freq,
+                'filename' => $filename,
+                'description' => $description,
+                'headers' => $headers,
+                'data' => $data
+            ])
         ]);
     }
 
-    public function to_multi_preprocess(Request $request)
+
+    public function showMultivariateData(Request $request)
     {
-        $file_id = $request->get('file_id');
+        // Extract all the required data from the request (coming from the redirect URL)
+        $data = $request->get('data');
+        $headers = $request->get('headers');
         $type = $request->get('type');
         $freq = $request->get('freq');
-        $filename = $request->get('filename');
         $description = $request->get('description');
-        $headers = $request->get('headers');
-        $data = $request->get('data');
+        $filename = $request->get('filename');
 
-        return view('uploadData.univariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
 
+        return view('uploadData.multivariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
     }
+
+
+
 
 
 }

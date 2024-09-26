@@ -53,7 +53,8 @@ Route::post('/llm/save', [LLMController::class, 'save'])->name('llm.save');
 Route::post('/notes/save', [NotesController::class, 'save'])->name('notes.save');
 Route::post('/ts/seq_al/index/{file_id}', [TSSeqAlController::class, 'index'])->name('seqal.index');
 Route::post('/ts/seq_al/save_preprocess_fillna_seqal', [TSSeqAlController::class, 'save_preprocess_fillna_seqal'])->name('seqal.save_preprocess');
-Route::post('/ts/seq_al/to_graph', [TSSeqAlController::class, 'to_multi_preprocess'])->name('seqal.to_graph');
+// Route::post('/ts/seq_al/to_graph', [TSSeqAlController::class, 'to_multi_preprocess'])->name('seqal.to_graph');
+Route::get('/ts/seq_al/multi', [TSSeqAlController::class, 'showMultivariateData'])->name('seqal.multi');
 
 
 Route::get('/test_base', function () {
