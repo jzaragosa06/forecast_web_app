@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChatHistory;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
@@ -33,6 +34,32 @@ class LLMController extends Controller
                 'message' => 'Error communicating with AI server',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function save(Request $request)
+    {
+        $chat_from_req = $request->input('history');
+        $file_assoc_id = $request->get('file_assoc_id');
+
+
+        $history = ChatHistory::where('file_assoc_id', $file_assoc_id)->first();
+
+
+        if ($history) {
+            $history->update(["history" => $chat_from_req]);
+            return response()->json(['status' => 'success', 'message' => 'Chat history updated  successfully.']);
+
+
+        } else {
+            //  create new
+            ChatHistory::create([
+                'file_assoc_id' => $file_assoc_id,
+                'history' => $chat_from_req,
+            ]);
+
+            return response()->json(['status' => 'success', 'message' => 'Chat history saved successfully.']);
+
         }
     }
 }

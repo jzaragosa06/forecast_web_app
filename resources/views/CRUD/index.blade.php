@@ -8,10 +8,9 @@
     <div class="container mx-auto px-4 py-6">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            <!-- Files and Results Tree on the left -->
-            <div class="bg-white rounded-lg shadow p-4 lg:col-span-1">
+            <div class="bg-gray-100 rounded-lg shadow p-6 lg:col-span-1">
                 <h5 class="text-lg font-semibold mb-4">Files and Results Tree</h5>
-                <ul class="space-y-4">
+                <ul class="space-y-6">
                     @php
                         $currentFileId = null;
                     @endphp
@@ -23,23 +22,26 @@
                 </li>
                 @endif
 
-                <li>
+                <li class="p-4 bg-white rounded shadow mb-4">
                     <p class="font-medium">{{ $file->filename }}</p>
                     <span class="text-sm text-gray-500">Associated Results:</span>
-                    <ul class="ml-4 space-y-2">
+                    <ul class="ml-6 space-y-3">
                         @php
                             $currentFileId = $file->file_id;
                         @endphp
                         @endif
 
                         @if ($file->assoc_filename)
-                            <li class="flex items-center justify-between">
-                                <p>{{ $file->assoc_filename }}</p>
+                            <li class="flex items-center justify-between"> <!-- Flex container for alignment -->
+                                <p class="w-3/4">{{ $file->assoc_filename }}</p>
+                                <!-- Set consistent width to align buttons -->
                                 <form action="{{ route('manage.results.post', $file->file_assoc_id) }}" method="post">
                                     @csrf
-                                    <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">View</button>
+                                    <button type="submit"
+                                        class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">View</button>
                                 </form>
                             </li>
+                            <hr>
                         @else
                             <li class="text-gray-500">No associated results found.</li>
                         @endif

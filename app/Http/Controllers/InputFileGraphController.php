@@ -29,6 +29,7 @@ class InputFileGraphController extends Controller
         }
 
         $timeSeriesData = [
+            'file_id' => $file_id,
             'filename' => $file->filename,
             'header' => $header,
             'data' => $series,

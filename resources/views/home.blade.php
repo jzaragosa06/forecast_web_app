@@ -390,20 +390,13 @@
 
         // =======================================================================================
 
-        // Open modals
-        // $('#ts-info').click(function() {
-        //     $('#ts-info-form').css('display', 'flex');
-        //     $('#ts-info-form').css();
 
-        // });
-        $('#ts-info').click(function () {
-            $('#ts-info-form').removeClass('hidden').hide().fadeIn(200);
-            $('#ts-info-form > div').removeClass('scale-95').addClass('scale-100');
-        });
+            $('#ts-info').click(function() {
+                $('#ts-info-form').removeClass('hidden').hide().fadeIn(200);
+                $('#ts-info-form > div').removeClass('scale-95').addClass('scale-100');
+            });
 
-        // $('#ts-add-via-api-open-meteo-btn').click(function() {
-        //     $('#ts-add-via-api-open-meteo-modal').css('display', 'flex');
-        // });
+
 
 
         $('#ts-add-via-api-open-meteo-btn').click(function () {
@@ -488,27 +481,42 @@
         // =======================================================================================
 
 
+            function convertDate(inputDate) {
+                // Parse the input date string into a Date object
+                const parsedDate = new Date(inputDate);
+
+                // Format the date as MM/dd/yyyy (full year format)
+                const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
+                return formattedDate;
+            }
+
+
+            function generateCSV(data, selectedVariables) {
+
+
+                // Extract time array from the response
+                const timeArray = data.daily.time;
 
         // Initialize and show Google Map when "Open Map" button is clicked
         $('#get-from-maps-btn').on('click', function () {
             $('#map').css('display', 'block');
 
-            // Initialize Google Map
-            if (!map) {
-                map = new google.maps.Map(document.getElementById('map'), {
-                    center: {
-                        lat: -34.397,
-                        lng: 150.644
-                    }, // Set default center
-                    zoom: 8
-                });
+                  // Initialize Google Map
+                  if (!map) {
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: {
+                            lat: -34.397,
+                            lng: 150.644
+                        }, // Set default center
+                        zoom: 8
+                    });
 
-                // Add marker on click
-                map.addListener('click', function (e) {
-                    placeMarkerAndPanTo(e.latLng, map);
-                });
-            }
-        });
+                    // Add marker on click
+                    map.addListener('click', function(e) {
+                        placeMarkerAndPanTo(e.latLng, map);
+                    });
+                }
+            });
 
         // Place a marker on map and pan to it
         function placeMarkerAndPanTo(latLng, map) {
@@ -693,6 +701,16 @@
                 alert('Failed to fetch data. Please try again.');
             }
         });
+
+
+            function convertDate(inputDate) {
+                // Parse the input date string into a Date object
+                const parsedDate = new Date(inputDate);
+
+                // Format the date as MM/dd/yyyy (full year format)
+                const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
+                return formattedDate;
+            }
 
 
         function generateCSV(data, selectedVariables) {
