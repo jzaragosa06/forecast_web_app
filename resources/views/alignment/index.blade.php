@@ -300,6 +300,14 @@
             return csvContent;
         }
 
+        function convertDate(inputDate) {
+            // Parse the input date string into a Date object
+            const parsedDate = new Date(inputDate);
+            // Format the date as MM/dd/yyyy (full year format)
+            const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
+            return formattedDate;
+        }
+
 
         $(document).ready(function() {
 
@@ -485,13 +493,7 @@
                 });
 
 
-                function convertDate(inputDate) {
-                    // Parse the input date string into a Date object
-                    const parsedDate = new Date(inputDate);
-                    // Format the date as MM/dd/yyyy (full year format)
-                    const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
-                    return formattedDate;
-                }
+
 
 
                 function generateCSV(data, selectedVariables) {
@@ -583,7 +585,8 @@
                         rows.slice(1).forEach(row => {
                             const values = row.split(',');
                             if (values.length > 1) {
-                                array2.push([values[0], ...values.slice(1).map(Number)]);
+                                array2.push([convertDate(values[0]), ...values.slice(1).map(
+                                    Number)]);
                             }
                         });
 
@@ -602,40 +605,38 @@
 
 
         $(document).ready(function() {
-
-
-
             $('#save-btn').click(function(e) {
                 const csvContent = convertToCSV(combinedArray, headers_array);
 
 
-                console.log(csvContent);
-                // make a temporary variable for header and the data. 
-                csvContent_temp_array = csvContent.split('\n');
-                let headers = csvContent_temp_array[0];
-                let data = csvContent_temp_array.slice(1).join('\n');
+                // Create a FormData object to send the CSV and other data
+                const blob = new Blob([csvContent], {
+                    type: 'text/csv'
+                });
 
-                console.log("header of temp: ", headers);
-                console.log("data: ", data);
+
+                const formData = new FormData();
+                formData.append('csv_file', blob, 'data.csv');
+
+                formData.append('file_id', timeSeriesData['file_id']);
+                formData.append('type', 'multivariate');
+                formData.append('filename', timeSeriesData['filename']);
+                formData.append('freq', timeSeriesData['freq']);
+                formData.append('description', timeSeriesData['description']);
 
 
                 $.ajax({
-                    url: '{{ route('seqal.save_preprocess') }}', // Replace with your actual route
+                    url: '{{ route('seqal.tempsave') }}', // Replace with your actual route
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
                             'content') // Add CSRF token here
                     },
-                    data: {
-                        file_id: timeSeriesData['file_id'],
-                        type: 'multivariate',
-                        filename: timeSeriesData['filename'],
-                        freq: timeSeriesData['freq'],
-                        description: timeSeriesData['description'],
-                        headers: headers,
-                        data: data,
-                    },
+                    data: formData,
+                    processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                    contentType: false, // Let the browser set the content type
                     success: function(response) {
+                        console.log('Data saved successfully:');
                         window.location.href = response.redirect_url;
                     },
                     error: function(error) {

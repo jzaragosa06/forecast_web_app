@@ -57,6 +57,10 @@ Route::post('/ts/seq_al/save_preprocess_fillna_seqal', [TSSeqAlController::class
 Route::get('/ts/seq_al/multi', [TSSeqAlController::class, 'showMultivariateData'])->name('seqal.multi');
 
 
+Route::post('/ts/seq_al/temp/save', [TSSeqAlController::class, 'temporary_save'])->name('seqal.tempsave');
+Route::get('ts/seq_al/preprocess/{id}', [TSSeqAlController::class, 'to_graph_for_preprocessing'])->name('seqal.preprocess');
+
+
 Route::get('/test_base', function () {
     return view('test_base');
 });

@@ -344,8 +344,11 @@
             //extract the additional data from the controller. 
             const type = @json($type);
             const freq = @json($freq);
-            const description = @json($description);
-            const filename = @json($filename);
+            // const description = @json($description);
+            // const filename = @json($filename);
+            const description = $('#description').val();
+            const filename = $('#filename').val();
+
 
 
 

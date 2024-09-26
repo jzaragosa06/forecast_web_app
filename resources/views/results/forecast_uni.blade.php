@@ -19,8 +19,9 @@
             <div class="w-full md:w-1/3 p-4">
                 <div class="bg-white shadow-md rounded-lg p-4 h-full">
                     <div class="mb-4">
-                        <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-                        <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                        <p id="explanation-paragraph-out" class="text-gray-700">Lorem ipsum dolor sit amet, consectetur
+                            adipiscing
+                            elit, sed do
                             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                             quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                     </div>
@@ -131,7 +132,8 @@
                 <div class="w-full md:w-1/3 p-4">
                     <div class="bg-white shadow-md rounded-lg p-4 h-full">
                         <div class="mb-4">
-                            <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                            <p id="explanation-paragraph-test" class="text-gray-700">Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit, sed do
                                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
                                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                         </div>
@@ -400,6 +402,12 @@
         renderChart2();
         // renderForecastTable_out();
         renderForecastTable_test();
+        $(document).ready(function() {
+            $('#explanation-paragraph-out').text(data.forecast.pred_out_explanation);
+            $('#explanation-paragraph-test').text(data.forecast.pred_test_explanation);
+
+
+        });
 
         $('#mae').text(data.forecast.metrics.mae);
         $('#mse').text(data.forecast.metrics.mse);
@@ -412,6 +420,8 @@
         $('#description').text(data.metadata.description);
         $('#steps').text(data.metadata.steps);
         $('#target').text(data.metadata.colname);
+
+
 
 
 
