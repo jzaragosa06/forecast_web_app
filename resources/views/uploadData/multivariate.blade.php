@@ -121,6 +121,8 @@
         let activeIndex = null;
         let chartInstance = null;
 
+        console.log("headers: ", headers);
+
 
 
         // ---------------
@@ -222,7 +224,7 @@
                 },
                 stroke: {
                     curve: 'smooth',
-                    width: 1,
+                    width: 2,
                 }
             };
 

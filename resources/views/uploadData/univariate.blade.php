@@ -203,7 +203,7 @@
                     },
                     stroke: {
                         curve: 'smooth',
-                        width: 1 // Thin line
+                        width: 2 // Thin line
                     },
                 };
 

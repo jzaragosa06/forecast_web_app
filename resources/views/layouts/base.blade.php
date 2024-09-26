@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('DataForesight')</title>
 
+    <!-- Include Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+
+    <!-- Include Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({
@@ -29,11 +36,18 @@
             max-height: 100%;
         }
 
+
         .recent-result {
             overflow-y: auto;
             /* make it scrollable if the content exceeds the maximum height */
+        .carousel {
+            transition: transform 0.5s ease;
         }
     </style>
+    <!-- Quill CSS and JS CDN -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -113,7 +127,12 @@
         </div>
 
         <!-- Main Content -->
-        <div class="ml-20 flex-1 overflow-y-auto h-screen p-6">
+
+         <!-- <div class="ml-20 flex-1 overflow-y-auto h-screen p-6"> -->
+
+        {{-- <div class="flex-1 p-6"> --}}
+        <div class="flex-1 flex flex-col">
+
             <!-- Navbar -->
             <div class="flex justify-between items-center bg-white shadow p-4 rounded-lg">
                 <!-- Title -->
@@ -155,11 +174,19 @@
                 </div>
             </div>
 
-            <div class="mt-6 bg-white border border-gray-200 rounded-lg flex items-center justify-center p-6">
+            {{-- <div class="mt-6 bg-white border border-gray-200 rounded-lg flex items-center justify-center p-6">
+                @yield('content')
+            </div> --}}
+
+            <div class="mt-6 bg-white border border-gray-200 rounded-lg flex-1 overflow-y-auto p-6">
                 @yield('content')
             </div>
+
+
         </div>
     </div>
+
+
 
     <!-- FontAwesome Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>

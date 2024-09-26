@@ -5,12 +5,125 @@
 @section('page-title', 'Dashboard')
 
 @section('content')
-<div class="container mx-auto p-4">
-    <div class="flex flex-wrap justify-center mx-4">
-        <div class="w-full md:w-1/3 xl:w-1/4 p-4 flex-1 flex">
-            <div class="border bg-white p-4 rounded-lg shadow-md">
-                <h4 class="text-lg font-semibold mb-4">Analyze</h4>
-                <form action="{{ route('manage.operations') }}" method="post">
+
+    <div class="container  mx-auto my-6">
+        <div class="container mx-auto p-4">
+            <div class="flex space-x-4">
+                <div class="w-full md:w-1/3">
+                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
+                        <h4 class="text-lg font-semibold mb-4">Analyze</h4>
+                        <form action="{{ route('manage.operations') }}" method="post" class="flex-grow">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="file_id" class="block text-sm font-medium mb-1">Select File</label>
+                                <select name="file_id" id="file_id"
+                                    class="form-select block w-full border-gray-300 rounded-md shadow-sm">
+                                    @foreach (Auth::user()->files as $file)
+                                        <option value="{{ $file->file_id }}">{{ $file->filename }}</option>
+                                    @endforeach
+                                    <option value="" id="add-more-from-option">Add more data +</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="operation" class="block text-sm font-medium mb-1">Select Operation</label>
+                                <select name="operation" id="operation"
+                                    class="form-select block w-full border-gray-300 rounded-md shadow-sm">
+                                    <option value="trend">Trend</option>
+                                    <option value="seasonality">Seasonality</option>
+                                    <option value="forecast">Forecast</option>
+                                </select>
+                            </div>
+
+                            <button type="submit"
+                                class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">Analyze</button>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="w-full md:w-1/3">
+                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
+                        <h4 class="text-lg font-semibold mb-4">Add Data</h4>
+                        <div class="flex-grow">
+                            <button type="button" id="ts-info"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md mb-2 hover:bg-blue-700"
+                                data-toggle="modal" data-target="#ts-info-form">
+                                Add More data via upload
+                            </button>
+                            <button type="button" id="ts-add-via-api-open-meteo-btn"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" data-toggle="modal"
+                                data-target="#ts-add-via-api-open-meteo-modal">
+                                Add data from Open-Meteo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="w-full md:w-1/3">
+                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
+                        <h4 class="text-lg font-semibold mb-4">Recent Results</h4>
+                        <div class="flex-grow">
+                            <ul class="list-disc pl-5">
+                                @foreach ($file_assocs as $file_assoc)
+                                    <li class="mb-2">
+                                        <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
+                                            class="text-blue-600 hover:underline">
+                                            <p>{{ $file_assoc->assoc_filename }}</p>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4">
+
+        <div class="container mx-auto p-4">
+            <h5 class="text-xl font-semibold mb-4">List of Input Time Series Data</h5>
+            @foreach ($timeSeriesData as $index => $fileData)
+                <div class="bg-white border rounded-lg shadow-md mb-4">
+                    <div class="p-4">
+                        <div class="flex">
+                            <div class="w-full lg:w-1/3">
+                                <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
+                                <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
+                                <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
+                                <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
+                                <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
+                                    @csrf
+                                    <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq. Al.</button>
+                                </form>
+                            </div>
+                            <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
+                                <div class="graph-container mt-4" style="height: 300px;">
+                                    <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+
+    <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="ts-info-form"
+        style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Information About the Time Series Data</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal" aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('upload.ts') }}" method="POST" enctype="multipart/form-data">
+
                     @csrf
                     <div class="mb-4">
                         <label for="file_id" class="block text-sm font-medium mb-1">Select File</label>
@@ -380,12 +493,44 @@
 @endsection
 
 @section('scripts')
-<script>
-    $(document).ready(function () {
-        let map;
-        let marker;
-        let lat;
-        let lon;
+    <script>
+        $(document).ready(function() {
+            let map;
+            let marker;
+            let lat;
+            let lon;
+
+
+            // =======================================================================================
+
+
+            $('#ts-info').click(function() {
+                $('#ts-info-form').removeClass('hidden').hide().fadeIn(200);
+                $('#ts-info-form > div').removeClass('scale-95').addClass('scale-100');
+            });
+
+
+
+
+            $('#ts-add-via-api-open-meteo-btn').click(function() {
+                $('#ts-add-via-api-open-meteo-modal').removeClass('hidden').hide().fadeIn(200);
+                $('#ts-add-via-api-open-meteo-modal > div').removeClass('scale-95').addClass('scale-100');
+            });
+
+            // Close modals
+            $('[data-dismiss="modal"]').click(function() {
+                $(this).closest('.fixed').css('display', 'none');
+            });
+
+            // Close modals when clicking outside the modal content
+            $('.fixed').click(function(e) {
+                if ($(e.target).is(this)) {
+                    $(this).fadeOut(200, function() {
+                        $(this).addClass('hidden');
+                    });
+                }
+            });
+            // =======================================================================================
 
 
         // =======================================================================================
@@ -666,6 +811,22 @@
                 }
 
 
+            function convertDate(inputDate) {
+                // Parse the input date string into a Date object
+                const parsedDate = new Date(inputDate);
+
+                // Format the date as MM/dd/yyyy (full year format)
+                const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
+                return formattedDate;
+            }
+
+
+            function generateCSV(data, selectedVariables) {
+
+
+                // Extract time array from the response
+                const timeArray = data.daily.time;
+
 
                 $.ajax({
                     url: '{{ route('save') }}', // URL to your Laravel route
@@ -686,13 +847,19 @@
                     }
                 });
 
-                // ========================================================================================
-            },
-            error: function (xhr, status, error) {
-                console.error('Error fetching data:', error);
-                alert('Failed to fetch data. Please try again.');
-            }
-        });
+                // Loop through each day (time array)
+                for (let i = 0; i < timeArray.length; i++) {
+                    // Start each row with the time (date)
+                    // let row = [timeArray[i]];
+                    let row = [convertDate(timeArray[i])];
+
+                    // For each selected variable, add the corresponding value to the row
+                    selectedVariables.forEach(variable => {
+
+                        row.push(data.daily[variable][i]);
+
+
+                    });
 
 
         function generateCSV(data, selectedVariables) {

@@ -6,9 +6,11 @@ use App\Http\Controllers\LLMController;
 use App\Http\Controllers\ManageOperationsController;
 use App\Http\Controllers\ManageResultsUsingCRUDController;
 use App\Http\Controllers\ManageShowResultsController;
+use App\Http\Controllers\NotesController;
 use App\Http\Controllers\PreprocessInputFileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaveInputController;
+use App\Http\Controllers\TSSeqAlController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,7 +48,13 @@ Route::post('/profile/update/photo', [ProfileController::class, 'update_photo'])
 Route::get('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.get');
 Route::post('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.post');
 Route::post('/llm/ask', [LLMController::class, 'ask'])->name('llm.ask');
+Route::post('/llm/save', [LLMController::class, 'save'])->name('llm.save');
 
+Route::post('/notes/save', [NotesController::class, 'save'])->name('notes.save');
+Route::post('/ts/seq_al/index/{file_id}', [TSSeqAlController::class, 'index'])->name('seqal.index');
+Route::post('/ts/seq_al/save_preprocess_fillna_seqal', [TSSeqAlController::class, 'save_preprocess_fillna_seqal'])->name('seqal.save_preprocess');
+// Route::post('/ts/seq_al/to_graph', [TSSeqAlController::class, 'to_multi_preprocess'])->name('seqal.to_graph');
+Route::get('/ts/seq_al/multi', [TSSeqAlController::class, 'showMultivariateData'])->name('seqal.multi');
 
 
 Route::get('/test_base', function () {
@@ -76,10 +84,12 @@ Route::get('/flowchart', function () {
 });
 
 
+Route::get('/carousel', function () {
+    return view('carousel');
+});
 
-
-
-
-
+Route::get('/alignment', function () {
+    return view('alignement');
+});
 
 
