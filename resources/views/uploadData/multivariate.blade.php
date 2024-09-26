@@ -121,6 +121,8 @@
         let activeIndex = null;
         let chartInstance = null;
 
+        console.log("headers: ", headers);
+
 
 
         // ---------------

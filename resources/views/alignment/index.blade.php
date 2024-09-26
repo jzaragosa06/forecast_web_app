@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <!-- Save Button -->
-                <button class="bg-blue-500 text-white px-4 py-2 ml-4 rounded-md hover:bg-blue-600">
+                <button id="save-btn" class="bg-blue-500 text-white px-4 py-2 ml-4 rounded-md hover:bg-blue-600">
                     Save
                 </button>
             </div>
@@ -179,6 +179,72 @@
                     // Read file as text
                     reader.readAsText(file);
                 }
+            });
+        });
+
+
+        $(document).ready(function() {
+
+
+
+            function convertToCSV(combinedArray, headers_array) {
+                let csvContent = "";
+
+                // Add the header row to CSV (combining 'Date' and headers_array)
+                const headers = ['Date', headers_array.flat().join(',')];
+                csvContent = headers + "\n";
+
+
+                // Add data rows to CSV
+                combinedArray.forEach(row => {
+                    const csvRow = row.map(cell => (cell === '' ? '' : cell)); // Handle empty values
+                    csvContent += csvRow.join(',') + "\n";
+                });
+
+                return csvContent;
+            }
+
+
+            $('#save-btn').click(function(e) {
+                const csvContent = convertToCSV(combinedArray, headers_array);
+
+
+                console.log(csvContent);
+                // make a temporary variable for header and the data. 
+                csvContent_temp_array = csvContent.split('\n');
+                let headers = csvContent_temp_array[0];
+                let data = csvContent_temp_array.slice(1).join('\n');
+
+                console.log("header of temp: ", headers);
+                console.log("data: ", data);
+
+
+                $.ajax({
+                    url: '{{ route('seqal.save_preprocess') }}', // Replace with your actual route
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content') // Add CSRF token here
+                    },
+                    data: {
+                        file_id: timeSeriesData['file_id'],
+                        type: 'multivariate',
+                        filename: timeSeriesData['filename'],
+                        freq: timeSeriesData['freq'],
+                        description: timeSeriesData['description'],
+                        headers: headers,
+                        data: data,
+                    },
+                    success: function(response) {
+                        window.location.href = response.redirect_url;
+
+                    },
+                    error: function(error) {
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+
+
             });
         });
     </script>

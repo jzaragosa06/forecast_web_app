@@ -713,13 +713,6 @@
                     // For each selected variable, add the corresponding value to the row
                     selectedVariables.forEach(variable => {
 
-                        // if (typeof data.daily[variable][i] === "string") {
-                        //     row.push(convertDate(data.daily[variable][i]));
-                        //     alert('its a date string');
-                        // } else {
-                        //     row.push(data.daily[variable][i]);
-
-                        // }
                         row.push(data.daily[variable][i]);
 
 

@@ -37,8 +37,9 @@ class PreprocessInputFileController extends Controller
 
             return view('uploadData.univariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
         }
-
     }
+
+
 
 
 }
