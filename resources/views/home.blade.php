@@ -219,7 +219,7 @@
                     &times;
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body  overflow-y-auto max-h-[75vh]">
                 <form action="" method="POST">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
