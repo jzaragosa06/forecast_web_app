@@ -59,6 +59,9 @@
                             </span>
                         </div>
                     </div>
+
+
+
                 </div>
             </div>
         </div>
@@ -111,6 +114,39 @@
                 </div>
             </div>
         </div>
+
+        {{-- <form method="POST" action="/share-file">
+            @csrf
+            <input type="hidden" name="file_assoc_id" value="1"> <!-- ID of the file association -->
+
+            <label for="users">Share with Users:</label>
+            <select name="shared_to_user_ids[]" multiple>
+                @foreach ($users as $user)
+                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                @endforeach
+            </select>
+
+            <button type="submit">Share</button>
+        </form> --}}
+
+        <form method="POST" action="{{ route('share.with_other') }}">
+            @csrf
+            <input type="hidden" name="file_assoc_id" value="{{ $file_assoc_id }}"> <!-- ID of the file association -->
+
+            <label for="users">Share with Users:</label>
+            <div>
+                @foreach ($users as $user)
+                    <div>
+                        <input type="checkbox" name="shared_to_user_ids[]" value="{{ $user->id }}"
+                            id="user_{{ $user->id }}">
+                        <label for="user_{{ $user->id }}">{{ $user->name }}</label>
+                    </div>
+                @endforeach
+            </div>
+
+            <button type="submit">Share</button>
+        </form>
+
     </div>
 @endsection
 

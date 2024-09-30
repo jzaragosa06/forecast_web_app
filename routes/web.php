@@ -10,6 +10,7 @@ use App\Http\Controllers\NotesController;
 use App\Http\Controllers\PreprocessInputFileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaveInputController;
+use App\Http\Controllers\ShareController;
 use App\Http\Controllers\TSSeqAlController;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +57,8 @@ Route::post('/ts/seq_al/save_preprocess_fillna_seqal', [TSSeqAlController::class
 // Route::post('/ts/seq_al/to_graph', [TSSeqAlController::class, 'to_multi_preprocess'])->name('seqal.to_graph');
 Route::get('/ts/seq_al/multi', [TSSeqAlController::class, 'showMultivariateData'])->name('seqal.multi');
 
+
+Route::post('/share/with_other', [ShareController::class, 'shareFileWithUsers'])->name('share.with_other');
 
 Route::post('/ts/seq_al/temp/save', [TSSeqAlController::class, 'temporary_save'])->name('seqal.tempsave');
 Route::get('ts/seq_al/preprocess/{id}', [TSSeqAlController::class, 'to_graph_for_preprocessing'])->name('seqal.preprocess');

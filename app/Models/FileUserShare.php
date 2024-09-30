@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class FileUserShare extends Controller
+class FileUserShare extends Model
 {
+    use HasFactory;
+
     protected $table = 'file_user_shares';
 
     protected $fillable = [

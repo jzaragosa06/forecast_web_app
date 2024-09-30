@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChatHistory;
 use App\Models\Note;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Auth;
 use Storage;
@@ -36,6 +37,10 @@ class ManageShowResultsController extends Controller
         $note = Note::where('file_assoc_id', $file_assoc_id)->first();
         $history = ChatHistory::where('file_assoc_id', $file_assoc_id)->first();
 
+        // ===========================
+        $users = User::where('id', '!=', Auth::id())->get();
+        // ===========================
+
         // Handle different operations and file types
         if ($operation == "forecast") {
             if ($inputFileType == "univariate") {
@@ -45,9 +50,9 @@ class ManageShowResultsController extends Controller
             }
         } elseif ($operation == "trend") {
             if ($inputFileType == "univariate") {
-                return view('results.trend_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('results.trend_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users]);
             } else {
-                return view('results.trend_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('results.trend_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users]);
             }
         } else {
             if ($inputFileType == "univariate") {
