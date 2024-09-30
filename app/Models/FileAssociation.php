@@ -20,4 +20,11 @@ class FileAssociation extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function sharedWithUsers()
+    {
+        // Users this file is shared with
+        return $this->belongsToMany(User::class, 'file_user_shares', 'file_assoc_id', 'shared_to_user_id')
+            ->withTimestamps();
+    }
+
 }

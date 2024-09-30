@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Http\Controllers\FileUserShare;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -54,5 +55,18 @@ class User extends Authenticatable
     public function getProfilePhotoUrlAttribute()
     {
         return $this->profile_photo_path ? Storage::disk('public')->url($this->profile_photo_path) : 'path/to/default/photo.jpg';
+    }
+
+    public function sharedFiles()
+    {
+        // Files shared with this user
+        return $this->belongsToMany(FileAssociation::class, 'file_user_shares', 'shared_to_user_id', 'file_assoc_id')
+            ->withTimestamps();
+    }
+
+    public function filesSharedByMe()
+    {
+        // Files shared by this user
+        return $this->hasMany(FileUserShare::class, 'shared_by_user_id');
     }
 }
