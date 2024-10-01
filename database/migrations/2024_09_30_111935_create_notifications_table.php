@@ -22,6 +22,9 @@ return new class extends Migration {
             $table->boolean('read')->default(false); // For tracking if the notification has been read
             $table->timestamps();
 
+
+
+
             // Foreign keys
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('file_assoc_id')->references('file_assoc_id')->on('file_associations')->onDelete('cascade');

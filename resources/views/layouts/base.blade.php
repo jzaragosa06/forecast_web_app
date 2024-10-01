@@ -146,11 +146,71 @@
                 <!-- Notification and Profile -->
                 <div class="flex items-center space-x-4">
                     <!-- Notification Bell -->
-                    <div class="relative">
+                    {{-- <div class="relative">
                         <a href="#" class="text-gray-600 hover:text-indigo-500">
                             <i class="fas fa-bell"></i>
                         </a>
-                        <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
+
+                        @if ($notifications->count() > 0)
+                            <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
+                        @endif
+
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                            @if ($notifications->isEmpty())
+                                <li><a class="dropdown-item">No new notifications</a></li>
+                            @else
+                                @foreach ($notifications as $notification)
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <strong>{{ $notification->shared_by }}</strong> shared a file:
+                                            <em>{{ $notification->assoc_filename }}</em><br>
+                                            <small class="text-muted">{{ $notification->notification_time }}</small>
+                                        </a>
+                                    </li>
+                                @endforeach
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                
+                            @endif
+                        </ul>
+                    </div> --}}
+
+                    <div class="flex items-center space-x-4">
+                        <!-- Notification Bell -->
+                        <div class="relative">
+                            <button id="notificationBell"
+                                class="text-gray-600 hover:text-indigo-500 focus:outline-none">
+                                <i class="fas fa-bell"></i>
+                            </button>
+
+                            <!-- Notification Count (if any) -->
+                            @if ($notifications->count() > 0)
+                                <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
+                            @endif
+
+                            <!-- Notification Dropdown (Initially Hidden) -->
+                            <div id="notificationDropdown"
+                                class="hidden absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                                <ul class="py-2">
+                                    @if ($notifications->isEmpty())
+                                        <li class="px-4 py-2 text-sm text-gray-700">No new notifications</li>
+                                    @else
+                                        @foreach ($notifications as $notification)
+                                            <li class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                <strong>{{ $notification->shared_by }}</strong> shared a file:
+                                                <em>{{ $notification->assoc_filename }}</em><br>
+                                                <small
+                                                    class="text-gray-500">{{ $notification->notification_time }}</small>
+                                            </li>
+                                        @endforeach
+                                        <li>
+                                            <hr class="my-2">
+                                        </li>
+                                    @endif
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Profile Icon with Dropdown -->
@@ -191,6 +251,32 @@
     <!-- FontAwesome Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bellIcon = document.getElementById('notificationBell');
+            const dropdown = document.getElementById('notificationDropdown');
+            let isDropdownOpen = false;
+
+            // Toggle dropdown visibility on click
+            bellIcon.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent click from propagating to document
+                isDropdownOpen = !isDropdownOpen;
+                dropdown.classList.toggle('hidden', !isDropdownOpen);
+            });
+
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', function() {
+                if (isDropdownOpen) {
+                    dropdown.classList.add('hidden');
+                    isDropdownOpen = false;
+                }
+            });
+
+            // Prevent closing when clicking inside the dropdown
+            dropdown.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+        
         // JavaScript to toggle the dropdown
         document.getElementById('profileDropdownButton').addEventListener('click', function() {
             const dropdown = document.getElementById('profileDropdown');

@@ -80,6 +80,45 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- -------------------------------------------------------------------------------- --}}
+                <div class="w-full md:w-1/3">
+                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
+                        <h4 class="text-lg font-semibold mb-4">Shared to Me</h4>
+
+                        @if ($sharedFiles->isEmpty())
+                            <p>No files have been shared with you yet.</p>
+                        @else
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Filename</th>
+                                        <th>File Path</th>
+                                        <th>Operation</th>
+                                        <th>Shared By</th>
+                                        <th>Shared At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($sharedFiles as $file)
+                                        <tr>
+                                            <td>{{ $file->assoc_filename }}</td>
+                                            <td>{{ $file->associated_file_path }}</td>
+                                            <td>{{ $file->operation }}</td>
+                                            <td>{{ $file->shared_by }}</td>
+                                            <td>{{ $file->shared_at }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
+                    </div>
+                </div>
+                {{-- -------------------------------------------------------------------------------- --}}
+
+
+
+
             </div>
         </div>
         <hr class="my-4">
