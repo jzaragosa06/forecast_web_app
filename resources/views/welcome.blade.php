@@ -24,7 +24,7 @@
 
         <section class="flex justify-center items-center min-h-screen py-16 px-8">
             <div class="text-left animate-fade-in max-w-xl">
-                <h1 class="text-4xl font-bold text-gray-800 mb-4">TagSalamisim is all you need.</h1>
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">DataForesight is all you need.</h1>
                 <p class="text-gray-500 mb-6 text-left">
                     Unlock powerful insights from your data with our cutting-edge time series analysis platform. Break down
                     your data into trend, seasonality, and forecasts with ease. Engage with an AI assistant for

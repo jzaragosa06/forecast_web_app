@@ -6,7 +6,7 @@ use App\Models\File;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\FileAssociation;
-
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -33,10 +33,13 @@ class ManageResultsUsingCRUDController extends Controller
             )
             ->get();
         $files_assoc = FileAssociation::where('user_id', Auth::id())->get();
+        // ===========================
+        $users = User::where('id', '!=', Auth::id())->get();
+        // ===========================
 
 
         // the file_assoc contains the results, files contains the input files and results, and files_input contains the file inputs
-        return view('CRUD.index', compact('files_assoc', 'files', 'files_input'));
+        return view('CRUD.index', compact('files_assoc', 'files', 'files_input', 'users'));
     }
 
 

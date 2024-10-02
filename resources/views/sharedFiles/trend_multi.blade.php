@@ -117,9 +117,9 @@
                         <div class="flex mt-4">
                             <input type="text" id="chatInput"
                                 class="w-full p-2 border border-gray-300 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                placeholder="Type a message..." />
+                                placeholder="Type a message..." disabled />
                             <button id="sendMessage"
-                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded-r hover:bg-blue-600">
+                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded-r hover:bg-blue-600" disabled>
                                 Send
                             </button>
                         </div>
@@ -136,8 +136,8 @@
 
                         <!-- Save button aligned with the input field -->
                         <div class="flex mt-4">
-                            <button id="saveNotes"
-                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                            <button id="saveNotes" disabled
+                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600" disabled >
                                 Save Notes
                             </button>
                         </div>
@@ -159,6 +159,7 @@
             // Initialize Quill editor with basic options
             var quill = new Quill('#notesEditor', {
                 theme: 'snow',
+                readOnly: true, // Make Quill editor read-only
                 modules: {
                     toolbar: [
                         ['bold', 'italic', 'underline'], // Basic formatting
@@ -176,7 +177,7 @@
             @if ($note)
                 quill.root.innerHTML = `{!! $note->content !!}`;
             @endif
-        
+
 
 
             // Save Notes button click event

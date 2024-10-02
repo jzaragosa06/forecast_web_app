@@ -118,6 +118,18 @@
                         Profile
                     </span>
                 </div>
+
+                <div class="relative group">
+                    <a href="{{ route('share.index') }}"
+                        class="{{ request()->routeIs('share.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
+                        {{-- <i class="fas fa-share-alt text-xl"></i> --}}
+                        <i class="fas fa-share-square text-xl"></i>
+                    </a>
+                    <span
+                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Shared Files
+                    </span>
+                </div>
             </nav>
 
             <!-- Settings Icon (at bottom) -->
@@ -129,7 +141,7 @@
         </div>
 
         <!-- Main Content -->
-        {{-- <div class="flex-1 p-6"> --}}
+
         <div class="flex-1 flex flex-col">
 
             <!-- Navbar -->
@@ -145,12 +157,65 @@
 
                 <!-- Notification and Profile -->
                 <div class="flex items-center space-x-4">
-                    <!-- Notification Bell -->
-                    <div class="relative">
-                        <a href="#" class="text-gray-600 hover:text-indigo-500">
-                            <i class="fas fa-bell"></i>
-                        </a>
-                        <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
+
+                    <div class="flex items-center space-x-4">
+                        <!-- Notification Bell -->
+                        <div class="relative">
+                            <button id="notificationBell"
+                                class="text-gray-600 hover:text-indigo-500 focus:outline-none">
+                                <i class="fas fa-bell text-xl"></i>
+                            </button>
+
+                            <!-- Notification Count (if any) -->
+                            @if ($notifications->count() > 0)
+                                <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
+                            @endif
+
+                            <!-- Notification Dropdown (Initially Hidden) -->
+                            <div id="notificationDropdown"
+                                class="hidden absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                                <ul class="py-1">
+                                    @if ($notifications->isEmpty())
+                                        <li class="px-4 py-3 text-sm text-gray-500">No new notifications</li>
+                                    @else
+                                        @foreach ($notifications as $notification)
+                                            <li
+                                                class="px-4 py-3 flex items-center justify-between text-sm text-gray-700 hover:bg-gray-100">
+                                                <div class="flex-1">
+                                                    <strong
+                                                        class="text-gray-900">{{ $notification->shared_by }}</strong>
+                                                    shared a file
+                                                    <div class="text-xs text-gray-500">
+                                                        {{ $notification->notification_time }}</div>
+                                                </div>
+                                                {{-- <form
+                                                    action="{{ route('share.view_file', ['file_assoc_id' => $notification->file_assoc_id, 'user_id' => $notification->user_id]) }}"
+                                                    method="post">
+                                                    <button type="submit"
+                                                        class="ml-2 bg-indigo-500 text-white text-xs px-3 py-1 rounded-full hover:bg-indigo-600 focus:outline-none">
+                                                        View
+                                                    </button>
+                                                </form> --}}
+                                                <a
+                                                    href="{{ route('share.view_file', ['file_assoc_id' => $notification->file_assoc_id, 'user_id' => $notification->user_id]) }}">
+                                                    <button
+                                                        class="ml-2 bg-indigo-500 text-white text-xs px-3 py-1 rounded-full hover:bg-indigo-600 focus:outline-none">
+                                                        View
+                                                    </button>
+                                                </a>
+
+                                            </li>
+                                        @endforeach
+
+                                        <li
+                                            class="px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 flex justify-center items-center">
+                                            <a href="{{ route('share.index') }}">View All</a>
+                                        </li>
+
+                                    @endif
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Profile Icon with Dropdown -->
@@ -191,6 +256,32 @@
     <!-- FontAwesome Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bellIcon = document.getElementById('notificationBell');
+            const dropdown = document.getElementById('notificationDropdown');
+            let isDropdownOpen = false;
+
+            // Toggle dropdown visibility on click
+            bellIcon.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent click from propagating to document
+                isDropdownOpen = !isDropdownOpen;
+                dropdown.classList.toggle('hidden', !isDropdownOpen);
+            });
+
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', function() {
+                if (isDropdownOpen) {
+                    dropdown.classList.add('hidden');
+                    isDropdownOpen = false;
+                }
+            });
+
+            // Prevent closing when clicking inside the dropdown
+            dropdown.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+
         // JavaScript to toggle the dropdown
         document.getElementById('profileDropdownButton').addEventListener('click', function() {
             const dropdown = document.getElementById('profileDropdown');
