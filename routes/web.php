@@ -59,10 +59,13 @@ Route::get('/ts/seq_al/multi', [TSSeqAlController::class, 'showMultivariateData'
 
 
 Route::post('/share/with_other', [ShareController::class, 'shareFileWithUsers'])->name('share.with_other');
+// Route::post('share/view/{file_assoc_id}/{user_id}', [ShareController::class, 'view_shared_file'])->name('share.view_file');
+Route::get('share/view/{file_assoc_id}/{user_id}', [ShareController::class, 'view_shared_file'])->name('share.view_file');
+
+Route::get('/share/index', [ShareController::class, 'index'])->name('share.index');
 
 Route::post('/ts/seq_al/temp/save', [TSSeqAlController::class, 'temporary_save'])->name('seqal.tempsave');
 Route::get('ts/seq_al/preprocess/{id}', [TSSeqAlController::class, 'to_graph_for_preprocessing'])->name('seqal.preprocess');
-
 
 Route::get('/test_base', function () {
     return view('test_base');
