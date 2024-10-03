@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name', 'TagSalamisim') }}</title>
+    <title>{{ config('app.name', 'DataForesight') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes fade-in {
@@ -33,7 +33,7 @@
             <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <a class="flex items-center space-x-3 self-center text-2xl font-semibold whitespace-nowrap text-sky-600"
                     href="{{ url('/') }}">
-                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-10 w-10">
+                    <!-- <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-10 w-10"> -->
                     <!-- Adjust the size as needed -->
                     <span>{{ config('app.name', 'TagSalamisim') }}</span>
                 </a>
