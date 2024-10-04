@@ -11,7 +11,7 @@ use Storage;
 use App\Models\ChatHistory;
 use App\Models\Note;
 use App\Models\User;
-
+use App\Models\Logs;
 
 class ShareController extends Controller
 {
@@ -28,6 +28,8 @@ class ShareController extends Controller
         $fileAssocId = $request->input('file_assoc_id');
         $sharedToUserIds = $request->input('shared_to_user_ids');
         $sharedByUserId = Auth::id(); // ID of the user sharing the file
+
+        $file_association = FileUserShare::where('file_assoc_id', $fileAssocId)->first();
 
         // Loop through each user ID and insert into file_user_shares table
         foreach ($sharedToUserIds as $sharedToUserId) {
@@ -52,59 +54,28 @@ class ShareController extends Controller
                     'read' => false,  // Notification is unread by default
                 ]);
             }
+
+
+            // ============================================
+            //This adds a log
+            $user = User::where('id', $sharedToUserId)->first();
+
+            Logs::create([
+                'user_id' => Auth::id(),
+                'action' => 'Shared a File',
+                'description' => 'Shared the ' . $file_association->assoc_filename . ' to ' . $user->name,
+            ]);
+            // ============================================
+
         }
+
+
+
 
         // Redirect back or return success response
         return redirect()->route('home');
     }
 
-
-    //this function allow the users to view the shared files to them. 
-    // public function view_shared_file($file_assoc_id, $user_id)
-    // {
-    //     // Fetch the file association and join with the files table to get the file details.
-    //     $file_assoc = DB::table('file_associations')
-    //         ->join('files', 'file_associations.file_id', '=', 'files.file_id')
-    //         ->where('file_associations.file_assoc_id', $file_assoc_id)
-    //         ->where('file_associations.user_id', $user_id)
-    //         ->select('file_associations.*', 'files.type as file_type')
-    //         ->first();
-
-    //     if (!$file_assoc) {
-    //         abort(404, 'File Association not found');
-    //     }
-
-    //     $operation = $file_assoc->operation;
-    //     $inputFileType = $file_assoc->file_type;
-
-    //     // Access the associated file content
-    //     $json = Storage::get($file_assoc->associated_file_path);
-    //     $jsonData = json_decode($json, true);
-    //     $note = Note::where('file_assoc_id', $file_assoc_id)->first();
-    //     $history = ChatHistory::where('file_assoc_id', $file_assoc_id)->first();
-
-
-    //     // Handle different operations and file types
-    //     if ($operation == "forecast") {
-    //         if ($inputFileType == "univariate") {
-    //             return view('results.forecast_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
-    //         } else {
-    //             return view('results.forecast_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
-    //         }
-    //     } elseif ($operation == "trend") {
-    //         if ($inputFileType == "univariate") {
-    //             return view('results.trend_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
-    //         } else {
-    //             return view('results.trend_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
-    //         }
-    //     } else {
-    //         if ($inputFileType == "univariate") {
-    //             return view('results.seasonality_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
-    //         } else {
-    //             return view('results.seasonality_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
-    //         }
-    //     }
-    // }
     public function view_shared_file($file_assoc_id, $user_id)
     {
 
@@ -139,6 +110,18 @@ class ShareController extends Controller
         $notif->save();
 
         // ==============================================================================
+
+
+        // ===================================
+        //I put it here to prevent redundancy
+
+        $sharedBy = User::where('id', $user_id)->first();
+        Logs::create([
+            'user_id' => Auth::id(),
+            'action' => 'View Shared Result File',
+            'description' => 'Viewed result file ' . $file_assoc->assoc_filename . ', which was shared by ' . $sharedBy->name,
+        ]);
+        // ===================================
 
         // Handle different operations and file types
         if ($operation == "forecast") {

@@ -3,6 +3,7 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InputFileGraphController;
 use App\Http\Controllers\LLMController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\ManageOperationsController;
 use App\Http\Controllers\ManageResultsUsingCRUDController;
 use App\Http\Controllers\ManageShowResultsController;
@@ -56,7 +57,7 @@ Route::post('/ts/seq_al/index/{file_id}', [TSSeqAlController::class, 'index'])->
 Route::post('/ts/seq_al/save_preprocess_fillna_seqal', [TSSeqAlController::class, 'save_preprocess_fillna_seqal'])->name('seqal.save_preprocess');
 // Route::post('/ts/seq_al/to_graph', [TSSeqAlController::class, 'to_multi_preprocess'])->name('seqal.to_graph');
 Route::get('/ts/seq_al/multi', [TSSeqAlController::class, 'showMultivariateData'])->name('seqal.multi');
-
+Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 
 Route::post('/share/with_other', [ShareController::class, 'shareFileWithUsers'])->name('share.with_other');
 // Route::post('share/view/{file_assoc_id}/{user_id}', [ShareController::class, 'view_shared_file'])->name('share.view_file');
