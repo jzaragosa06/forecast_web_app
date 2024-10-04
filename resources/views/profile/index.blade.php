@@ -13,7 +13,7 @@
                     <div class="relative group">
                         <div class="flex justify-center p-6">
                             <img id="profileImage"
-                                src="{{ $user->profile_photo ? asset('storage/' . $user->profile_photo) : 'https://via.placeholder.com/150' }}"
+                                src="{{ $user->profile_photo ? asset('storage/' . $user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
                                 class="w-32 h-32 object-cover rounded-full" alt="Profile Photo">
                         </div>
                         <span
