@@ -5,6 +5,8 @@ use Auth;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Logs;
+
 
 class ProfileController extends Controller
 {
@@ -13,7 +15,7 @@ class ProfileController extends Controller
         $user = User::where('id', Auth::id())->firstOrFail();
 
         return view('profile.index', compact('user'));
-        
+
 
     }
 
@@ -27,6 +29,14 @@ class ProfileController extends Controller
         }
 
         $user->save();
+
+
+        Logs::create([
+            'user_id' => Auth::id(),
+            'action' => 'Updated Profile Photo',
+            'description' => 'Successfully updated profile photo ',
+        ]);
+
         return redirect()->back()->with('success', 'Profile photo updated successfully');
 
 

@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Auth;
+use PhpParser\Node\Stmt\TryCatch;
 use Storage;
+use App\Models\Logs;
+
 
 class ManageOperationsController extends Controller
 {
@@ -37,63 +40,92 @@ class ManageOperationsController extends Controller
             $method = $request->input('method');
 
             if ($type == 'univariate') {
-                $response = Http::attach(
-                    'inputFile',
-                    $file_content,
-                    basename($file->filepath)
-                )->post('http://127.0.0.1:5000/api/forecast-univariate', [
-                            'type' => $type,
-                            'freq' => $freq,
-                            'description' => $description,
-                            'steps' => $steps,
-                            'method' => $method
+                try {
+                    $response = Http::attach(
+                        'inputFile',
+                        $file_content,
+                        basename($file->filepath)
+                    )->post('http://127.0.0.1:5000/api/forecast-univariate', [
+                                'type' => $type,
+                                'freq' => $freq,
+                                'description' => $description,
+                                'steps' => $steps,
+                                'method' => $method
+                            ]);
+
+                    if ($response->successful()) {
+                        $jsonFilename = pathinfo(basename($file->filepath), PATHINFO_FILENAME) . '-initial-' . now()->timestamp . '.json';
+                        $jsonPath = 'resultJSON/' . $jsonFilename;
+                        Storage::put($jsonPath, json_encode($response->body()));
+
+                        $assoc_filename = 'forecast-on-' . $file->filename . 'created-' . now()->timestamp;
+
+                        FileAssociation::create([
+                            'file_id' => $file_id,
+                            'user_id' => Auth::id(),
+                            'assoc_filename' => $assoc_filename,
+                            'associated_file_path' => $jsonPath,
+                            'operation' => $operation,
                         ]);
 
-                if ($response->successful()) {
-                    $jsonFilename = pathinfo(basename($file->filepath), PATHINFO_FILENAME) . '-initial-' . now()->timestamp . '.json';
-                    $jsonPath = 'resultJSON/' . $jsonFilename;
-                    Storage::put($jsonPath, json_encode($response->body()));
 
-                    $assoc_filename = 'forecast-on-' . $file->filename . 'created-' . now()->timestamp;
-
-                    FileAssociation::create([
-                        'file_id' => $file_id,
+                        Logs::create([
+                            'user_id' => Auth::id(),
+                            'action' => 'Perform Forecast',
+                            'description' => 'Successfully performed a forecast on file ' . $assoc_filename,
+                        ]);
+                    }
+                } catch (\Throwable $th) {
+                    Logs::create([
                         'user_id' => Auth::id(),
-                        'assoc_filename' => $assoc_filename,
-                        'associated_file_path' => $jsonPath,
-                        'operation' => $operation,
+                        'action' => 'Perform Forecast',
+                        'description' => 'Failed to performed a forecast on file ' . $assoc_filename,
                     ]);
                 }
 
             } else {
-                $response = Http::timeout(300) // Increase timeout to 120 seconds
-                    ->attach(
-                        'inputFile',
-                        $file_content,
-                        basename($file->filepath)
-                    )->post('http://127.0.0.1:5000/api/forecast-multivariate', [
-                            'type' => $type,
-                            'freq' => $freq,
-                            'description' => $description,
-                            'steps' => $steps,
-                            'method' => $method
+                try {
+                    $response = Http::timeout(300) // Increase timeout to 120 seconds
+                        ->attach(
+                            'inputFile',
+                            $file_content,
+                            basename($file->filepath)
+                        )->post('http://127.0.0.1:5000/api/forecast-multivariate', [
+                                'type' => $type,
+                                'freq' => $freq,
+                                'description' => $description,
+                                'steps' => $steps,
+                                'method' => $method
+                            ]);
+
+
+                    if ($response->successful()) {
+                        $jsonFilename = pathinfo(basename($file->filepath), PATHINFO_FILENAME) . '-initial-' . now()->timestamp . '.json';
+                        $jsonPath = 'resultJSON/' . $jsonFilename;
+                        Storage::put($jsonPath, json_encode($response->body()));
+
+                        $assoc_filename = 'forecast-on-' . $file->filename . 'created-' . now()->timestamp;
+
+
+                        FileAssociation::create([
+                            'file_id' => $file_id,
+                            'user_id' => Auth::id(),
+                            'assoc_filename' => $assoc_filename,
+                            'associated_file_path' => $jsonPath,
+                            'operation' => $operation,
                         ]);
 
-
-                if ($response->successful()) {
-                    $jsonFilename = pathinfo(basename($file->filepath), PATHINFO_FILENAME) . '-initial-' . now()->timestamp . '.json';
-                    $jsonPath = 'resultJSON/' . $jsonFilename;
-                    Storage::put($jsonPath, json_encode($response->body()));
-
-                    $assoc_filename = 'forecast-on-' . $file->filename . 'created-' . now()->timestamp;
-
-
-                    FileAssociation::create([
-                        'file_id' => $file_id,
+                        Logs::create([
+                            'user_id' => Auth::id(),
+                            'action' => 'Perform Forecast',
+                            'description' => 'Successfully performed a forecast on file ' . $assoc_filename,
+                        ]);
+                    }
+                } catch (\Throwable $th) {
+                    Logs::create([
                         'user_id' => Auth::id(),
-                        'assoc_filename' => $assoc_filename,
-                        'associated_file_path' => $jsonPath,
-                        'operation' => $operation,
+                        'action' => 'Perform Forecast',
+                        'description' => 'Failed to performed a forecast on file ' . $assoc_filename,
                     ]);
                 }
             }
@@ -131,10 +163,21 @@ class ManageOperationsController extends Controller
                         'associated_file_path' => $jsonPath,
                         'operation' => $operation,
                     ]);
+
+
+                    Logs::create([
+                        'user_id' => Auth::id(),
+                        'action' => 'Analyze Trend',
+                        'description' => 'Successfully analyzed trend on ' . $assoc_filename . ' using Facebook Prophet.',
+                    ]);
                 }
 
             } catch (\Throwable $th) {
-                throw $th;
+                Logs::create([
+                    'user_id' => Auth::id(),
+                    'action' => 'Analyze Trend',
+                    'description' => 'Failed analyzed trend on ' . $assoc_filename . ' using Facebook Prophet.',
+                ]);
             }
 
             return redirect()->route('home');
@@ -171,10 +214,21 @@ class ManageOperationsController extends Controller
                         'associated_file_path' => $jsonPath,
                         'operation' => $operation,
                     ]);
+
+
+                    Logs::create([
+                        'user_id' => Auth::id(),
+                        'action' => 'Analyze Seasonality',
+                        'description' => 'Successfully analyzed seasonality on ' . $assoc_filename . ' using Facebook Prophet.',
+                    ]);
                 }
 
             } catch (\Throwable $th) {
-                throw $th;
+                Logs::create([
+                    'user_id' => Auth::id(),
+                    'action' => 'Analyze Seasonality',
+                    'description' => 'Failed to analyzed seasonality on ' . $assoc_filename . ' using Facebook Prophet.',
+                ]);
             }
 
             return redirect()->route('home');

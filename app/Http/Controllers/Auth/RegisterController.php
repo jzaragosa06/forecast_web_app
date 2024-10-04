@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Logs;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Auth;
+
+
 
 class RegisterController extends Controller
 {
@@ -75,6 +80,16 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'profile_photo' => $profilePhotoPath,
 
+        ]);
+    }
+
+
+    protected function registered(Request $request, $user)
+    {
+        Logs::create([
+            'user_id' => Auth::id(),
+            'action' => 'Register',
+            'description' => 'Registered a new user account',
         ]);
     }
 }

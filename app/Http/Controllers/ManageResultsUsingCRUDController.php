@@ -9,6 +9,7 @@ use App\Models\FileAssociation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Logs;
 
 
 
@@ -55,9 +56,12 @@ class ManageResultsUsingCRUDController extends Controller
             Storage::delete($fileAssociation->associated_file_path);
         }
 
+
+
         // Delete the entry from the database
         // $fileAssociation->delete();
         DB::table('file_associations')->where('file_assoc_id', $file_assoc_id)->delete();
+
 
         return redirect()->route('crud.index');
     }
@@ -74,6 +78,13 @@ class ManageResultsUsingCRUDController extends Controller
         if (Storage::exists($file->filepath)) {
             Storage::delete($file->filepath);
         }
+
+        Logs::create([
+            'user_id' => Auth::id(),
+            'action' => 'Delete Input File',
+            'description' => 'Successfully deleted ' . $file->filename,
+        ]);
+
 
         // Delete the entry from the database
         // $fileAssociation->delete();

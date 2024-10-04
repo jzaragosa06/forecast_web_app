@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+
 use Illuminate\Http\Request;
 use Storage;
+use Auth;
+use App\Models\Logs;
 
 class InputFileGraphController extends Controller
 {
@@ -34,6 +37,12 @@ class InputFileGraphController extends Controller
             'header' => $header,
             'data' => $series,
         ];
+
+        Logs::create([
+            'user_id' => Auth::id(),
+            'action' => 'Viewed Input File',
+            'description' => 'Viewed the graph of ' . $file->filename,
+        ]);
 
         return view('inputFileGraph.index', compact('timeSeriesData'));
     }
