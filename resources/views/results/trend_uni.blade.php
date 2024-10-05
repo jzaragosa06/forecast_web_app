@@ -19,49 +19,6 @@
                 <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
                     <p class="text-gray-700 mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                         eiusmod tempor incididunt ut labore et dolore magna aliqua. ...</p>
-
-                    <!-- Centered Icons with Flexbox -->
-                    <div class="flex justify-center space-x-4">
-                        <!-- SMA Icons -->
-                        <div class="relative group">
-                            <!-- Icon for SMA 5 -->
-                            <div
-                                class="w-6 h-6 bg-[#546E7A] rounded-full flex items-center justify-center text-white cursor-pointer">
-                                5
-                            </div>
-                            <span
-                                class="absolute opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded-lg py-1 px-2 bottom-full mb-2 left-1/2 transform -translate-x-1/2">
-                                SMA 5 - Short-term trend (5-day moving average).
-                            </span>
-                        </div>
-
-                        <div class="relative group">
-                            <!-- Icon for SMA 10 -->
-                            <div
-                                class="w-6 h-6 bg-[#1E90FF] rounded-full flex items-center justify-center text-white cursor-pointer">
-                                10
-                            </div>
-                            <span
-                                class="absolute opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded-lg py-1 px-2 bottom-full mb-2 left-1/2 transform -translate-x-1/2">
-                                SMA 10 - Mid-term trend (10-day moving average).
-                            </span>
-                        </div>
-
-                        <div class="relative group">
-                            <!-- Icon for SMA 20 -->
-                            <div
-                                class="w-6 h-6 bg-[#00E396] rounded-full flex items-center justify-center text-white cursor-pointer">
-                                20
-                            </div>
-                            <span
-                                class="absolute opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded-lg py-1 px-2 bottom-full mb-2 left-1/2 transform -translate-x-1/2">
-                                SMA 20 - Long-term trend (20-day moving average).
-                            </span>
-                        </div>
-                    </div>
-
-
-
                 </div>
             </div>
         </div>
@@ -115,7 +72,7 @@
             </div>
         </div>
 
-      
+
 
 
 
@@ -125,7 +82,6 @@
 
 @section('scripts')
     <script>
-       
         $(document).ready(function() {
             // Initialize Quill editor with basic options
             var quill = new Quill('#notesEditor', {
@@ -281,78 +237,69 @@
 
 
 
-        // Fetch and parse JSON data from the server-side
-        const jsonData = @json($data); // Server-side rendered data
-        const data = JSON.parse(jsonData);
+        $(document).ready(function() {
+            // Fetch and parse JSON data from the server-side
+            const jsonData = @json($data); // Server-side rendered data
+            const data = JSON.parse(jsonData);
 
-        // Utility function to handle missing values
-        const cleanData = (arr) => arr.map(value => (value === '' || value === null) ? null : value);
+            // Utility function to handle missing values
+            const cleanData = (arr) => arr.map(value => (value === '' || value === null) ? null : value);
 
-        // Clean the data to handle missing values
-        const originalData = cleanData(data.trend[`${data.colname}`]);
-        const sma5Data = cleanData(data.trend[`${data.colname}_sma_5`]);
-        const sma10Data = cleanData(data.trend[`${data.colname}_sma_10`]);
-        const sma20Data = cleanData(data.trend[`${data.colname}_sma_20`]);
+            // Clean the data to handle missing values
+            const trendData = cleanData(data.trend[`${data.colname}`]);
 
-        // Initialize the chart with ApexCharts
-        var options = {
-            chart: {
-                type: 'line',
-                height: 350,
-                zoom: {
-                    enabled: true
-                },
-                toolbar: {
-                    show: false,
-                }
-            },
-            series: [{
-                name: 'Original Value',
-                data: originalData,
-            }, {
-                name: 'SMA 5',
-                data: sma5Data,
-            }, {
-                name: 'SMA 10',
-                data: sma10Data,
-            }, {
-                name: 'SMA 20',
-                data: sma20Data,
-            }],
-            xaxis: {
-                categories: data.trend.index, // x-axis labels (dates/times)
-                title: {
-                    text: 'Date/Time'
-                },
-                type: 'datetime',
-            },
-            yaxis: {
-                title: {
-                    text: `${data.colname}`,
-                },
-                labels: {
-                    formatter: function(value) {
-                        // Check if the value is a valid number before applying toFixed
-                        return isNaN(value) ? value : value.toFixed(2); // Safely format only valid numeric values
+
+            // Initialize the chart with ApexCharts
+            var options = {
+                chart: {
+                    type: 'line',
+                    height: 350,
+                    zoom: {
+                        enabled: true
+                    },
+                    toolbar: {
+                        show: false,
                     }
-                }
-            },
-            stroke: {
-                curve: 'smooth',
-                width: 2
-            },
-            markers: {
-                size: 0
-            },
-            tooltip: {
-                enabled: true,
-                shared: true,
-                intersect: false
-            },
-            colors: ['#FF4560', '#546E7A', '#1E90FF', '#00E396'] // Corresponding colors
-        };
+                },
+                series: [{
+                    name: `${data.colname}`,
+                    data: trendData,
+                }],
+                xaxis: {
+                    categories: data.trend.index, // x-axis labels (dates/times)
+                    title: {
+                        text: 'Date/Time'
+                    },
+                    type: 'datetime',
+                },
+                yaxis: {
+                    title: {
+                        text: `${data.colname}`,
+                    },
+                    labels: {
+                        formatter: function(value) {
+                            // Check if the value is a valid number before applying toFixed
+                            return isNaN(value) ? value : value.toFixed(
+                            2); // Safely format only valid numeric values
+                        }
+                    }
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                markers: {
+                    size: 0
+                },
+                tooltip: {
+                    enabled: true,
+                    shared: true,
+                    intersect: false
+                },
+            };
 
-        var chart = new ApexCharts(document.querySelector("#chart1"), options);
-        chart.render();
+            var chart = new ApexCharts(document.querySelector("#chart1"), options);
+            chart.render();
+        });
     </script>
 @endsection
