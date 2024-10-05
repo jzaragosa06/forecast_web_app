@@ -23,9 +23,10 @@ class SaveInputController extends Controller
                 'filepath' => $path,
                 'type' => $request->get('type'),
                 'freq' => $request->get('freq'),
-                'description' => $request->get('description')
-
+                'description' => $request->get('description'),
+                'source' => $request->get('source'),
             ]);
+
 
             Logs::create([
                 'user_id' => Auth::id(),

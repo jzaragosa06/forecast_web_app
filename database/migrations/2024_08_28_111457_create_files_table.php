@@ -19,10 +19,11 @@ return new class extends Migration {
             $table->string('filepath');
             $table->string('type');
             $table->string('freq');
+            $table->string('source');
             $table->text('description');
 
             $table->timestamps();
-            
+
             // $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 

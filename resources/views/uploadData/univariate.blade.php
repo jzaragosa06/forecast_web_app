@@ -32,7 +32,7 @@
 
                         Frequency
                     </label>
-                    <input type="text" id="freq" name="freq" value="{{ $freq }}" readonly
+                    <input type="text" id="freq" name="freq" readonly
                         class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
                 <div class="mb-4">
@@ -113,10 +113,22 @@
             console.log(data);
             console.log(headers);
 
+            let freq = "";
+
+
+
 
             let originalData = JSON.parse(JSON.stringify(data)); // Deep copy of original data
             let tempData = JSON.parse(JSON.stringify(originalData));
             console.log('tempdata', tempData);
+
+
+
+
+            freq = inferFrequency(tempData.map(row => convertDate(row[0])));
+            $('#freq').val(freq);
+
+
 
             let chartInstance = null; // Variable to store the current chart instance
 
@@ -134,18 +146,62 @@
             // Ensure that data is valid
             if (data && data.length > 0 && headers.length > 1) {
                 const values = originalData.map(row => parseFloat(row[1]) || null); // Handle NaN as null
-                // const dates = originalData.map(row => new Date(row[0]));
-                // const dates = originalData.map(row => row[0]);
+
                 const dates = originalData.map(row => convertDate(row[0]));
-
-
                 console.log(dates);
+
                 const label = headers[1];
 
 
                 showChart(label, dates, values);
             } else {
                 console.error('Invalid data or headers');
+            }
+
+            function inferFrequency(dates) {
+                // Sort dates in ascending order if they are not already sorted
+                dates.sort((a, b) => new Date(a) - new Date(b));
+
+                // Calculate the difference in days between consecutive dates
+                let diffs = [];
+                for (let i = 1; i < dates.length; i++) {
+                    const diff = Math.abs(new Date(dates[i]) - new Date(dates[i - 1])) / (1000 * 60 * 60 * 24);
+                    diffs.push(diff);
+                }
+
+                // Find the mode of the differences
+                let modeDiff = findMode(diffs);
+
+                // Determine the frequency based on the difference
+                if (modeDiff >= 28 && modeDiff <= 31) {
+                    return "M"; // Monthly
+                } else if (modeDiff >= 89 && modeDiff <= 92) {
+                    return "Q"; // Quarterly
+                } else if (modeDiff >= 364 && modeDiff <= 366) {
+                    return "Y"; // Yearly
+                } else if (modeDiff === 7) {
+                    return "W"; // Weekly
+                } else if (modeDiff === 1) {
+                    return "D"; // Daily
+                } else {
+                    return "Unknown frequency";
+                }
+            }
+
+            function findMode(arr) {
+                const frequency = {};
+                let maxFreq = 0;
+                let mode = null;
+
+                arr.forEach(value => {
+                    frequency[value] = (frequency[value] || 0) + 1;
+                    if (frequency[value] > maxFreq) {
+                        maxFreq = frequency[value];
+                        mode = value;
+                    }
+                });
+
+                return mode;
             }
 
             function showChart(label, dates, values) {
@@ -287,9 +343,7 @@
 
                 //extract the additional data from the controller. 
                 const type = @json($type);
-                const freq = @json($freq);
-                // const description = @json($description);
-                // const filename = @json($filename);
+
                 const description = $('#description').val();
                 const filename = $('#filename').val();
 
@@ -302,12 +356,11 @@
                 const formData = new FormData();
                 formData.append('csv_file', blob, 'data.csv');
 
-
-
                 formData.append('type', type);
                 formData.append('freq', freq);
                 formData.append('description', description);
                 formData.append('filename', filename);
+                formData.append('source', 'uploads');
 
 
                 // Inspect FormData

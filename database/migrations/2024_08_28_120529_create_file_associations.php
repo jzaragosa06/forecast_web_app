@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('assoc_filename');
             $table->string('associated_file_path');
             $table->string('operation');
+            $table->string('description')->nullable();
             $table->timestamps();
 
             $table->foreign('file_id')->references('file_id')->on('files')->onDelete('cascade');
