@@ -4,9 +4,6 @@
 
 @section('page-title', 'Multivariate Seasonality')
 
-
-
-
 @section('content')
     <div class="max-w-7xl mx-auto p-6">
         <div class="flex flex-wrap -mx-4">

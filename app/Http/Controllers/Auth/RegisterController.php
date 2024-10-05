@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Logs;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Auth;
+
+
 
 class RegisterController extends Controller
 {
@@ -53,8 +58,6 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'contact_num' => ['required'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'profile_photo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
-
         ]);
     }
 
@@ -66,15 +69,25 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $profilePhotoPath = $data['profile_photo']->store('profile_photos', 'public');
+
 
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'contact_num' => $data['contact_num'],
             'password' => Hash::make($data['password']),
-            'profile_photo' => $profilePhotoPath,
 
+
+        ]);
+    }
+
+
+    protected function registered(Request $request, $user)
+    {
+        Logs::create([
+            'user_id' => Auth::id(),
+            'action' => 'Register',
+            'description' => 'Registered a new user account',
         ]);
     }
 }

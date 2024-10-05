@@ -11,8 +11,6 @@ class PreprocessInputFileController extends Controller
 
         $request->validate([
             'file' => 'required|file',
-            'type' => 'required',
-            'freq' => 'required',
             'description' => 'string',
         ]);
 
@@ -20,23 +18,40 @@ class PreprocessInputFileController extends Controller
         $filename = $file->getClientOriginalName();
 
         // Extract the variables from the request
-        $type = $request->get('type');
-        $freq = $request->get('freq');
+        $type = "";
+        // $freq = $request->get('freq');
         $description = $request->get('description');
 
-        if ($request->input('type') === 'multivariate') {
-            $data = array_map('str_getcsv', file($file->getRealPath()));
-            $headers = $data[0];
-            array_shift($data);
+        $data = array_map('str_getcsv', file($file->getRealPath()));
+        $headers = $data[0];
+        array_shift($data);
 
-            return view('uploadData.multivariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
+        if (sizeof($headers) == 2) {
+            $type = "univariate";
+
         } else {
-            $data = array_map('str_getcsv', file($file->getRealPath()));
-            $headers = $data[0];
-            array_shift($data);
-
-            return view('uploadData.univariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
+            $type = "multivariate";
         }
+
+        if ($type === 'multivariate') {
+            return view('uploadData.multivariate', compact('data', 'headers', 'type', 'description', 'filename'));
+        } else {
+            return view('uploadData.univariate', compact('data', 'headers', 'type', 'description', 'filename'));
+        }
+
+        // if ($request->input('type') === 'multivariate') {
+        //     $data = array_map('str_getcsv', file($file->getRealPath()));
+        //     $headers = $data[0];
+        //     array_shift($data);
+
+        //     return view('uploadData.multivariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
+        // } else {
+        //     $data = array_map('str_getcsv', file($file->getRealPath()));
+        //     $headers = $data[0];
+        //     array_shift($data);
+
+        //     return view('uploadData.univariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
+        // }
     }
 
 

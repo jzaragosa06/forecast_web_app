@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChatHistory;
+use App\Models\FileAssociation;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use App\Models\Logs;
+use Auth;
+
 
 
 class LLMController extends Controller
@@ -42,12 +46,19 @@ class LLMController extends Controller
         $chat_from_req = $request->input('history');
         $file_assoc_id = $request->get('file_assoc_id');
 
-
+        $file_assoc = FileAssociation::where('file_assoc_id', $file_assoc_id)->first();
         $history = ChatHistory::where('file_assoc_id', $file_assoc_id)->first();
 
 
         if ($history) {
             $history->update(["history" => $chat_from_req]);
+
+            Logs::create([
+                'user_id' => Auth::id(),
+                'action' => 'Converse with AI',
+                'description' => 'Converse and updated the history for the file: ' . $file_assoc->assoc_filename,
+            ]);
+
             return response()->json(['status' => 'success', 'message' => 'Chat history updated  successfully.']);
 
 
@@ -56,6 +67,12 @@ class LLMController extends Controller
             ChatHistory::create([
                 'file_assoc_id' => $file_assoc_id,
                 'history' => $chat_from_req,
+            ]);
+
+            Logs::create([
+                'user_id' => Auth::id(),
+                'action' => 'Converse with AI',
+                'description' => 'Converse and saved the history for the file: ' . $file_assoc->assoc_filename,
             ]);
 
             return response()->json(['status' => 'success', 'message' => 'Chat history saved successfully.']);

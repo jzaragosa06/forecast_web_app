@@ -6,10 +6,28 @@
 
 
 @section('content')
-
     <div class="container  mx-auto my-6">
         <div class="container mx-auto p-4">
             <div class="flex space-x-4">
+
+                <div class="w-full md:w-1/3">
+                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
+                        <h4 class="text-lg font-semibold mb-4">Add Data</h4>
+                        <div class="flex-grow">
+                            <button type="button" id="ts-info"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md mb-2 hover:bg-blue-700"
+                                data-toggle="modal" data-target="#ts-info-form">
+                                Add More data via upload
+                            </button>
+                            <button type="button" id="ts-add-via-api-open-meteo-btn"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" data-toggle="modal"
+                                data-target="#ts-add-via-api-open-meteo-modal">
+                                Add data from Open-Meteo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="w-full md:w-1/3">
                     <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
                         <h4 class="text-lg font-semibold mb-4">Analyze</h4>
@@ -42,27 +60,6 @@
                     </div>
                 </div>
 
-
-                <div class="w-full md:w-1/3">
-                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
-                        <h4 class="text-lg font-semibold mb-4">Add Data</h4>
-                        <div class="flex-grow">
-                            <button type="button" id="ts-info"
-                                class="bg-blue-600 text-white px-4 py-2 rounded-md mb-2 hover:bg-blue-700"
-                                data-toggle="modal" data-target="#ts-info-form">
-                                Add More data via upload
-                            </button>
-                            <button type="button" id="ts-add-via-api-open-meteo-btn"
-                                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" data-toggle="modal"
-                                data-target="#ts-add-via-api-open-meteo-modal">
-                                Add data from Open-Meteo
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-
-
                 <div class="w-full md:w-1/3">
                     <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
                         <h4 class="text-lg font-semibold mb-4">Recent Results</h4>
@@ -84,35 +81,59 @@
         </div>
         <hr class="my-4">
 
-        <div class="container mx-auto p-4">
-            <h5 class="text-xl font-semibold mb-4">List of Input Time Series Data</h5>
-            @foreach ($timeSeriesData as $index => $fileData)
-                <div class="bg-white border rounded-lg shadow-md mb-4">
-                    <div class="p-4">
-                        <div class="flex">
-                            <div class="w-full lg:w-1/3">
-                                <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
-                                <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
-                                <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
-                                <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
-                                <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
-                                    @csrf
-                                    <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq. Al.</button>
-                                </form>
-                            </div>
-                            <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
-                                <div class="graph-container mt-4" style="height: 300px;">
-                                    <div id="graph-{{ $index }}" style="height: 100%;"></div>
+
+
+        <div class="flex space-x-4">
+            <!-- Input Button -->
+            <button id="inputBtn" class="bg-blue-600 text-white border border-blue-600 px-4 py-2 rounded-md">
+                Input
+            </button>
+            <!-- Results Button -->
+            <button id="resultsBtn" class="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-md">
+                Results
+            </button>
+        </div>
+
+        <div id="inputContainer" class="mt-4">
+            <!-- Input container content -->
+            <div class="container mx-auto p-4">
+                <h5 class="text-xl font-semibold mb-4">List of Input Time Series Data</h5>
+                @foreach ($timeSeriesData as $index => $fileData)
+                    <div class="bg-white border rounded-lg shadow-md mb-4">
+                        <div class="p-4">
+                            <div class="flex">
+                                <div class="w-full lg:w-1/3">
+                                    <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
+                                    <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
+                                    <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
+                                    <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
+                                    <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
+                                        @csrf
+                                        <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq. Al.</button>
+                                    </form>
+                                </div>
+                                <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
+                                    <div class="graph-container mt-4" style="height: 300px;">
+                                        <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
+
         </div>
+        <div id="resultsContainer" class="mt-4 hidden">
+            <!-- Results container content -->
+            <div class="container mx-auto p-4">
+
+            </div>
+        </div>
+
     </div>
 
-
+    <!-- Upload Modal -->
     <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="ts-info-form"
         style="display:none;">
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
@@ -130,31 +151,12 @@
                         <input type="file" name="file" id="file"
                             class="form-input block w-full border-gray-300 rounded-md shadow-sm">
                     </div>
-                    <div class="mb-4">
-                        <label for="type" class="block text-sm font-medium mb-1">Type:</label>
-                        <select name="type" class="form-select block w-full border-gray-300 rounded-md shadow-sm"
-                            required>
-                            <option value="univariate">Univariate</option>
-                            <option value="multivariate">Multivariate</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label for="freq" class="block text-sm font-medium mb-1">Frequency:</label>
-                        <select name="freq" class="form-select block w-full border-gray-300 rounded-md shadow-sm"
-                            required>
-                            <option value="D">Day</option>
-                            <option value="W">Week</option>
-                            <option value="M">Month</option>
-                            <option value="Q">Quarter</option>
-                            <option value="Y">Yearly</option>
-                        </select>
-                    </div>
+
                     <div class="mb-4">
                         <label for="description" class="block text-sm font-medium mb-1">Description:</label>
-                        {{-- <input type="text" name="description"
-                            class="form-input block w-full border-gray-300 rounded-md shadow-sm"> --}}
+
                         <textarea name="description" id="description" cols="10" rows="5"
-                            class="form-input block w-full border-gray-300 rounded-md shadow-sm"></textarea>
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm" required></textarea>
                     </div>
                     <div class="flex justify-between">
                         <button type="button" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
@@ -372,46 +374,35 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-            let map;
-            let marker;
-            let lat;
-            let lon;
+            const inputBtn = document.getElementById('inputBtn');
+            const resultsBtn = document.getElementById('resultsBtn');
+            const inputContainer = document.getElementById('inputContainer');
+            const resultsContainer = document.getElementById('resultsContainer');
 
+            // Event listeners to toggle between buttons
+            inputBtn.addEventListener('click', () => {
+                inputBtn.classList.add('bg-blue-600', 'text-white');
+                inputBtn.classList.remove('bg-white', 'text-blue-600');
+                resultsBtn.classList.add('bg-white', 'text-blue-600');
+                resultsBtn.classList.remove('bg-blue-600', 'text-white');
 
-            // =======================================================================================
-
-
-            $('#ts-info').click(function() {
-                $('#ts-info-form').removeClass('hidden').hide().fadeIn(200);
-                $('#ts-info-form > div').removeClass('scale-95').addClass('scale-100');
+                inputContainer.classList.remove('hidden');
+                resultsContainer.classList.add('hidden');
             });
 
+            resultsBtn.addEventListener('click', () => {
+                resultsBtn.classList.add('bg-blue-600', 'text-white');
+                resultsBtn.classList.remove('bg-white', 'text-blue-600');
+                inputBtn.classList.add('bg-white', 'text-blue-600');
+                inputBtn.classList.remove('bg-blue-600', 'text-white');
 
-
-
-            $('#ts-add-via-api-open-meteo-btn').click(function() {
-                $('#ts-add-via-api-open-meteo-modal').removeClass('hidden').hide().fadeIn(200);
-                $('#ts-add-via-api-open-meteo-modal > div').removeClass('scale-95').addClass('scale-100');
+                inputContainer.classList.add('hidden');
+                resultsContainer.classList.remove('hidden');
             });
 
-            // Close modals
-            $('[data-dismiss="modal"]').click(function() {
-                $(this).closest('.fixed').css('display', 'none');
-            });
+        });
+        $(document).ready(function() {
 
-            // Close modals when clicking outside the modal content
-            $('.fixed').click(function(e) {
-                if ($(e.target).is(this)) {
-                    $(this).fadeOut(200, function() {
-                        $(this).addClass('hidden');
-                    });
-                }
-            });
-            // =======================================================================================
-
-
-
-            // =======================================================================================
             // Iterate over each file data to create corresponding graphs
             @foreach ($timeSeriesData as $index => $fileData)
                 var options = {
@@ -468,9 +459,56 @@
                 var chart = new ApexCharts(document.querySelector("#graph-{{ $index }}"), options);
                 chart.render();
             @endforeach
-            // =======================================================================================
+        });
+
+        $(document).ready(function() {
+            $('#operation').on('change', function() {
+                if ($(this).val() === 'forecast') {
+                    $('#forecast-modal').removeClass('hidden').hide().fadeIn(200);
+                    $('#forecast-modal > div').removeClass('scale-95').addClass('scale-100');
+                    $('#modal_file_id').val($('#file_id').val());
+                }
+            });
+
+            // Open the 'Add More data' modal when 'Add more data' is selected
+            $('#file_id').on('change', function() {
+                if ($(this).val() === '') {
+                    $('#ts-info-form').modal('show');
+                }
+            });
+
+            $('#ts-info').click(function() {
+                $('#ts-info-form').removeClass('hidden').hide().fadeIn(200);
+                $('#ts-info-form > div').removeClass('scale-95').addClass('scale-100');
+            });
 
 
+        });
+
+        $(document).ready(function() {
+            let map;
+            let marker;
+            let lat;
+            let lon;
+
+            $('#ts-add-via-api-open-meteo-btn').click(function() {
+                $('#ts-add-via-api-open-meteo-modal').removeClass('hidden').hide().fadeIn(200);
+                $('#ts-add-via-api-open-meteo-modal > div').removeClass('scale-95').addClass('scale-100');
+            });
+
+            // Close modals
+            $('[data-dismiss="modal"]').click(function() {
+                $(this).closest('.fixed').css('display', 'none');
+            });
+
+            // Close modals when clicking outside the modal content
+            $('.fixed').click(function(e) {
+                if ($(e.target).is(this)) {
+                    $(this).fadeOut(200, function() {
+                        $(this).addClass('hidden');
+                    });
+                }
+            });
 
             // Initialize and show Google Map when "Open Map" button is clicked
             $('#get-from-maps-btn').on('click', function() {
@@ -517,27 +555,6 @@
                 $('#long').text(lon);
             }
 
-
-
-            $('#operation').on('change', function() {
-                if ($(this).val() === 'forecast') {
-                    $('#forecast-modal').removeClass('hidden').hide().fadeIn(200);
-                    $('#forecast-modal > div').removeClass('scale-95').addClass('scale-100');
-                    $('#modal_file_id').val($('#file_id').val());
-                }
-
-
-
-            });
-
-
-            // Open the 'Add More data' modal when 'Add more data' is selected
-            $('#file_id').on('change', function() {
-                if ($(this).val() === '') {
-                    $('#ts-info-form').modal('show');
-                }
-            });
-
             // Geolocation: Use current location
             $('#use-current-loc-btn').on('click', function() {
                 if (navigator.geolocation) {
@@ -566,159 +583,147 @@
                     alert("Geolocation is not supported by this browser.");
                 }
             });
-        });
 
-        // Listen for click event on the fetch button
-        $('#fetch-data-open-meteo-btn').on('click', function(e) {
-            e.preventDefault();
+            // Listen for click event on the fetch button
+            $('#fetch-data-open-meteo-btn').on('click', function(e) {
+                e.preventDefault();
 
-            // Extract latitude and longitude
-            let lat = $('#lat').text().trim(); // Assuming lat and long values are stored here
-            let long = $('#long').text().trim();
+                // Extract latitude and longitude
+                let lat = $('#lat').text().trim(); // Assuming lat and long values are stored here
+                let long = $('#long').text().trim();
 
-            // Get the selected checkboxes
-            let selectedDaily = [];
-            $('input[name="daily"]:checked').each(function() {
-                selectedDaily.push($(this).val());
-            });
+                // Get the selected checkboxes
+                let selectedDaily = [];
+                $('input[name="daily"]:checked').each(function() {
+                    selectedDaily.push($(this).val());
+                });
 
-            // If no checkboxes are selected, alert the user
-            if (selectedDaily.length === 0) {
-                alert('Please select at least one data field');
-                return;
-            }
+                // If no checkboxes are selected, alert the user
+                if (selectedDaily.length === 0) {
+                    alert('Please select at least one data field');
+                    return;
+                }
 
-            // Build the API request URL
-            let apiUrl = 'https://archive-api.open-meteo.com/v1/archive';
-            let startDate = $('#start-date').val(); // Extracting start date
-            let endDate = $('#end-date').val(); // Extracting end date
+                // Build the API request URL
+                let apiUrl = 'https://archive-api.open-meteo.com/v1/archive';
+                let startDate = $('#start-date').val(); // Extracting start date
+                let endDate = $('#end-date').val(); // Extracting end date
 
-            let dailyParams = selectedDaily.join(',');
+                let dailyParams = selectedDaily.join(',');
 
-            let requestUrl =
-                `${apiUrl}?latitude=${lat}&longitude=${long}&start_date=${startDate}&end_date=${endDate}&daily=${dailyParams}&timezone=auto`;
+                let requestUrl =
+                    `${apiUrl}?latitude=${lat}&longitude=${long}&start_date=${startDate}&end_date=${endDate}&daily=${dailyParams}&timezone=auto`;
 
+                // Send the AJAX request
+                $.ajax({
+                    url: requestUrl,
+                    type: 'GET',
+                    success: function(response) {
+                        // Handle the response from the server
+                        console.log('Data fetched successfully:', response);
 
-            console.log(requestUrl);
+                        csvData = generateCSV(response, selectedDaily);
+                        console.log("generated csv raw", csvData);
 
-            // Send the AJAX request
-            $.ajax({
-                url: requestUrl,
-                type: 'GET',
-                success: function(response) {
-                    // Handle the response from the server
-                    console.log('Data fetched successfully:', response);
+                        // Create a FormData object to send the CSV and other data
+                        const blob = new Blob([csvData], {
+                            type: 'text/csv'
+                        });
 
+                        const formData = new FormData();
+                        formData.append('csv_file', blob, 'data.csv');
 
-                    // You can display the data in the modal or elsewhere in the app
-                    // =================================================================================================
-                    csvData = generateCSV(response, selectedDaily);
-                    console.log("generated csv raw", csvData);
-
-                    // Create a FormData object to send the CSV and other data
-                    const blob = new Blob([csvData], {
-                        type: 'text/csv'
-                    });
-
-                    const formData = new FormData();
-                    formData.append('csv_file', blob, 'data.csv');
-
-                    let currentDate = new Date().toISOString().split('T')[0];
-                    console.log(currentDate);
+                        let currentDate = new Date().toISOString().split('T')[0];
+                        console.log(currentDate);
 
 
-                    let type;
-                    let freq = 'D';
-                    let description = `time sereis data involving ${selectedDaily.join(',')}`;
-                    let filename = `${selectedDaily.join('-')}-${currentDate}.csv`;
+                        let type;
+                        let freq = 'D';
+                        let description =
+                            `time sereis data involving ${selectedDaily.join(',')}`;
+                        let filename = `${selectedDaily.join('-')}-${currentDate}.csv`;
 
-                    if (selectedDaily.length == 1) {
-                        type = "univariate";
-                    } else {
-                        type = "multivariate";
-                    }
-
-                    formData.append('type', type);
-                    formData.append('freq', freq);
-                    formData.append('description', description);
-                    formData.append('filename', filename);
-
-                    // Inspect FormData
-                    for (let [key, value] of formData.entries()) {
-                        console.log(key, value);
-                    }
-
-
-
-                    $.ajax({
-                        url: '{{ route('save') }}', // URL to your Laravel route
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                'content') // Add CSRF token here
-                        },
-                        data: formData,
-                        processData: false, // Prevent jQuery from automatically transforming the data into a query string
-                        contentType: false, // Let the browser set the content type
-                        success: function(response) {
-                            console.log('Data saved successfully:');
-                            window.location.href = response.redirect_url;
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error saving data:', error);
+                        if (selectedDaily.length == 1) {
+                            type = "univariate";
+                        } else {
+                            type = "multivariate";
                         }
-                    });
 
-                    // ========================================================================================
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error fetching data:', error);
-                    alert('Failed to fetch data. Please try again.');
+                        formData.append('type', type);
+                        formData.append('freq', freq);
+                        formData.append('description', description);
+                        formData.append('filename', filename);
+                        formData.append('source', 'open-meteo');
+
+                        $.ajax({
+                            url: '{{ route('save') }}', // URL to your Laravel route
+                            type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                    'content') // Add CSRF token here
+                            },
+                            data: formData,
+                            processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                            contentType: false, // Let the browser set the content type
+                            success: function(response) {
+                                console.log('Data saved successfully:');
+                                window.location.href = response.redirect_url;
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error saving data:', error);
+                            }
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching data:', error);
+                        alert('Failed to fetch data. Please try again.');
+                    }
+                });
+
+
+                function convertDate(inputDate) {
+                    // Parse the input date string into a Date object
+                    const parsedDate = new Date(inputDate);
+
+                    // Format the date as MM/dd/yyyy (full year format)
+                    const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
+                    return formattedDate;
                 }
+
+
+                function generateCSV(data, selectedVariables) {
+
+
+                    // Extract time array from the response
+                    const timeArray = data.daily.time;
+
+                    // Initialize CSV content with headers
+                    let csvContent = 'time,' + selectedVariables.join(',') + '\n';
+
+                    // Loop through each day (time array)
+                    for (let i = 0; i < timeArray.length; i++) {
+                        // Start each row with the time (date)
+                        // let row = [timeArray[i]];
+                        let row = [convertDate(timeArray[i])];
+
+                        // For each selected variable, add the corresponding value to the row
+                        selectedVariables.forEach(variable => {
+
+                            row.push(data.daily[variable][i]);
+
+
+                        });
+
+                        // Add the row to CSV content
+                        csvContent += row.join(',') + '\n';
+                    }
+
+                    return csvContent;
+                }
+
+
+
             });
-
-
-            function convertDate(inputDate) {
-                // Parse the input date string into a Date object
-                const parsedDate = new Date(inputDate);
-
-                // Format the date as MM/dd/yyyy (full year format)
-                const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
-                return formattedDate;
-            }
-
-
-            function generateCSV(data, selectedVariables) {
-
-
-                // Extract time array from the response
-                const timeArray = data.daily.time;
-
-                // Initialize CSV content with headers
-                let csvContent = 'time,' + selectedVariables.join(',') + '\n';
-
-                // Loop through each day (time array)
-                for (let i = 0; i < timeArray.length; i++) {
-                    // Start each row with the time (date)
-                    // let row = [timeArray[i]];
-                    let row = [convertDate(timeArray[i])];
-
-                    // For each selected variable, add the corresponding value to the row
-                    selectedVariables.forEach(variable => {
-
-                        row.push(data.daily[variable][i]);
-
-
-                    });
-
-                    // Add the row to CSV content
-                    csvContent += row.join(',') + '\n';
-                }
-
-                return csvContent;
-            }
-
-
 
         });
     </script>

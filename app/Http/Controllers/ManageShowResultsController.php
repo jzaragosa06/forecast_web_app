@@ -10,7 +10,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Auth;
 use Storage;
-use DB; // Import DB facade
+use DB;
+use App\Models\Logs;
 
 class ManageShowResultsController extends Controller
 {
@@ -40,6 +41,16 @@ class ManageShowResultsController extends Controller
         // ===========================
         $users = User::where('id', '!=', Auth::id())->get();
         // ===========================
+
+
+        // ===================================
+        //I put it here to prevent redundancy
+        Logs::create([
+            'user_id' => Auth::id(),
+            'action' => 'View Result File',
+            'description' => 'Viewed ' . $file_assoc->assoc_filename,
+        ]);
+        // ===================================
 
         // Handle different operations and file types
         if ($operation == "forecast") {

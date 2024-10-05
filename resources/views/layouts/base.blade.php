@@ -108,16 +108,6 @@
                         Manage Results
                     </span>
                 </div>
-                <div class="relative group">
-                    <a href="{{ route('profile.index') }}"
-                        class="{{ request()->routeIs('profile.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
-                        <i class="fas fa-user-circle text-xl"></i>
-                    </a>
-                    <span
-                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Profile
-                    </span>
-                </div>
 
                 <div class="relative group">
                     <a href="{{ route('share.index') }}"
@@ -219,7 +209,7 @@
                     </div>
 
                     <!-- Profile Icon with Dropdown -->
-                    <div class="relative">
+                    {{-- <div class="relative">
                         <button id="profileDropdownButton"
                             class="flex items-center text-gray-600 hover:text-indigo-500 focus:outline-none">
                             <i class="fas fa-user-circle text-xl"></i>
@@ -234,8 +224,51 @@
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>
+                            <div>
+                                <a href="{{ route('logs.index') }}">Logs</a>
+                            </div>
+                        </div>
+                    </div> --}}
+
+                    <div class="relative">
+                        <!-- Profile button -->
+                        <button id="profileDropdownButton"
+                            class="flex items-center text-gray-600 hover:text-indigo-500 focus:outline-none focus:ring focus:ring-indigo-300 rounded-md">
+                            <i class="fas fa-user-circle text-xl mr-2"></i>
+                        </button>
+
+                        <!-- Dropdown menu -->
+                        <div id="profileDropdown"
+                            class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                            <!-- Profile Link -->
+                            <a href="{{ route('profile.index') }}"
+                                class="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200">
+                                <i class="fas fa-user mr-2"></i>
+                                <span>Profile</span>
+                            </a>
+
+                            <!-- Logs Link -->
+                            <a href="{{ route('logs.index') }}"
+                                class="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200">
+                                <i class="fas fa-list mr-2"></i>
+                                <span>Logs</span>
+                            </a>
+
+                            <!-- Logout Link -->
+                            <a href="{{ route('logout') }}"
+                                class="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                <span>Logout</span>
+                            </a>
+
+                            <!-- Hidden Logout Form -->
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                @csrf
+                            </form>
                         </div>
                     </div>
+
                 </div>
             </div>
 
