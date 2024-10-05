@@ -161,7 +161,8 @@ class ShareController extends Controller
                 'users.id as user_id',
                 'users.name as shared_by',
                 'file_user_shares.created_at as shared_at'
-            )
+            )->orderBy('file_user_shares.created_at', 'desc')
+
             ->get();
 
         // Files shared by the current user with others
@@ -174,7 +175,8 @@ class ShareController extends Controller
                 'file_associations.associated_file_path',
                 'users.name as shared_to',
                 'file_user_shares.created_at as shared_at'
-            )
+            )->orderBy('file_user_shares.created_at', 'desc')
+
             ->get();
 
         // Pass data to the view

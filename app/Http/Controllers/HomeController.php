@@ -36,10 +36,15 @@ class HomeController extends Controller
     {
         // Get the files associated with the authenticated user
         // $files = File::where('user_id', Auth::id())->get();
-        $files = Auth::user()->files;
-        $file_assocs = FileAssociation::where('user_id', Auth::id())->get();
 
-        // Prepare an array to store time series data
+        $file_assocs = FileAssociation::where('user_id', Auth::id())->orderBy('created_at', 'desc')
+            ->get();
+
+
+        // $files = Auth::user()->files;
+
+        $files = File::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+
         $timeSeriesData = [];
 
         // Loop through each file and extract data

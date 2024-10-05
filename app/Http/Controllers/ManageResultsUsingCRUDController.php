@@ -18,7 +18,8 @@ class ManageResultsUsingCRUDController extends Controller
     public function index()
     {
 
-        $files_input = File::where('user_id', Auth::id())->get();
+        $files_input = File::where('user_id', Auth::id())->orderBy('created_at', 'desc')
+            ->get();
 
         $files = DB::table('files')
             ->leftJoin('file_associations', 'files.file_id', '=', 'file_associations.file_id')
@@ -31,9 +32,11 @@ class ManageResultsUsingCRUDController extends Controller
                 'file_associations.assoc_filename',
                 'file_associations.associated_file_path',
                 'file_associations.operation'
-            )
+            )->orderBy('file_associations.created_at', 'desc')
+
             ->get();
-        $files_assoc = FileAssociation::where('user_id', Auth::id())->get();
+        $files_assoc = FileAssociation::where('user_id', Auth::id())->orderBy('created_at', 'desc')
+            ->get();
         // ===========================
         $users = User::where('id', '!=', Auth::id())->get();
         // ===========================

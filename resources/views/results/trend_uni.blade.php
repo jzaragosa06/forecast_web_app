@@ -280,7 +280,7 @@
                         formatter: function(value) {
                             // Check if the value is a valid number before applying toFixed
                             return isNaN(value) ? value : value.toFixed(
-                            2); // Safely format only valid numeric values
+                                2); // Safely format only valid numeric values
                         }
                     }
                 },
