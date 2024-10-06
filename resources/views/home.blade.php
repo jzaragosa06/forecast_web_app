@@ -24,6 +24,13 @@
                                 data-target="#ts-add-via-api-open-meteo-modal">
                                 Add data from Open-Meteo
                             </button>
+
+                            {{-- Stocks --}}
+                            <button type="button" id="ts-add-via-api-stocks-btn"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                Stocks
+                            </button>
+
                         </div>
                     </div>
                 </div>
@@ -159,6 +166,7 @@
                                             @csrf
                                             <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq.
                                                 Al.</button>
+
                                         </form>
                                     </div>
                                     <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
@@ -413,6 +421,240 @@
             </div>
         </div>
     </div>
+
+    <!-- Stocks Modal -->
+    {{-- <div id="ts-add-via-api-stocks-modal"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Stock Market Data</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex justify-between">
+                    <button type="button" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
+                        data-dismiss="modal">Close</button>
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
+    <!-- Stocks Modal -->
+    {{-- <div id="ts-add-via-api-stocks-modal"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Stock Market Data</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Stock selection using Combo Box -->
+                <div class="flex flex-col space-y-4">
+                    <div class="flex justify-between space-x-4">
+                        <!-- Stock Combo Box -->
+                        <div class="w-full">
+                            <label for="stock-selection" class="block text-sm font-medium text-gray-700">Select
+                                Stock</label>
+                            <select id="stock-selection"
+                                class="w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                <option value="AAPL">Apple (AAPL)</option>
+                                <option value="TSLA">Tesla (TSLA)</option>
+                                <option value="GOOG">Google (GOOG)</option>
+                                <option value="AMZN">Amazon (AMZN)</option>
+                                <option value="MSFT">Microsoft (MSFT)</option>
+                            </select>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="flex space-x-4">
+                            <!-- Start Date -->
+                            <div>
+                                <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                                <input type="date" id="start-date"
+                                    class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                            <!-- End Date -->
+                            <div>
+                                <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
+                                <input type="date" id="end-date"
+                                    class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interval Dropdown -->
+                    <div class="w-full">
+                        <label for="interval" class="block text-sm font-medium text-gray-700">Interval</label>
+                        <select id="interval"
+                            class="w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="1day">1 Day</option>
+                            <option value="1week">1 Week</option>
+                            <option value="1month">1 Month</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="flex justify-between mt-4">
+                    <button type="button" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
+                        data-dismiss="modal">Close</button>
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+    {{-- <div id="ts-add-via-api-stocks-modal"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Stock Market Data</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Stock selection using Combo Box (Input + Datalist) -->
+                <div class="flex flex-col space-y-4">
+                    <div class="flex justify-between space-x-4">
+                        <!-- Stock Combo Box -->
+                        <div class="w-full">
+                            <label for="stock-selection" class="block text-sm font-medium text-gray-700">Select or Enter
+                                Stock</label>
+                            <input list="stocks" id="stock-selection" name="stock-selection"
+                                class="w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                                placeholder="Enter stock symbol or select from the list">
+                            <datalist id="stocks">
+                                <option value="AAPL">Apple (AAPL)</option>
+                                <option value="TSLA">Tesla (TSLA)</option>
+                                <option value="GOOG">Google (GOOG)</option>
+                                <option value="AMZN">Amazon (AMZN)</option>
+                                <option value="MSFT">Microsoft (MSFT)</option>
+                            </datalist>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="flex space-x-4">
+                            <!-- Start Date -->
+                            <div>
+                                <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                                <input type="date" id="start-date"
+                                    class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                            <!-- End Date -->
+                            <div>
+                                <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
+                                <input type="date" id="end-date"
+                                    class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interval Dropdown -->
+                    <div class="w-full">
+                        <label for="interval" class="block text-sm font-medium text-gray-700">Interval</label>
+                        <select id="interval"
+                            class="w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="1day">1 Day</option>
+                            <option value="1week">1 Week</option>
+                            <option value="1month">1 Month</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="flex justify-between mt-4">
+                    <button type="button" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
+                        data-dismiss="modal">Close</button>
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
+    <div id="ts-add-via-api-stocks-modal"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40 hidden" style="display:none;">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h5 class="text-lg font-semibold text-gray-800">Stock Market Data</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Stock selection using Combo Box (Input + Datalist) -->
+                <div class="flex flex-col space-y-6">
+                    <div class="space-y-2">
+                        <!-- Stock Combo Box -->
+                        <div>
+                            <label for="stock-selection" class="block text-sm font-medium text-gray-700">Select or Enter
+                                Stock</label>
+                            <input list="stocks" id="stock-selection" name="stock-selection"
+                                class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                                placeholder="Enter stock symbol or select from the list">
+                            <datalist id="stocks">
+                                <option value="AAPL">Apple (AAPL)</option>
+                                <option value="TSLA">Tesla (TSLA)</option>
+                                <option value="GOOG">Google (GOOG)</option>
+                                <option value="AMZN">Amazon (AMZN)</option>
+                                <option value="MSFT">Microsoft (MSFT)</option>
+                            </datalist>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="flex space-x-4">
+                            <!-- Start Date -->
+                            <div class="w-1/2">
+                                <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                                <input type="date" id="start-date"
+                                    class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                            <!-- End Date -->
+                            <div class="w-1/2">
+                                <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
+                                <input type="date" id="end-date"
+                                    class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interval Dropdown -->
+                    <div>
+                        <label for="interval" class="block text-sm font-medium text-gray-700">Interval</label>
+                        <select id="interval"
+                            class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="1day">1 Day</option>
+                            <option value="1week">1 Week</option>
+                            <option value="1month">1 Month</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="flex justify-end mt-6 space-x-4">
+                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                        data-dismiss="modal">Close</button>
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('scripts')
@@ -769,6 +1011,27 @@
 
             });
 
+        });
+
+        $(document).ready(function() {
+            $('#ts-add-via-api-stocks-btn').click(function() {
+                $('#ts-add-via-api-stocks-modal').removeClass('hidden').hide().fadeIn(200);
+                $('#ts-add-via-api-stocks-modal > div').removeClass('scale-95').addClass('scale-100');
+            });
+
+            // Close modals
+            $('[data-dismiss="modal"]').click(function() {
+                $(this).closest('.fixed').css('display', 'none');
+            });
+
+            // Close modals when clicking outside the modal content
+            $('.fixed').click(function(e) {
+                if ($(e.target).is(this)) {
+                    $(this).fadeOut(200, function() {
+                        $(this).addClass('hidden');
+                    });
+                }
+            });
         });
     </script>
 @endsection
