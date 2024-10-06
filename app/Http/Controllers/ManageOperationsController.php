@@ -72,14 +72,14 @@ class ManageOperationsController extends Controller
                         Logs::create([
                             'user_id' => Auth::id(),
                             'action' => 'Perform Forecast',
-                            'description' => 'Successfully performed a forecast on file ' . $assoc_filename,
+                            'description' => 'Successfully performed a forecast on file ' . $file->filename,
                         ]);
                     }
                 } catch (\Throwable $th) {
                     Logs::create([
                         'user_id' => Auth::id(),
                         'action' => 'Perform Forecast',
-                        'description' => 'Failed to performed a forecast on file ' . $assoc_filename,
+                        'description' => 'Failed to performed a forecast on file ' . $file->filename,
                     ]);
                 }
 
@@ -118,14 +118,14 @@ class ManageOperationsController extends Controller
                         Logs::create([
                             'user_id' => Auth::id(),
                             'action' => 'Perform Forecast',
-                            'description' => 'Successfully performed a forecast on file ' . $assoc_filename,
+                            'description' => 'Successfully performed a forecast on file ' . $file->filename,
                         ]);
                     }
                 } catch (\Throwable $th) {
                     Logs::create([
                         'user_id' => Auth::id(),
                         'action' => 'Perform Forecast',
-                        'description' => 'Failed to performed a forecast on file ' . $assoc_filename,
+                        'description' => 'Failed to performed a forecast on file ' . $file->filename,
                     ]);
                 }
             }
@@ -168,7 +168,7 @@ class ManageOperationsController extends Controller
                     Logs::create([
                         'user_id' => Auth::id(),
                         'action' => 'Analyze Trend',
-                        'description' => 'Successfully analyzed trend on ' . $assoc_filename . ' using Facebook Prophet.',
+                        'description' => 'Successfully analyzed trend on ' . $file->filename . ' using Facebook Prophet.',
                     ]);
                 }
 
@@ -176,7 +176,7 @@ class ManageOperationsController extends Controller
                 Logs::create([
                     'user_id' => Auth::id(),
                     'action' => 'Analyze Trend',
-                    'description' => 'Failed analyzed trend on ' . $assoc_filename . ' using Facebook Prophet.',
+                    'description' => 'Failed analyzed trend on ' . $file->filename . ' using Facebook Prophet.',
                 ]);
             }
 
@@ -219,7 +219,7 @@ class ManageOperationsController extends Controller
                     Logs::create([
                         'user_id' => Auth::id(),
                         'action' => 'Analyze Seasonality',
-                        'description' => 'Successfully analyzed seasonality on ' . $assoc_filename . ' using Facebook Prophet.',
+                        'description' => 'Successfully analyzed seasonality on ' . $file->filename . ' using Facebook Prophet.',
                     ]);
                 }
 
@@ -227,7 +227,7 @@ class ManageOperationsController extends Controller
                 Logs::create([
                     'user_id' => Auth::id(),
                     'action' => 'Analyze Seasonality',
-                    'description' => 'Failed to analyzed seasonality on ' . $assoc_filename . ' using Facebook Prophet.',
+                    'description' => 'Failed to analyzed seasonality on ' . $file->filename . ' using Facebook Prophet.',
                 ]);
             }
 

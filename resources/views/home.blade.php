@@ -60,23 +60,40 @@
                     </div>
                 </div>
 
+
+
                 <div class="w-full md:w-1/3">
                     <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
                         <h4 class="text-lg font-semibold mb-4">Recent Results</h4>
                         <div class="flex-grow">
-                            <ul class="list-disc pl-5">
-                                @foreach ($file_assocs as $file_assoc)
-                                    <li class="mb-2">
-                                        <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
-                                            class="text-blue-600 hover:underline">
-                                            <p>{{ $file_assoc->assoc_filename }}</p>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
+                            @if ($file_assocs->isEmpty())
+                                <p class="text-gray-500 text-center">No recent results found.</p>
+                            @else
+                                <ul class="list-disc pl-5">
+                                    @foreach ($file_assocs->slice(0, 5) as $file_assoc)
+                                        <li class="mb-2">
+                                            <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
+                                                class="text-blue-600 hover:underline">
+                                                <p>{{ $file_assoc->assoc_filename }}</p>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
                         </div>
+
+                        {{-- Show "View More" link if there are more than 5 results --}}
+                        @if ($file_assocs->count() > 5)
+                            <div class="mt-4">
+                                <a href="{{ route('crud.index') }}" class="text-blue-600 hover:underline font-semibold">
+                                    View More
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
+
+
             </div>
         </div>
         <hr class="my-4">
@@ -85,49 +102,75 @@
 
         <div class="flex space-x-4">
             <!-- Input Button -->
-            <button id="inputBtn" class="bg-blue-600 text-white border border-blue-600 px-4 py-2 rounded-md">
-                Input
+            <button id="input-via-uploads-Btn" class="bg-blue-600 text-white border border-blue-600 px-4 py-2 rounded-md">
+                Uploads
             </button>
             <!-- Results Button -->
-            <button id="resultsBtn" class="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-md">
-                Results
+            <button id="input-via-openmeteo-Btn" class="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-md">
+                Open-Meteo
             </button>
         </div>
 
-        <div id="inputContainer" class="mt-4">
+        <div id="input-via-uploads-Container" class="mt-4">
             <!-- Input container content -->
             <div class="container mx-auto p-4">
-                <h5 class="text-xl font-semibold mb-4">List of Input Time Series Data</h5>
                 @foreach ($timeSeriesData as $index => $fileData)
-                    <div class="bg-white border rounded-lg shadow-md mb-4">
-                        <div class="p-4">
-                            <div class="flex">
-                                <div class="w-full lg:w-1/3">
-                                    <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
-                                    <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
-                                    <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
-                                    <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
-                                    <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
-                                        @csrf
-                                        <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq. Al.</button>
-                                    </form>
-                                </div>
-                                <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
-                                    <div class="graph-container mt-4" style="height: 300px;">
-                                        <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                    @if ($files[$index]->source == 'uploads')
+                        <div class="bg-white border rounded-lg shadow-md mb-4">
+                            <div class="p-4">
+                                <div class="flex">
+                                    <div class="w-full lg:w-1/3">
+                                        <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
+                                        <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
+                                        <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
+                                        <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
+                                        <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
+                                            @csrf
+                                            <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq.
+                                                Al.</button>
+                                        </form>
+                                    </div>
+                                    <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
+                                        <div class="graph-container mt-4" style="height: 300px;">
+                                            <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 @endforeach
             </div>
 
         </div>
-        <div id="resultsContainer" class="mt-4 hidden">
-            <!-- Results container content -->
+        <div id="input-via-openmeteo-Container" class="mt-4 hidden">
             <div class="container mx-auto p-4">
-
+                @foreach ($timeSeriesData as $index => $fileData)
+                    @if ($files[$index]->source == 'open-meteo')
+                        <div class="bg-white border rounded-lg shadow-md mb-4">
+                            <div class="p-4">
+                                <div class="flex">
+                                    <div class="w-full lg:w-1/3">
+                                        <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
+                                        <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
+                                        <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
+                                        <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
+                                        <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
+                                            @csrf
+                                            <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq.
+                                                Al.</button>
+                                        </form>
+                                    </div>
+                                    <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
+                                        <div class="graph-container mt-4" style="height: 300px;">
+                                            <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
             </div>
         </div>
 
@@ -139,7 +182,8 @@
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
             <div class="flex justify-between items-center border-b pb-2 mb-2">
                 <h5 class="text-lg font-semibold">Information About the Time Series Data</h5>
-                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
                     &times;
                 </button>
             </div>
@@ -374,30 +418,30 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-            const inputBtn = document.getElementById('inputBtn');
-            const resultsBtn = document.getElementById('resultsBtn');
-            const inputContainer = document.getElementById('inputContainer');
-            const resultsContainer = document.getElementById('resultsContainer');
+            const uploadsBtn = document.getElementById('input-via-uploads-Btn');
+            const openmeteoBtn = document.getElementById('input-via-openmeteo-Btn');
+            const uploadsContainer = document.getElementById('input-via-uploads-Container');
+            const openmeteoContainer = document.getElementById('input-via-openmeteo-Container');
 
             // Event listeners to toggle between buttons
-            inputBtn.addEventListener('click', () => {
-                inputBtn.classList.add('bg-blue-600', 'text-white');
-                inputBtn.classList.remove('bg-white', 'text-blue-600');
-                resultsBtn.classList.add('bg-white', 'text-blue-600');
-                resultsBtn.classList.remove('bg-blue-600', 'text-white');
+            uploadsBtn.addEventListener('click', () => {
+                uploadsBtn.classList.add('bg-blue-600', 'text-white');
+                uploadsBtn.classList.remove('bg-white', 'text-blue-600');
+                openmeteoBtn.classList.add('bg-white', 'text-blue-600');
+                openmeteoBtn.classList.remove('bg-blue-600', 'text-white');
 
-                inputContainer.classList.remove('hidden');
-                resultsContainer.classList.add('hidden');
+                uploadsContainer.classList.remove('hidden');
+                openmeteoContainer.classList.add('hidden');
             });
 
-            resultsBtn.addEventListener('click', () => {
-                resultsBtn.classList.add('bg-blue-600', 'text-white');
-                resultsBtn.classList.remove('bg-white', 'text-blue-600');
-                inputBtn.classList.add('bg-white', 'text-blue-600');
-                inputBtn.classList.remove('bg-blue-600', 'text-white');
+            openmeteoBtn.addEventListener('click', () => {
+                openmeteoBtn.classList.add('bg-blue-600', 'text-white');
+                openmeteoBtn.classList.remove('bg-white', 'text-blue-600');
+                uploadsBtn.classList.add('bg-white', 'text-blue-600');
+                uploadsBtn.classList.remove('bg-blue-600', 'text-white');
 
-                inputContainer.classList.add('hidden');
-                resultsContainer.classList.remove('hidden');
+                uploadsContainer.classList.add('hidden');
+                openmeteoContainer.classList.remove('hidden');
             });
 
         });
