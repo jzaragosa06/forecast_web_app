@@ -104,3 +104,7 @@ Route::get('/alignment', function () {
 });
 
 
+
+Route::get('/response', function () {
+    return view('response');
+});

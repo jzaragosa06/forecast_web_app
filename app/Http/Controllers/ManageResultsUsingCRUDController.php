@@ -32,8 +32,7 @@ class ManageResultsUsingCRUDController extends Controller
                 'file_associations.assoc_filename',
                 'file_associations.associated_file_path',
                 'file_associations.operation'
-            )->orderBy('file_associations.created_at', 'desc')
-
+            )
             ->get();
         $files_assoc = FileAssociation::where('user_id', Auth::id())->orderBy('created_at', 'desc')
             ->get();

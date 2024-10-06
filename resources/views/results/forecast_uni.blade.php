@@ -196,6 +196,9 @@
                 chatBox.classList.add('hidden');
             });
         });
+
+
+
         $(document).ready(function() {
             // Toggle between Outsample Forecast and Detailed Result sections
             const outsampleBtn = document.getElementById('outsampleForecastBtn');
@@ -652,13 +655,13 @@
 
                     // Normalize the absolute error based on the range of actual values
                     const normalizedError = range > 0 ? (absoluteError / range) :
-                    0; // Avoid division by zero
+                        0; // Avoid division by zero
                     const colorIntensity = Math.min(255, Math.max(0, normalizedError *
-                    255)); // Scale to 0-255
+                        255)); // Scale to 0-255
 
                     // Set the color to a gradient from white (no error) to red (maximum error)
                     const errorColor =
-                    `rgba(255, ${255 - colorIntensity}, ${255 - colorIntensity}, 0.5)`; // Gradient from white to red
+                        `rgba(255, ${255 - colorIntensity}, ${255 - colorIntensity}, 0.5)`; // Gradient from white to red
 
                     rows += `
             <tr class="border-b border-gray-200">
