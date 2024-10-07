@@ -620,16 +620,20 @@
                             <!-- Start Date -->
                             <div class="w-1/2">
                                 <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
-                                <input type="date" id="start-date"
+                                <input type="date" id="start-date-stocks"
                                     class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             </div>
                             <!-- End Date -->
                             <div class="w-1/2">
                                 <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
-                                <input type="date" id="end-date"
+                                <input type="date" id="end-date-stocks"
                                     class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             </div>
                         </div>
+
+
+
+
                     </div>
 
                     <!-- Interval Dropdown -->
@@ -648,8 +652,8 @@
                 <div class="flex justify-end mt-6 space-x-4">
                     <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
                         data-dismiss="modal">Close</button>
-                    <button type="submit"
-                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Upload</button>
+                    <button id="fetch-data-stocks" type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch</button>
                 </div>
             </div>
         </div>
@@ -1014,6 +1018,9 @@
         });
 
         $(document).ready(function() {
+
+            // Initialize Flatpickr with yy-mm-dd format
+
             $('#ts-add-via-api-stocks-btn').click(function() {
                 $('#ts-add-via-api-stocks-modal').removeClass('hidden').hide().fadeIn(200);
                 $('#ts-add-via-api-stocks-modal > div').removeClass('scale-95').addClass('scale-100');
@@ -1032,6 +1039,181 @@
                     });
                 }
             });
+
+
+            $('#fetch-data-stocks').click(function(e) {
+                e.preventDefault();
+
+                // Fetch the values from the inputs
+                const stockSymbol = $('#stock-selection').val(); // Fetch stock symbol input
+                const startDate = $('#start-date-stocks').val(); // Extracting start date
+                const endDate = $('#end-date-stocks').val(); // Extracting end date
+                const interval = $('#interval').val(); // Fetch interval dropdown
+
+                // Validation logic: Check if any field is empty
+                if (!stockSymbol) {
+                    alert("Stock symbol is required!");
+                    $('#stock-selection').focus(); // Focus the empty input
+                    return;
+                }
+
+                if (!startDate) {
+                    alert("Start date is required!");
+                    $('#start-date-stocks').focus();
+                    return;
+                }
+
+                if (!endDate) {
+                    alert("End date is required!");
+                    $('#end-date-stocks').focus();
+                    return;
+                }
+
+                if (!interval) {
+                    alert("Interval is required!");
+                    $('#interval').focus();
+                    return;
+                }
+
+                // build the http request. 
+                let requestURLStocks =
+                    `https://api.twelvedata.com/time_series?apikey=e7bd90a9e6b24f85aec8b6d9a0f07b10&interval=${interval}&end_date=${endDate}&start_date=${startDate}&symbol=${stockSymbol}&format=JSON`;
+
+                $.ajax({
+                    type: "GET",
+                    url: requestURLStocks,
+
+                    success: function(response) {
+                        console.log('success', response);
+                        let csvData = extractToCSV(response);
+                        console.log(csvData);
+                        const blob = new Blob([csvData], {
+                            type: 'text/csv'
+                        });
+
+                        const formData = new FormData();
+                        formData.append('csv_file', blob, 'data.csv');
+
+                        let currentDate = new Date().toISOString().split('T')[0];
+                        let type = "multivariate";
+                        let freq;;
+                        let description =
+                            `Time sereis data involving the ${stockSymbol} stocks between ${startDate} and ${endDate}. `;
+                        let filename = `Stock-${stockSymbol}-${currentDate}.csv`;
+
+
+                        formData.append('type', type);
+                        formData.append('freq', freq);
+                        formData.append('description', description);
+                        formData.append('filename', filename);
+                        formData.append('source', 'stocks');
+
+                        $.ajax({
+                            url: '{{ route('save') }}', // URL to your Laravel route
+                            type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                    'content') // Add CSRF token here
+                            },
+                            data: formData,
+                            processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                            contentType: false, // Let the browser set the content type
+                            success: function(response) {
+                                console.log('Data saved successfully:');
+                                window.location.href = response.redirect_url;
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error saving data:', error);
+                            }
+                        });
+
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching data:', error);
+                        alert('Failed to fetch data. Please try again.');
+                    }
+                });
+
+            });
+
+            // function extractToCSV(response) {
+            //     // Check if response has values array
+            //     if (!response || !response.values || response.values.length === 0) {
+            //         console.error("No values found in the response.");
+            //         return;
+            //     }
+
+            //     // Extract data from the values array
+            //     const values = response.values;
+
+            //     // Define the CSV headers
+            //     const headers = ['datetime', 'open', 'high', 'low', 'close', 'volume'];
+
+            //     // Create an array for CSV rows starting with the headers
+            //     let csvContent = headers.join(",") + "\n";
+
+            //     // Loop through the values and extract the fields to append to the CSV content
+            //     values.forEach(item => {
+            //         const row = [
+            //             convertDate(item.datetime),
+            //             item.open,
+            //             item.high,
+            //             item.low,
+            //             item.close,
+            //             item.volume
+            //         ].join(",");
+            //         csvContent += row + "\n";
+            //     });
+
+
+            //     return csvContent;
+            // }
+            function extractToCSV(response) {
+                // Check if response has values array
+                if (!response || !response.values || response.values.length === 0) {
+                    console.error("No values found in the response.");
+                    return;
+                }
+
+                // Extract data from the values array
+                const values = response.values;
+
+                // Define the CSV headers
+                const headers = ['datetime', 'open', 'high', 'low', 'close', 'volume'];
+
+                // Create an array for CSV rows starting with the headers
+                let csvContent = headers.join(",") + "\n";
+
+                // Sort the values in ascending order based on datetime
+                values.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+                // Loop through the sorted values and extract the fields to append to the CSV content
+                values.forEach(item => {
+                    const row = [
+                        convertDate(item.datetime), // Assuming this function formats the date
+                        item.open,
+                        item.high,
+                        item.low,
+                        item.close,
+                        item.volume
+                    ].join(",");
+                    csvContent += row + "\n";
+                });
+
+                return csvContent;
+            }
+
+
+            function convertDate(inputDate) {
+                // Parse the input date string into a Date object
+                const parsedDate = new Date(inputDate);
+
+                // Format the date as MM/dd/yyyy (full year format)
+                const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
+                return formattedDate;
+            }
+
         });
     </script>
 @endsection
