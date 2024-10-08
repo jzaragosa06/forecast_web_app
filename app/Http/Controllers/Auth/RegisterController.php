@@ -90,4 +90,11 @@ class RegisterController extends Controller
             'description' => 'Registered a new user account',
         ]);
     }
+    public function showRegistrationForm()
+{
+    // Load the terms.html file
+    $termsHtml = file_get_contents(resource_path('views/auth/terms.html'));
+    return view('auth.register', compact('termsHtml'));
+}
+
 }
