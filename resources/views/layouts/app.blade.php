@@ -173,7 +173,7 @@
                         link.classList.add('bg-blue-500', 'text-white');
                     }
                 });
-            });
+            }); 
         });
     </script>
 
