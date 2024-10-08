@@ -42,11 +42,11 @@
                             <li class="flex items-center justify-between"> <!-- Flex container for alignment -->
                                 <p class="w-3/4">{{ $file->assoc_filename }}</p>
                                 <!-- Set consistent width to align buttons -->
-                                <form action="{{ route('manage.results.post', $file->file_assoc_id) }}" method="post">
+                                {{-- <form action="{{ route('manage.results.post', $file->file_assoc_id) }}" method="post">
                                     @csrf
                                     <button type="submit"
                                         class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">View</button>
-                                </form>
+                                </form> --}}
                             </li>
                             <hr>
                         @else

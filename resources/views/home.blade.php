@@ -24,6 +24,13 @@
                                 data-target="#ts-add-via-api-open-meteo-modal">
                                 Add data from Open-Meteo
                             </button>
+
+                            {{-- Stocks --}}
+                            <button type="button" id="ts-add-via-api-stocks-btn"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                Stocks
+                            </button>
+
                         </div>
                     </div>
                 </div>
@@ -60,23 +67,40 @@
                     </div>
                 </div>
 
+
+
                 <div class="w-full md:w-1/3">
                     <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
                         <h4 class="text-lg font-semibold mb-4">Recent Results</h4>
                         <div class="flex-grow">
-                            <ul class="list-disc pl-5">
-                                @foreach ($file_assocs as $file_assoc)
-                                    <li class="mb-2">
-                                        <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
-                                            class="text-blue-600 hover:underline">
-                                            <p>{{ $file_assoc->assoc_filename }}</p>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
+                            @if ($file_assocs->isEmpty())
+                                <p class="text-gray-500 text-center">No recent results found.</p>
+                            @else
+                                <ul class="list-disc pl-5">
+                                    @foreach ($file_assocs->slice(0, 5) as $file_assoc)
+                                        <li class="mb-2">
+                                            <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
+                                                class="text-blue-600 hover:underline">
+                                                <p>{{ $file_assoc->assoc_filename }}</p>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
                         </div>
+
+                        {{-- Show "View More" link if there are more than 5 results --}}
+                        @if ($file_assocs->count() > 5)
+                            <div class="mt-4">
+                                <a href="{{ route('crud.index') }}" class="text-blue-600 hover:underline font-semibold">
+                                    View More
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
+
+
             </div>
         </div>
         <hr class="my-4">
@@ -85,49 +109,76 @@
 
         <div class="flex space-x-4">
             <!-- Input Button -->
-            <button id="inputBtn" class="bg-blue-600 text-white border border-blue-600 px-4 py-2 rounded-md">
-                Input
+            <button id="input-via-uploads-Btn" class="bg-blue-600 text-white border border-blue-600 px-4 py-2 rounded-md">
+                Uploads
             </button>
             <!-- Results Button -->
-            <button id="resultsBtn" class="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-md">
-                Results
+            <button id="input-via-openmeteo-Btn" class="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-md">
+                Open-Meteo
             </button>
         </div>
 
-        <div id="inputContainer" class="mt-4">
+        <div id="input-via-uploads-Container" class="mt-4">
             <!-- Input container content -->
             <div class="container mx-auto p-4">
-                <h5 class="text-xl font-semibold mb-4">List of Input Time Series Data</h5>
                 @foreach ($timeSeriesData as $index => $fileData)
-                    <div class="bg-white border rounded-lg shadow-md mb-4">
-                        <div class="p-4">
-                            <div class="flex">
-                                <div class="w-full lg:w-1/3">
-                                    <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
-                                    <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
-                                    <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
-                                    <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
-                                    <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
-                                        @csrf
-                                        <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq. Al.</button>
-                                    </form>
-                                </div>
-                                <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
-                                    <div class="graph-container mt-4" style="height: 300px;">
-                                        <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                    @if ($files[$index]->source == 'uploads')
+                        <div class="bg-white border rounded-lg shadow-md mb-4">
+                            <div class="p-4">
+                                <div class="flex">
+                                    <div class="w-full lg:w-1/3">
+                                        <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
+                                        <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
+                                        <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
+                                        <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
+                                        <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
+                                            @csrf
+                                            <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq.
+                                                Al.</button>
+                                        </form>
+                                    </div>
+                                    <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
+                                        <div class="graph-container mt-4" style="height: 300px;">
+                                            <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 @endforeach
             </div>
 
         </div>
-        <div id="resultsContainer" class="mt-4 hidden">
-            <!-- Results container content -->
+        <div id="input-via-openmeteo-Container" class="mt-4 hidden">
             <div class="container mx-auto p-4">
+                @foreach ($timeSeriesData as $index => $fileData)
+                    @if ($files[$index]->source == 'open-meteo')
+                        <div class="bg-white border rounded-lg shadow-md mb-4">
+                            <div class="p-4">
+                                <div class="flex">
+                                    <div class="w-full lg:w-1/3">
+                                        <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
+                                        <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
+                                        <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
+                                        <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
+                                        <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
+                                            @csrf
+                                            <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq.
+                                                Al.</button>
 
+                                        </form>
+                                    </div>
+                                    <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
+                                        <div class="graph-container mt-4" style="height: 300px;">
+                                            <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
             </div>
         </div>
 
@@ -139,7 +190,8 @@
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
             <div class="flex justify-between items-center border-b pb-2 mb-2">
                 <h5 class="text-lg font-semibold">Information About the Time Series Data</h5>
-                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
                     &times;
                 </button>
             </div>
@@ -369,35 +421,273 @@
             </div>
         </div>
     </div>
+
+    <!-- Stocks Modal -->
+    {{-- <div id="ts-add-via-api-stocks-modal"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Stock Market Data</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="flex justify-between">
+                    <button type="button" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
+                        data-dismiss="modal">Close</button>
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
+    <!-- Stocks Modal -->
+    {{-- <div id="ts-add-via-api-stocks-modal"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Stock Market Data</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Stock selection using Combo Box -->
+                <div class="flex flex-col space-y-4">
+                    <div class="flex justify-between space-x-4">
+                        <!-- Stock Combo Box -->
+                        <div class="w-full">
+                            <label for="stock-selection" class="block text-sm font-medium text-gray-700">Select
+                                Stock</label>
+                            <select id="stock-selection"
+                                class="w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                <option value="AAPL">Apple (AAPL)</option>
+                                <option value="TSLA">Tesla (TSLA)</option>
+                                <option value="GOOG">Google (GOOG)</option>
+                                <option value="AMZN">Amazon (AMZN)</option>
+                                <option value="MSFT">Microsoft (MSFT)</option>
+                            </select>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="flex space-x-4">
+                            <!-- Start Date -->
+                            <div>
+                                <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                                <input type="date" id="start-date"
+                                    class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                            <!-- End Date -->
+                            <div>
+                                <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
+                                <input type="date" id="end-date"
+                                    class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interval Dropdown -->
+                    <div class="w-full">
+                        <label for="interval" class="block text-sm font-medium text-gray-700">Interval</label>
+                        <select id="interval"
+                            class="w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="1day">1 Day</option>
+                            <option value="1week">1 Week</option>
+                            <option value="1month">1 Month</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="flex justify-between mt-4">
+                    <button type="button" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
+                        data-dismiss="modal">Close</button>
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+    {{-- <div id="ts-add-via-api-stocks-modal"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Stock Market Data</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Stock selection using Combo Box (Input + Datalist) -->
+                <div class="flex flex-col space-y-4">
+                    <div class="flex justify-between space-x-4">
+                        <!-- Stock Combo Box -->
+                        <div class="w-full">
+                            <label for="stock-selection" class="block text-sm font-medium text-gray-700">Select or Enter
+                                Stock</label>
+                            <input list="stocks" id="stock-selection" name="stock-selection"
+                                class="w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                                placeholder="Enter stock symbol or select from the list">
+                            <datalist id="stocks">
+                                <option value="AAPL">Apple (AAPL)</option>
+                                <option value="TSLA">Tesla (TSLA)</option>
+                                <option value="GOOG">Google (GOOG)</option>
+                                <option value="AMZN">Amazon (AMZN)</option>
+                                <option value="MSFT">Microsoft (MSFT)</option>
+                            </datalist>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="flex space-x-4">
+                            <!-- Start Date -->
+                            <div>
+                                <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                                <input type="date" id="start-date"
+                                    class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                            <!-- End Date -->
+                            <div>
+                                <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
+                                <input type="date" id="end-date"
+                                    class="mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interval Dropdown -->
+                    <div class="w-full">
+                        <label for="interval" class="block text-sm font-medium text-gray-700">Interval</label>
+                        <select id="interval"
+                            class="w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="1day">1 Day</option>
+                            <option value="1week">1 Week</option>
+                            <option value="1month">1 Month</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="flex justify-between mt-4">
+                    <button type="button" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
+                        data-dismiss="modal">Close</button>
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
+    <div id="ts-add-via-api-stocks-modal"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40 hidden" style="display:none;">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h5 class="text-lg font-semibold text-gray-800">Stock Market Data</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Stock selection using Combo Box (Input + Datalist) -->
+                <div class="flex flex-col space-y-6">
+                    <div class="space-y-2">
+                        <!-- Stock Combo Box -->
+                        <div>
+                            <label for="stock-selection" class="block text-sm font-medium text-gray-700">Select or Enter
+                                Stock</label>
+                            <input list="stocks" id="stock-selection" name="stock-selection"
+                                class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                                placeholder="Enter stock symbol or select from the list">
+                            <datalist id="stocks">
+                                <option value="AAPL">Apple (AAPL)</option>
+                                <option value="TSLA">Tesla (TSLA)</option>
+                                <option value="GOOG">Google (GOOG)</option>
+                                <option value="AMZN">Amazon (AMZN)</option>
+                                <option value="MSFT">Microsoft (MSFT)</option>
+                            </datalist>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="flex space-x-4">
+                            <!-- Start Date -->
+                            <div class="w-1/2">
+                                <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                                <input type="date" id="start-date-stocks"
+                                    class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                            <!-- End Date -->
+                            <div class="w-1/2">
+                                <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
+                                <input type="date" id="end-date-stocks"
+                                    class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                    <!-- Interval Dropdown -->
+                    <div>
+                        <label for="interval" class="block text-sm font-medium text-gray-700">Interval</label>
+                        <select id="interval"
+                            class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="1day">1 Day</option>
+                            <option value="1week">1 Week</option>
+                            <option value="1month">1 Month</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="flex justify-end mt-6 space-x-4">
+                    <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                        data-dismiss="modal">Close</button>
+                    <button id="fetch-data-stocks" type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('scripts')
     <script>
         $(document).ready(function() {
-            const inputBtn = document.getElementById('inputBtn');
-            const resultsBtn = document.getElementById('resultsBtn');
-            const inputContainer = document.getElementById('inputContainer');
-            const resultsContainer = document.getElementById('resultsContainer');
+            const uploadsBtn = document.getElementById('input-via-uploads-Btn');
+            const openmeteoBtn = document.getElementById('input-via-openmeteo-Btn');
+            const uploadsContainer = document.getElementById('input-via-uploads-Container');
+            const openmeteoContainer = document.getElementById('input-via-openmeteo-Container');
 
             // Event listeners to toggle between buttons
-            inputBtn.addEventListener('click', () => {
-                inputBtn.classList.add('bg-blue-600', 'text-white');
-                inputBtn.classList.remove('bg-white', 'text-blue-600');
-                resultsBtn.classList.add('bg-white', 'text-blue-600');
-                resultsBtn.classList.remove('bg-blue-600', 'text-white');
+            uploadsBtn.addEventListener('click', () => {
+                uploadsBtn.classList.add('bg-blue-600', 'text-white');
+                uploadsBtn.classList.remove('bg-white', 'text-blue-600');
+                openmeteoBtn.classList.add('bg-white', 'text-blue-600');
+                openmeteoBtn.classList.remove('bg-blue-600', 'text-white');
 
-                inputContainer.classList.remove('hidden');
-                resultsContainer.classList.add('hidden');
+                uploadsContainer.classList.remove('hidden');
+                openmeteoContainer.classList.add('hidden');
             });
 
-            resultsBtn.addEventListener('click', () => {
-                resultsBtn.classList.add('bg-blue-600', 'text-white');
-                resultsBtn.classList.remove('bg-white', 'text-blue-600');
-                inputBtn.classList.add('bg-white', 'text-blue-600');
-                inputBtn.classList.remove('bg-blue-600', 'text-white');
+            openmeteoBtn.addEventListener('click', () => {
+                openmeteoBtn.classList.add('bg-blue-600', 'text-white');
+                openmeteoBtn.classList.remove('bg-white', 'text-blue-600');
+                uploadsBtn.classList.add('bg-white', 'text-blue-600');
+                uploadsBtn.classList.remove('bg-blue-600', 'text-white');
 
-                inputContainer.classList.add('hidden');
-                resultsContainer.classList.remove('hidden');
+                uploadsContainer.classList.add('hidden');
+                openmeteoContainer.classList.remove('hidden');
             });
 
         });
@@ -724,6 +1014,205 @@
 
 
             });
+
+        });
+
+        $(document).ready(function() {
+
+            // Initialize Flatpickr with yy-mm-dd format
+
+            $('#ts-add-via-api-stocks-btn').click(function() {
+                $('#ts-add-via-api-stocks-modal').removeClass('hidden').hide().fadeIn(200);
+                $('#ts-add-via-api-stocks-modal > div').removeClass('scale-95').addClass('scale-100');
+            });
+
+            // Close modals
+            $('[data-dismiss="modal"]').click(function() {
+                $(this).closest('.fixed').css('display', 'none');
+            });
+
+            // Close modals when clicking outside the modal content
+            $('.fixed').click(function(e) {
+                if ($(e.target).is(this)) {
+                    $(this).fadeOut(200, function() {
+                        $(this).addClass('hidden');
+                    });
+                }
+            });
+
+
+            $('#fetch-data-stocks').click(function(e) {
+                e.preventDefault();
+
+                // Fetch the values from the inputs
+                const stockSymbol = $('#stock-selection').val(); // Fetch stock symbol input
+                const startDate = $('#start-date-stocks').val(); // Extracting start date
+                const endDate = $('#end-date-stocks').val(); // Extracting end date
+                const interval = $('#interval').val(); // Fetch interval dropdown
+
+                // Validation logic: Check if any field is empty
+                if (!stockSymbol) {
+                    alert("Stock symbol is required!");
+                    $('#stock-selection').focus(); // Focus the empty input
+                    return;
+                }
+
+                if (!startDate) {
+                    alert("Start date is required!");
+                    $('#start-date-stocks').focus();
+                    return;
+                }
+
+                if (!endDate) {
+                    alert("End date is required!");
+                    $('#end-date-stocks').focus();
+                    return;
+                }
+
+                if (!interval) {
+                    alert("Interval is required!");
+                    $('#interval').focus();
+                    return;
+                }
+
+                // build the http request. 
+                let requestURLStocks =
+                    `https://api.twelvedata.com/time_series?apikey=e7bd90a9e6b24f85aec8b6d9a0f07b10&interval=${interval}&end_date=${endDate}&start_date=${startDate}&symbol=${stockSymbol}&format=JSON`;
+
+                $.ajax({
+                    type: "GET",
+                    url: requestURLStocks,
+
+                    success: function(response) {
+                        console.log('success', response);
+                        let csvData = extractToCSV(response);
+                        console.log(csvData);
+                        const blob = new Blob([csvData], {
+                            type: 'text/csv'
+                        });
+
+                        const formData = new FormData();
+                        formData.append('csv_file', blob, 'data.csv');
+
+                        let currentDate = new Date().toISOString().split('T')[0];
+                        let type = "multivariate";
+                        let freq;;
+                        let description =
+                            `Time sereis data involving the ${stockSymbol} stocks between ${startDate} and ${endDate}. `;
+                        let filename = `Stock-${stockSymbol}-${currentDate}.csv`;
+
+
+                        formData.append('type', type);
+                        formData.append('freq', freq);
+                        formData.append('description', description);
+                        formData.append('filename', filename);
+                        formData.append('source', 'stocks');
+
+                        $.ajax({
+                            url: '{{ route('save') }}', // URL to your Laravel route
+                            type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                    'content') // Add CSRF token here
+                            },
+                            data: formData,
+                            processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                            contentType: false, // Let the browser set the content type
+                            success: function(response) {
+                                console.log('Data saved successfully:');
+                                window.location.href = response.redirect_url;
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error saving data:', error);
+                            }
+                        });
+
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching data:', error);
+                        alert('Failed to fetch data. Please try again.');
+                    }
+                });
+
+            });
+
+            // function extractToCSV(response) {
+            //     // Check if response has values array
+            //     if (!response || !response.values || response.values.length === 0) {
+            //         console.error("No values found in the response.");
+            //         return;
+            //     }
+
+            //     // Extract data from the values array
+            //     const values = response.values;
+
+            //     // Define the CSV headers
+            //     const headers = ['datetime', 'open', 'high', 'low', 'close', 'volume'];
+
+            //     // Create an array for CSV rows starting with the headers
+            //     let csvContent = headers.join(",") + "\n";
+
+            //     // Loop through the values and extract the fields to append to the CSV content
+            //     values.forEach(item => {
+            //         const row = [
+            //             convertDate(item.datetime),
+            //             item.open,
+            //             item.high,
+            //             item.low,
+            //             item.close,
+            //             item.volume
+            //         ].join(",");
+            //         csvContent += row + "\n";
+            //     });
+
+
+            //     return csvContent;
+            // }
+            function extractToCSV(response) {
+                // Check if response has values array
+                if (!response || !response.values || response.values.length === 0) {
+                    console.error("No values found in the response.");
+                    return;
+                }
+
+                // Extract data from the values array
+                const values = response.values;
+
+                // Define the CSV headers
+                const headers = ['datetime', 'open', 'high', 'low', 'close', 'volume'];
+
+                // Create an array for CSV rows starting with the headers
+                let csvContent = headers.join(",") + "\n";
+
+                // Sort the values in ascending order based on datetime
+                values.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+
+                // Loop through the sorted values and extract the fields to append to the CSV content
+                values.forEach(item => {
+                    const row = [
+                        convertDate(item.datetime), // Assuming this function formats the date
+                        item.open,
+                        item.high,
+                        item.low,
+                        item.close,
+                        item.volume
+                    ].join(",");
+                    csvContent += row + "\n";
+                });
+
+                return csvContent;
+            }
+
+
+            function convertDate(inputDate) {
+                // Parse the input date string into a Date object
+                const parsedDate = new Date(inputDate);
+
+                // Format the date as MM/dd/yyyy (full year format)
+                const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
+                return formattedDate;
+            }
 
         });
     </script>

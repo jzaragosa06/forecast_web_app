@@ -5,83 +5,116 @@
 @section('page-title', 'Univariate Trend Result')
 
 
+
+
+
 @section('content')
-    <div>
-        <!-- Card Container -->
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Chart Area -->
-                <div class="col-span-2">
-                    <div id="chart1"></div>
+    <div class="container mx-auto my-6 h-screen bg-gray-50"> <!-- Added light gray background -->
+        <!-- Layout container with grid -->
+        <div class="grid grid-cols-3 gap-4 h-full">
+
+            <!-- Left Column (Graphs and Notes) -->
+            <div class="col-span-2 flex flex-col space-y-3 h-full">
+                <!-- Graph Section (Top) -->
+                <div class="bg-white shadow-md rounded-lg p-1 h-1/2"> <!-- Reduced padding to p-2 -->
+                    <div id="chart1"></div> <!-- Placeholder for the graph -->
                 </div>
 
-                <!-- Info and SMA Description Area -->
-                <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
-                    <p class="text-gray-700 mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                        eiusmod tempor incididunt ut labore et dolore magna aliqua. ...</p>
+                <!-- Notes Section (Bottom) -->
+                <div class="bg-white shadow-md rounded-lg p-3 flex-1 flex flex-col"> <!-- Reduced padding to p-3 -->
+                    <h2 class="font-semibold text-gray-700 text-sm">Notes</h2> <!-- Reduced font size -->
+                    <!-- Quill Editor Wrapper with scrolling -->
+                    <div class="bg-gray- p-2 rounded overflow-y-auto flex-1 text-sm"> <!-- Reduced text size -->
+                        <div id="notesEditor" class="h-full"></div> <!-- Make Quill editor take full height -->
+                    </div>
+                    <input type="hidden" id="notesContent" name="notesContent">
+                    <div class="mt-2">
+                        <button id="saveNotes"
+                            class="bg-blue-500 text-white font-bold py-1 px-3 rounded hover:bg-blue-600 text-sm">
+                            <!-- Reduced padding and font size -->
+                            Save Notes
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="chatContainer" class="mt-6">
-            <div class="flex flex-wrap">
-                <!-- Chat Dialog Section -->
-                <div class="w-full md:w-1/2 p-4">
-                    <div class="bg-white shadow-md rounded-lg p-4 h-full border border-gray-200 flex flex-col">
-                        <div class="mb-4 flex-grow">
-                            <h2 class="font-semibold text-gray-700">Chat with AI</h2>
-                            <div id="chatMessages" class="h-64 bg-gray-100 p-4 rounded overflow-y-auto">
-                                <!-- Chat messages go here -->
-                                @if ($history)
-                                    {!! $history->history !!}
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Chat input and button aligned on the same row -->
-                        <div class="flex mt-4">
-                            <input type="text" id="chatInput"
-                                class="w-full p-2 border border-gray-300 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                placeholder="Type a message..." />
-                            <button id="sendMessage"
-                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded-r hover:bg-blue-600">
-                                Send
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Notes Section -->
-                <div class="w-full md:w-1/2 p-4">
-                    <div class="bg-white shadow-md rounded-lg p-4 h-full border border-gray-200">
-                        <h2 class="font-semibold text-gray-700 mb-4">Notes</h2>
-                        <!-- Notes editor with same height as chat -->
-                        <div class="h-64 bg-gray-100 p-4 rounded overflow-y-auto" id="notesEditor"></div>
-                        <input type="hidden" id="notesContent" name="notesContent">
-
-                        <!-- Save button aligned with the input field -->
-                        <div class="flex mt-4">
-                            <button id="saveNotes"
-                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
-                                Save Notes
-                            </button>
-                        </div>
-                    </div>
+            <!-- Right Column (Info Card) -->
+            <div class="bg-white shadow-md rounded-lg p-3 flex flex-col justify-between h-full">
+                <!-- Info Section -->
+                <div class="mb-4">
+                    <p class="text-gray-700 text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <!-- Reduced font size -->
                 </div>
             </div>
         </div>
 
 
+        <!-- This is for Chat with AI-->
+        <button id="chatButton"
+            class="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-500 focus:outline-none">
+            <!-- AI Chat Icon -->
+            AI Chat 💬
+        </button>
 
+        <div id="chatBox" class="hidden fixed bottom-6 right-6 w-96 h-96 bg-white rounded-lg shadow-xl overflow-hidden">
+            <!-- Chat Header -->
+            <div class="bg-gray-200 border-b p-3 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-700">Chat with AI</h3>
+                <button id="closeChat" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
 
+            <!-- Chat Body -->
+            <div id="chatMessages" class="p-4 h-64 overflow-y-auto bg-gray-50">
+                @if ($history)
+                    {!! $history->history !!}
+                @else
+                    <div id="initial-message" class="text-sm text-gray-600">Welcome! How can I assist you today?</div>
+                @endif
+            </div>
 
-
+            <!-- Chat Input -->
+            <div class="bg-white p-3 border-t flex items-center space-x-2">
+                <input type="text" id="chatInput"
+                    class="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    placeholder="Type your message...">
+                <button id="sendMessage"
+                    class="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-500 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
     </div>
 @endsection
 
 @section('scripts')
     <script>
+        $(document).ready(function() {
+            // Select elements
+            const chatButton = document.getElementById('chatButton');
+            const chatBox = document.getElementById('chatBox');
+            const closeChat = document.getElementById('closeChat');
+
+            // Toggle chat box visibility
+            chatButton.addEventListener('click', () => {
+                chatBox.classList.toggle('hidden');
+            });
+
+            // Close chat box when 'X' is clicked
+            closeChat.addEventListener('click', () => {
+                chatBox.classList.add('hidden');
+            });
+        });
+
+
+
         $(document).ready(function() {
             // Initialize Quill editor with basic options
             var quill = new Quill('#notesEditor', {
@@ -138,41 +171,10 @@
                         alert('An error occurred. Please try again.');
                     }
                 });
-
-
-
-
             });
         });
 
 
-
-        // ---------------------------------------
-        function saveChatHistory() {
-            let chatHistory = $('#chatMessages').html(); // Get the entire chat HTML
-
-            // Send updated chat history to Laravel
-            $.ajax({
-                url: '{{ route('llm.save') }}', // Laravel route for saving chat history
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token
-                },
-                data: {
-                    history: chatHistory, // Send the entire chat HTML as history
-                    file_assoc_id: '{{ $file_assoc_id }}',
-                },
-                success: function(response) {
-                    console.log("Chat history saved.");
-                },
-                error: function(error) {
-                    console.log("Error saving chat history:", error);
-                }
-            });
-        }
-        // ------------------------------------
-
-        // ------------------------------------
 
         $(document).ready(function() {
             // Send message to Laravel when 'Send' button is clicked
@@ -183,6 +185,8 @@
                     alert("Please enter a message.");
                     return;
                 }
+                $('#initial-message').remove();
+
 
                 // Append the question (user's message) to the chat container
                 $('#chatMessages').append(`
@@ -233,6 +237,29 @@
                     }
                 });
             });
+
+            function saveChatHistory() {
+                let chatHistory = $('#chatMessages').html(); // Get the entire chat HTML
+
+                // Send updated chat history to Laravel
+                $.ajax({
+                    url: '{{ route('llm.save') }}', // Laravel route for saving chat history
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token
+                    },
+                    data: {
+                        history: chatHistory, // Send the entire chat HTML as history
+                        file_assoc_id: '{{ $file_assoc_id }}',
+                    },
+                    success: function(response) {
+                        console.log("Chat history saved.");
+                    },
+                    error: function(error) {
+                        console.log("Error saving chat history:", error);
+                    }
+                });
+            }
         });
 
 
@@ -246,14 +273,14 @@
             const cleanData = (arr) => arr.map(value => (value === '' || value === null) ? null : value);
 
             // Clean the data to handle missing values
-            const trendData = cleanData(data.trend[`${data.colname}`]);
+            const trendData = cleanData(data.trend[`${data.metadata.colname}`]);
 
 
             // Initialize the chart with ApexCharts
             var options = {
                 chart: {
                     type: 'line',
-                    height: 350,
+                    height: 300,
                     zoom: {
                         enabled: true
                     },
@@ -262,7 +289,7 @@
                     }
                 },
                 series: [{
-                    name: `${data.colname}`,
+                    name: `${data.metadata.colname}`,
                     data: trendData,
                 }],
                 xaxis: {
@@ -274,7 +301,7 @@
                 },
                 yaxis: {
                     title: {
-                        text: `${data.colname}`,
+                        text: `${data.metadata.colname}`,
                     },
                     labels: {
                         formatter: function(value) {

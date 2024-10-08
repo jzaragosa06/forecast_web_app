@@ -1,5 +1,3 @@
-
-
 @extends('layouts.base')
 
 @section('title', 'View File')
@@ -141,7 +139,11 @@
                     @endfor
                 ],
                 stroke: {
-                    curve: 'smooth'
+                    curve: 'smooth',
+                    lineCap: 'butt',
+                    colors: undefined,
+                    width: 2,
+                    dashArray: 0,
                 },
                 grid: {
                     show: true,

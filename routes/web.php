@@ -10,6 +10,7 @@ use App\Http\Controllers\ManageShowResultsController;
 use App\Http\Controllers\NotesController;
 use App\Http\Controllers\PreprocessInputFileController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RenderImageController;
 use App\Http\Controllers\SaveInputController;
 use App\Http\Controllers\ShareController;
 use App\Http\Controllers\TSSeqAlController;
@@ -104,3 +105,16 @@ Route::get('/alignment', function () {
 });
 
 
+
+Route::get('/response', function () {
+    return view('response');
+});
+
+
+
+// Route::get('/render', function () {
+//     return view('renderImage');
+// });
+
+Route::get('/render', [RenderImageController::class, 'render']);
+Route::post('/save-chart-image', [RenderImageController::class, 'saveChartImage']);
