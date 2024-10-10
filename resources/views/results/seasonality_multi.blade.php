@@ -1,72 +1,95 @@
 @extends('layouts.base')
 
-@section('title', 'Multivariate Seasonality')
+@section('title', 'Univariate Seasonality')
 
-@section('page-title', 'Multivariate Seasonality')
+@section('page-title', 'Univariate Seasonality')
 
 @section('content')
-    <div class="max-w-7xl mx-auto p-6">
-        <div class="flex flex-wrap -mx-4">
-            <!-- Seasonality Graphs Section -->
-            <div id="seasonality-graphs" class="w-full md:w-2/3 px-4 mb-8">
-                <div class="bg-gray-100 shadow-lg rounded-lg p-6">
-                    <div id="chart-container" class="grid gap-6">
-                        <!-- Dynamic charts will be inserted here -->
+    <div class="container mx-auto my-6 h-screen bg-gray-50">
+        <!-- Layout container with grid -->
+
+        <div class="grid grid-cols-3 gap-4 h-full">
+            <!-- Left Column (Graphs and Notes) -->
+            <div class="col-span-2 flex flex-col space-y-3 h-full">
+                <div id="button-container" class="flex overflow-x-auto gap-2 mb-4">
+                    <!-- Dynamic buttons for components will be inserted here -->
+                </div>
+
+                <div id="chart-container" class="flex flex-col gap-6">
+                    <!-- Dynamic charts will be inserted here -->
+                </div>
+
+
+                <!-- Notes Section (Bottom) -->
+                <div class="bg-white shadow-md rounded-lg p-3 flex-1 flex flex-col">
+                    <h2 class="font-semibold text-gray-700 text-sm">Notes</h2>
+                    <div class="bg-gray-50 p-2 rounded overflow-y-auto flex-1 text-sm">
+                        <div id="notesEditor" class="h-full"></div>
+                    </div>
+                    <input type="hidden" id="notesContent" name="notesContent">
+                    <div class="mt-2">
+                        <button id="saveNotes"
+                            class="bg-blue-500 text-white font-bold py-1 px-3 rounded hover:bg-blue-600 text-sm">
+                            Save Notes
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Chat with AI and Notes Section -->
-            <div id="chat-with-AI-and-notes" class="w-full md:w-1/3 px-4 mb-8">
-                <div class="bg-gray-100 shadow-lg rounded-lg p-6">
-                    <div id="chatContainer" class="flex flex-col space-y-6"> <!-- Flex column and space between sections -->
+            <div>
+                {{-- <div id="variable-button-container" class="flex overflow-x-auto gap-2 mb-4">
+                    <!-- Dynamic buttons for variables will be inserted here -->
+                </div> --}}
+                <div class="flex overflow-x-auto space-x-2 hide-scrollbar" id="variable-button-container">
+                    <!-- Options will be dynamically added here -->
+                </div>
 
-                        <!-- Chat Dialog Section -->
-                        <div class="w-full">
-                            <div class="bg-white shadow-md rounded-lg p-4 h-full border border-gray-200 flex flex-col">
-                                <div class="mb-4 flex-grow">
-                                    <h2 class="font-semibold text-gray-700">Chat with AI</h2>
-                                    <div id="chatMessages" class="h-64 bg-gray-100 p-4 rounded overflow-y-auto">
-                                        <!-- Chat messages go here -->
-                                        @if ($history)
-                                            {!! $history->history !!}
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <!-- Chat input and button aligned on the same row -->
-                                <div class="flex mt-4">
-                                    <input type="text" id="chatInput"
-                                        class="w-full p-2 border border-gray-300 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                        placeholder="Type a message..." />
-                                    <button id="sendMessage"
-                                        class="bg-blue-500 text-white font-bold py-2 px-4 rounded-r hover:bg-blue-600">
-                                        Send
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Notes Section -->
-                        <div class="w-full">
-                            <div class="bg-white shadow-md rounded-lg p-4 h-full border border-gray-200">
-                                <h2 class="font-semibold text-gray-700 mb-4">Notes</h2>
-                                <!-- Notes editor with same height as chat -->
-                                <div class="h-64 bg-gray-100 p-4 rounded overflow-y-auto" id="notesEditor"></div>
-                                <input type="hidden" id="notesContent" name="notesContent">
-
-                                <!-- Save button aligned with the input field -->
-                                <div class="flex mt-4">
-                                    <button id="saveNotes"
-                                        class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
-                                        Save Notes
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
+                <!-- Right Column (Info Card) -->
+                <div class="bg-white shadow-md rounded-lg p-3 flex flex-col justify-between h-full">
+                    <div id="info-card" class="mb-4">
+                        <!-- Dynamic explanations will be shown here -->
                     </div>
                 </div>
+            </div>
+
+        </div>
+
+        <!-- Chat Button -->
+        <button id="chatButton"
+            class="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-500 focus:outline-none">
+            AI Chat 💬
+        </button>
+
+        <div id="chatBox" class="hidden fixed bottom-6 right-6 w-96 h-96 bg-white rounded-lg shadow-xl overflow-hidden">
+            <div class="bg-gray-200 border-b p-3 flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-700">Chat with AI</h3>
+                <button id="closeChat" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div id="chatMessages" class="p-4 h-64 overflow-y-auto bg-gray-50">
+                @if ($history)
+                    {!! $history->history !!}
+                @else
+                    <div id="initial-message" class="text-sm text-gray-600">Welcome! How can I assist you today?</div>
+                @endif
+            </div>
+
+            <div class="bg-white p-3 border-t flex items-center space-x-2">
+                <input type="text" id="chatInput"
+                    class="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    placeholder="Type your message...">
+                <button id="sendMessage"
+                    class="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-500 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
@@ -132,37 +155,13 @@
                         alert('An error occurred. Please try again.');
                     }
                 });
+
+
+
+
             });
         });
 
-
-
-        // ---------------------------------------
-        function saveChatHistory() {
-            let chatHistory = $('#chatMessages').html(); // Get the entire chat HTML
-
-            // Send updated chat history to Laravel
-            $.ajax({
-                url: '{{ route('llm.save') }}', // Laravel route for saving chat history
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token
-                },
-                data: {
-                    history: chatHistory, // Send the entire chat HTML as history
-                    file_assoc_id: '{{ $file_assoc_id }}',
-                },
-                success: function(response) {
-                    console.log("Chat history saved.");
-                },
-                error: function(error) {
-                    console.log("Error saving chat history:", error);
-                }
-            });
-        }
-        // ------------------------------------
-
-        // ------------------------------------
 
         $(document).ready(function() {
             // Send message to Laravel when 'Send' button is clicked
@@ -223,11 +222,53 @@
                     }
                 });
             });
+
+
+            function saveChatHistory() {
+                let chatHistory = $('#chatMessages').html(); // Get the entire chat HTML
+
+                // Send updated chat history to Laravel
+                $.ajax({
+                    url: '{{ route('llm.save') }}', // Laravel route for saving chat history
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token
+                    },
+                    data: {
+                        history: chatHistory, // Send the entire chat HTML as history
+                        file_assoc_id: '{{ $file_assoc_id }}',
+                    },
+                    success: function(response) {
+                        console.log("Chat history saved.");
+                    },
+                    error: function(error) {
+                        console.log("Error saving chat history:", error);
+                    }
+                });
+            }
         });
+
+        $(document).ready(function() {
+            // Select elements
+            const chatButton = document.getElementById('chatButton');
+            const chatBox = document.getElementById('chatBox');
+            const closeChat = document.getElementById('closeChat');
+
+            // Toggle chat box visibility
+            chatButton.addEventListener('click', () => {
+                chatBox.classList.toggle('hidden');
+            });
+
+            // Close chat box when 'X' is clicked
+            closeChat.addEventListener('click', () => {
+                chatBox.classList.add('hidden');
+            });
+        });
+
+        // Code for quill and chat with AI. 
         const jsonData = @json($data);
         const data = JSON.parse(jsonData);
 
-        // Generate x-axis labels for yearly seasonality as dates (Jan 1 to Dec 31 of an arbitrary year)
         const generateYearlyLabels = () => {
             const labels = [];
             const arbitraryYear = 2020; // Arbitrary non-leap year
@@ -244,34 +285,33 @@
         };
 
         const weeklyLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        const yearlyLabels = generateYearlyLabels(); // Use the new function to generate date labels
+        const yearlyLabels = generateYearlyLabels();
 
-        // Reference to the chart container
+        // Reference to containers
         const chartContainer = document.getElementById('chart-container');
+        const buttonContainer = document.getElementById('button-container');
+        const variableButtonContainer = document.getElementById('variable-button-container');
+        const infoCard = document.getElementById('info-card');
 
-        // Function to create a combined chart for all variables
-        function createCombinedChart(title, labels, seriesData, isDatetime = false, yaxisOptions) {
-            // Create card div for the chart and the paragraph
+        // Function to create chart
+        function createChart(title, labels, seriesData, yAxisConfig, isDatetime = false) {
             const cardDiv = document.createElement('div');
-            cardDiv.classList.add('bg-white', 'shadow-lg', 'rounded-lg', 'p-6', 'mb-6'); // Light gray background
+            cardDiv.classList.add('bg-white', 'shadow-lg', 'rounded-lg', 'p-6', 'mb-6');
 
-            // Create a div for the chart itself
             const chartDiv = document.createElement('div');
-            chartDiv.style.marginBottom = '20px'; // Spacing between chart and paragraph
-
-            cardDiv.appendChild(chartDiv); // Add chart div to card div
-            chartContainer.appendChild(cardDiv); // Append card div to chart container
-
+            chartDiv.style.marginBottom = '20px';
+            cardDiv.appendChild(chartDiv);
+            chartContainer.appendChild(cardDiv);
 
             const options = {
                 chart: {
                     type: 'line',
-                    height: 400,
+                    height: 350,
                     animations: {
                         enabled: true
                     },
                     toolbar: {
-                        show: false,
+                        show: false
                     }
                 },
                 title: {
@@ -279,12 +319,11 @@
                     align: 'left'
                 },
                 xaxis: {
-                    type: isDatetime ? 'datetime' : 'category', // Use 'datetime' for yearly
+                    type: isDatetime ? 'datetime' : 'category',
                     categories: labels,
                     labels: {
                         formatter: function(value, timestamp) {
                             if (isDatetime) {
-                                // Format the datetime labels to only show month and day
                                 return new Date(timestamp).toLocaleDateString('en-US', {
                                     month: 'short',
                                     day: 'numeric'
@@ -296,80 +335,57 @@
                     }
                 },
                 series: seriesData,
+                yaxis: yAxisConfig,
                 stroke: {
                     curve: 'smooth',
-                    width: 2,
+                    width: 2
                 },
                 markers: {
                     size: 0
                 },
                 tooltip: {
                     shared: true,
-                    intersect: false
-                },
-                yaxis: yaxisOptions // Multiple y-axes for each variable
+                    intersect: false,
+                    x: {
+                        format: 'MMM dd'
+                    }
+                }
             };
 
             const chart = new ApexCharts(chartDiv, options);
             chart.render();
-
-            // Create a paragraph below the chart
-            const paragraph = document.createElement('p');
-            // paragraph.classList.add('mt-4', 'text-gray-600', 'text-sm'); // Gray text
-            paragraph.classList.add('bg-gray-100', 'rounded-lg', 'p-2', 'mt-4');
-            paragraph.innerText =
-                `This is a detailed description or note for the graph titled: ${title}. You can add more context here.`;
-
-            cardDiv.appendChild(paragraph); // Append paragraph to card div
-
         }
 
-        // Combine all variables for yearly or weekly charts into one graph with different y-axis scales
-        const colnames = data.metadata.colname;
+        // Function to create buttons for components
+        function createButton(label, container, onClick) {
+            const button = document.createElement('button');
+            button.classList.add('font-bold', 'py-2', 'px-4', 'rounded', 'focus:outline-none', 'bg-white', 'text-blue-500',
+                'border', 'border-blue-500');
+            button.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+            button.onclick = onClick;
+            container.appendChild(button);
+        }
 
-        if (data.seasonality_per_period && colnames.length) {
-            // Prepare data for combined yearly seasonality chart
-            let yearlySeries = [];
-            let yearlyYaxis = [];
+        // Function to load the component (weekly or yearly)
+        function loadComponent(component) {
+            chartContainer.innerHTML = '';
+            const colnames = data.metadata.colname;
+            let seriesData = [];
+            let yAxisConfig = [];
+            let title =
+                `${data.metadata.colname.join(', ')} - ${component.charAt(0).toUpperCase() + component.slice(1)} Seasonality`;
 
-            let weeklySeries = [];
-            let weeklyYaxis = [];
-
-
-            colnames.forEach((col, index) => {
+            colnames.forEach((col) => {
                 const seasonalityData = data.seasonality_per_period[col];
 
-                // Prepare series for yearly seasonality
-                if (seasonalityData['yearly']) {
-                    yearlySeries.push({
+                if (seasonalityData[component]) {
+                    seriesData.push({
                         name: col,
-                        data: seasonalityData['yearly'].values
+                        data: seasonalityData[component].values
                     });
 
                     // Add y-axis configuration for this variable
-                    yearlyYaxis.push({
-                        seriesName: col,
-                        title: {
-                            text: col
-                        },
-                        labels: {
-                            show: true,
-                            formatter: function(value) {
-                                return isNaN(value) ? value : value.toFixed(2);
-                            }
-                        },
-                    });
-                }
-
-                // Prepare series for weekly seasonality
-                if (seasonalityData['weekly']) {
-                    weeklySeries.push({
-                        name: col,
-                        data: seasonalityData['weekly'].values
-                    });
-
-                    // Add y-axis configuration for this variable
-                    weeklyYaxis.push({
+                    yAxisConfig.push({
                         seriesName: col,
                         title: {
                             text: col
@@ -384,15 +400,80 @@
                 }
             });
 
-            // Create combined chart for yearly seasonality
-            if (yearlySeries.length > 0) {
-                createCombinedChart('Combined Yearly Seasonality', yearlyLabels, yearlySeries, true, yearlyYaxis);
-            }
-
-            // Create combined chart for weekly seasonality
-            if (weeklySeries.length > 0) {
-                createCombinedChart('Combined Weekly Seasonality', weeklyLabels, weeklySeries, false, weeklyYaxis);
-            }
+            const isDatetime = component === 'yearly';
+            createChart(title, isDatetime ? yearlyLabels : weeklyLabels, seriesData, yAxisConfig, isDatetime);
+            // Update explanations in the info card
+            updateInfoCard(component, colnames[0]); // Pass the first variable for initial load
         }
+
+        // Function to update the info card with explanations
+        function updateInfoCard(component, variable) {
+            const explanation = data.explanations[component][variable] || "No explanation available.";
+            infoCard.innerHTML = `<p class="text-gray-700 text-sm">${explanation}</p>`;
+        }
+
+        // Generate buttons based on available components
+        data.components.forEach(component => {
+            createButton(component, buttonContainer, () => {
+                loadComponent(component);
+                updateVariableButtons(component); // Update variable buttons on component change
+                updateButtonStyles(component, buttonContainer);
+            });
+        });
+
+        // Function to update button styles for component buttons
+        function updateButtonStyles(selectedComponent, container) {
+            const buttons = container.querySelectorAll('button');
+
+            buttons.forEach(button => {
+                if (button.textContent.toLowerCase() === selectedComponent) {
+                    button.classList.add('bg-blue-500', 'text-white');
+                    button.classList.remove('bg-white', 'text-blue-500', 'border');
+                } else {
+                    button.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
+                    button.classList.remove('bg-blue-500', 'text-white');
+                }
+            });
+        }
+
+
+        // Function to update variable buttons based on the selected component
+        function updateVariableButtons(component) {
+            variableButtonContainer.innerHTML = ''; // Clear existing variable buttons
+            const colnames = data.metadata.colname;
+
+            colnames.forEach(variable => {
+                createButton(variable, variableButtonContainer, () => {
+                    updateInfoCard(component,
+                        variable); // Update the info card with the variable's explanation
+                    updateVariableButtonStyles(variable); // Update button styles on variable selection
+                });
+            });
+
+            // Set the first variable as selected by default
+            updateInfoCard(component, colnames[0]); // Update the info card for the first variable
+            updateVariableButtonStyles(colnames[0]); // Highlight the first variable button
+        }
+
+        // Function to update button styles for variable buttons
+        function updateVariableButtonStyles(selectedVariable) {
+            const buttons = variableButtonContainer.querySelectorAll('button');
+
+            buttons.forEach(button => {
+                if (button.textContent.toLowerCase() === selectedVariable.toLowerCase()) {
+                    button.classList.add('bg-blue-500', 'text-white'); // Highlight selected variable
+                    button.classList.remove('bg-white', 'text-blue-500'); // Reset non-selected
+                } else {
+                    button.classList.add('bg-white', 'text-blue-500'); // Reset non-selected
+                    button.classList.remove('bg-blue-500', 'text-white'); // Remove highlight
+                }
+            });
+        }
+
+        const initialComponent = data.components[0];
+        loadComponent(initialComponent);
+        updateVariableButtons(initialComponent);
+
+        updateButtonStyles(data.components[0], buttonContainer);
     </script>
 @endsection
