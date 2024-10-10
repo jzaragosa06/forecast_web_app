@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Support\Facades\File; 
 
 
 
@@ -100,5 +101,14 @@ class RegisterController extends Controller
             'action' => 'Register',
             'description' => 'Registered a new user account',
         ]);
+    }
+    
+    public function showRegistrationForm()
+    {
+        // Load the terms.html file (adjust the path if necessary)
+        $termsHtml = File::get(resource_path('views/auth/terms.html'));
+
+        // Return the registration view with terms HTML
+        return view('auth.register', compact('termsHtml'));
     }
 }
