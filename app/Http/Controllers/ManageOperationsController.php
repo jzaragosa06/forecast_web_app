@@ -41,11 +41,12 @@ class ManageOperationsController extends Controller
 
             if ($type == 'univariate') {
                 try {
-                    $response = Http::attach(
-                        'inputFile',
-                        $file_content,
-                        basename($file->filepath)
-                    )->post('http://127.0.0.1:5000/api/forecast-univariate', [
+                    $response = Http::timeout(300) // Increase timeout to 120 seconds
+                        ->attach(
+                            'inputFile',
+                            $file_content,
+                            basename($file->filepath)
+                        )->post('http://127.0.0.1:5000/api/forecast-univariate', [
                                 'type' => $type,
                                 'freq' => $freq,
                                 'description' => $description,
