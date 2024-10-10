@@ -243,18 +243,6 @@
                         <input type="number" name="horizon" id="horizon"
                             class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">Forecast Method</label>
-                        <div class="flex items-center">
-                            <input type="radio" name="method" value="with_refit" id="with_refit" class="mr-2">
-                            <label for="with_refit" class="text-sm">With Refit</label>
-                        </div>
-                        <div class="flex items-center mt-1">
-                            <input type="radio" name="method" value="without_refit" id="without_refit"
-                                class="mr-2">
-                            <label for="without_refit" class="text-sm">Without Refit</label>
-                        </div>
-                    </div>
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Run
                         Forecast</button>
                 </form>

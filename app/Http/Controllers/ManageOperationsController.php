@@ -37,7 +37,7 @@ class ManageOperationsController extends Controller
 
         if ($operation == "forecast") {
             $steps = $request->get("horizon");
-            $method = $request->input('method');
+            $method = "without_refit";
 
             if ($type == 'univariate') {
                 try {
