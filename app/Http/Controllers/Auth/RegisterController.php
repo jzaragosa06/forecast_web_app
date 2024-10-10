@@ -57,7 +57,18 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'contact_num' => ['required'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => [
+                'required',
+                'string',
+                'min:9',
+                'confirmed',
+                'regex:/^(?=(?:.*[a-z]){3})(?=(?:.*[A-Z]){3})(?=(?:.*[0-9]){2})(?=.*[\W_]).{9,}$/'
+            ],
+        ], [
+            'password.required' => 'The password field is required.',
+            'password.min' => 'The password must be at least 9 characters.',
+            'password.confirmed' => 'The password confirmation does not match.',
+            'password.regex' => 'The password must contain at least 3 lowercase letters, 3 uppercase letters, 2 numbers, and 1 special character.',
         ]);
     }
 
@@ -90,11 +101,4 @@ class RegisterController extends Controller
             'description' => 'Registered a new user account',
         ]);
     }
-    public function showRegistrationForm()
-{
-    // Load the terms.html file
-    $termsHtml = file_get_contents(resource_path('views/auth/terms.html'));
-    return view('auth.register', compact('termsHtml'));
-}
-
 }
