@@ -37,9 +37,7 @@
             </div>
 
             <div>
-                {{-- <div id="variable-button-container" class="flex overflow-x-auto gap-2 mb-4">
-                    <!-- Dynamic buttons for variables will be inserted here -->
-                </div> --}}
+
                 <div class="flex overflow-x-auto space-x-2 hide-scrollbar" id="variable-button-container">
                     <!-- Options will be dynamically added here -->
                 </div>
@@ -265,215 +263,249 @@
             });
         });
 
-        // Code for quill and chat with AI. 
-        const jsonData = @json($data);
-        const data = JSON.parse(jsonData);
+        $(document).ready(function() {
 
-        const generateYearlyLabels = () => {
-            const labels = [];
-            const arbitraryYear = 2020; // Arbitrary non-leap year
-            let currentDate = new Date(arbitraryYear, 0, 1); // Start at January 1
+            const jsonData = @json($data);
+            const data = JSON.parse(jsonData);
 
-            while (currentDate.getFullYear() === arbitraryYear) {
-                // Convert to timestamp for ApexCharts datetime x-axis
-                labels.push(currentDate.getTime());
-                // Increment by 1 day
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
+            const generateYearlyLabels = () => {
+                const labels = [];
+                const arbitraryYear = 2020; // Arbitrary non-leap year
+                let currentDate = new Date(arbitraryYear, 0, 1); // Start at January 1
 
-            return labels;
-        };
-
-        const weeklyLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        const yearlyLabels = generateYearlyLabels();
-
-        // Reference to containers
-        const chartContainer = document.getElementById('chart-container');
-        const buttonContainer = document.getElementById('button-container');
-        const variableButtonContainer = document.getElementById('variable-button-container');
-        const infoCard = document.getElementById('info-card');
-
-        // Function to create chart
-        function createChart(title, labels, seriesData, yAxisConfig, isDatetime = false) {
-            const cardDiv = document.createElement('div');
-            cardDiv.classList.add('bg-white', 'shadow-lg', 'rounded-lg', 'p-6', 'mb-6');
-
-            const chartDiv = document.createElement('div');
-            chartDiv.style.marginBottom = '20px';
-            cardDiv.appendChild(chartDiv);
-            chartContainer.appendChild(cardDiv);
-
-            const options = {
-                chart: {
-                    type: 'line',
-                    height: 350,
-                    animations: {
-                        enabled: true
-                    },
-                    toolbar: {
-                        show: false
-                    }
-                },
-                title: {
-                    text: title,
-                    align: 'left'
-                },
-                xaxis: {
-                    type: isDatetime ? 'datetime' : 'category',
-                    categories: labels,
-                    labels: {
-                        formatter: function(value, timestamp) {
-                            if (isDatetime) {
-                                return new Date(timestamp).toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric'
-                                });
-                            } else {
-                                return value;
-                            }
-                        }
-                    }
-                },
-                series: seriesData,
-                yaxis: yAxisConfig,
-                stroke: {
-                    curve: 'smooth',
-                    width: 2
-                },
-                markers: {
-                    size: 0
-                },
-                tooltip: {
-                    shared: true,
-                    intersect: false,
-                    x: {
-                        format: 'MMM dd'
-                    }
+                while (currentDate.getFullYear() === arbitraryYear) {
+                    // Convert to timestamp for ApexCharts datetime x-axis
+                    labels.push(currentDate.getTime());
+                    // Increment by 1 day
+                    currentDate.setDate(currentDate.getDate() + 1);
                 }
+
+                return labels;
             };
 
-            const chart = new ApexCharts(chartDiv, options);
-            chart.render();
-        }
+            const weeklyLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const yearlyLabels = generateYearlyLabels();
 
-        // Function to create buttons for components
-        function createButton(label, container, onClick) {
-            const button = document.createElement('button');
-            button.classList.add('font-bold', 'py-2', 'px-4', 'rounded', 'focus:outline-none', 'bg-white', 'text-blue-500',
-                'border', 'border-blue-500');
-            button.textContent = label.charAt(0).toUpperCase() + label.slice(1);
-            button.onclick = onClick;
-            container.appendChild(button);
-        }
+            // Reference to containers
+            const chartContainer = document.getElementById('chart-container');
+            const buttonContainer = document.getElementById('button-container');
+            const variableButtonContainer = document.getElementById('variable-button-container');
+            const infoCard = document.getElementById('info-card');
 
-        // Function to load the component (weekly or yearly)
-        function loadComponent(component) {
-            chartContainer.innerHTML = '';
-            const colnames = data.metadata.colname;
-            let seriesData = [];
-            let yAxisConfig = [];
-            let title =
-                `${data.metadata.colname.join(', ')} - ${component.charAt(0).toUpperCase() + component.slice(1)} Seasonality`;
+            // Function to create chart
+            function createChart(title, labels, seriesData, yAxisConfig, isDatetime = false) {
+                const cardDiv = document.createElement('div');
+                cardDiv.classList.add('bg-white', 'shadow-lg', 'rounded-lg', 'p-6', 'mb-6');
 
-            colnames.forEach((col) => {
-                const seasonalityData = data.seasonality_per_period[col];
+                const chartDiv = document.createElement('div');
+                chartDiv.style.marginBottom = '20px';
+                cardDiv.appendChild(chartDiv);
+                chartContainer.appendChild(cardDiv);
 
-                if (seasonalityData[component]) {
-                    seriesData.push({
-                        name: col,
-                        data: seasonalityData[component].values
-                    });
-
-                    // Add y-axis configuration for this variable
-                    yAxisConfig.push({
-                        seriesName: col,
-                        title: {
-                            text: col
+                const options = {
+                    chart: {
+                        type: 'line',
+                        height: 350,
+                        animations: {
+                            enabled: true
                         },
-                        labels: {
-                            show: true,
-                            formatter: function(value) {
-                                return isNaN(value) ? value : value.toFixed(2);
+                        toolbar: {
+                            show: false
+                        },
+                        events: {
+                            // markerClick: function(event, chartContext, opts) {
+                            //     console.log(opts);
+                            //     console.log(opts.seriesIndex);
+                            //     //update here. 
+
+
+                            // }
+
+                            markerClick: function(event, chartContext, opts) {
+                                // Get the series index
+                                const selectedVariableIndex = opts.seriesIndex;
+
+                                // Fetch the variable name based on the series index
+                                const selectedVariable = data.metadata.colname[selectedVariableIndex];
+
+                                // Get the component currently in view (for example, 'weekly' or 'yearly')
+                                const component = document.querySelector(
+                                    '#button-container button.bg-blue-500').textContent.toLowerCase();
+
+                                // Update the info card with the selected variable's explanation
+                                updateInfoCard(component, selectedVariable);
+
+
+                                // Update the variable buttons to reflect the selected variable
+                                updateVariableButtonStyles(selectedVariable);
                             }
-                        },
-                    });
-                }
-            });
 
-            const isDatetime = component === 'yearly';
-            createChart(title, isDatetime ? yearlyLabels : weeklyLabels, seriesData, yAxisConfig, isDatetime);
-            // Update explanations in the info card
-            updateInfoCard(component, colnames[0]); // Pass the first variable for initial load
-        }
+                        }
+                    },
+                    title: {
+                        text: title,
+                        align: 'left'
+                    },
+                    xaxis: {
+                        type: isDatetime ? 'datetime' : 'category',
+                        categories: labels,
+                        labels: {
+                            formatter: function(value, timestamp) {
+                                if (isDatetime) {
+                                    return new Date(timestamp).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric'
+                                    });
+                                } else {
+                                    return value;
+                                }
+                            }
+                        }
+                    },
+                    series: seriesData,
+                    yaxis: yAxisConfig,
+                    stroke: {
+                        curve: 'smooth',
+                        width: 2
+                    },
+                    markers: {
+                        size: 0
+                    },
+                    tooltip: {
+                        shared: true,
+                        intersect: false,
+                        x: {
+                            format: 'MMM dd'
+                        }
+                    }
+                };
 
-        // Function to update the info card with explanations
-        function updateInfoCard(component, variable) {
-            const explanation = data.explanations[component][variable] || "No explanation available.";
-            infoCard.innerHTML = `<p class="text-gray-700 text-sm">${explanation}</p>`;
-        }
-
-        // Generate buttons based on available components
-        data.components.forEach(component => {
-            createButton(component, buttonContainer, () => {
-                loadComponent(component);
-                updateVariableButtons(component); // Update variable buttons on component change
-                updateButtonStyles(component, buttonContainer);
-            });
-        });
-
-        // Function to update button styles for component buttons
-        function updateButtonStyles(selectedComponent, container) {
-            const buttons = container.querySelectorAll('button');
-
-            buttons.forEach(button => {
-                if (button.textContent.toLowerCase() === selectedComponent) {
-                    button.classList.add('bg-blue-500', 'text-white');
-                    button.classList.remove('bg-white', 'text-blue-500', 'border');
-                } else {
-                    button.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
-                    button.classList.remove('bg-blue-500', 'text-white');
-                }
-            });
-        }
+                const chart = new ApexCharts(chartDiv, options);
+                chart.render();
+            }
 
 
-        // Function to update variable buttons based on the selected component
-        function updateVariableButtons(component) {
-            variableButtonContainer.innerHTML = ''; // Clear existing variable buttons
-            const colnames = data.metadata.colname;
+            // Function to create buttons for components
+            function createButton(label, container, onClick) {
+                const button = document.createElement('button');
+                button.classList.add('font-bold', 'py-2', 'px-4', 'rounded', 'focus:outline-none', 'bg-white',
+                    'text-blue-500',
+                    'border', 'border-blue-500');
+                button.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+                button.onclick = onClick;
+                container.appendChild(button);
+            }
 
-            colnames.forEach(variable => {
-                createButton(variable, variableButtonContainer, () => {
-                    updateInfoCard(component,
-                        variable); // Update the info card with the variable's explanation
-                    updateVariableButtonStyles(variable); // Update button styles on variable selection
+            // Function to load the component (weekly or yearly)
+            function loadComponent(component) {
+                chartContainer.innerHTML = '';
+                const colnames = data.metadata.colname;
+                let seriesData = [];
+                let yAxisConfig = [];
+                let title =
+                    `${data.metadata.colname.join(', ')} - ${component.charAt(0).toUpperCase() + component.slice(1)} Seasonality`;
+
+                colnames.forEach((col) => {
+                    const seasonalityData = data.seasonality_per_period[col];
+
+                    if (seasonalityData[component]) {
+                        seriesData.push({
+                            name: col,
+                            data: seasonalityData[component].values
+                        });
+
+                        // Add y-axis configuration for this variable
+                        yAxisConfig.push({
+                            seriesName: col,
+                            title: {
+                                text: col
+                            },
+                            labels: {
+                                show: true,
+                                formatter: function(value) {
+                                    return isNaN(value) ? value : value.toFixed(2);
+                                }
+                            },
+                        });
+                    }
+                });
+
+                const isDatetime = component === 'yearly';
+                createChart(title, isDatetime ? yearlyLabels : weeklyLabels, seriesData, yAxisConfig, isDatetime);
+                // Update explanations in the info card
+                updateInfoCard(component, colnames[0]); // Pass the first variable for initial load
+            }
+
+            // Function to update the info card with explanations
+            function updateInfoCard(component, variable) {
+                const explanation = data.explanations[component][variable] || "No explanation available.";
+                infoCard.innerHTML = `<p class="text-gray-700 text-sm">${explanation}</p>`;
+            }
+
+            // Generate buttons based on available components
+            data.components.forEach(component => {
+                createButton(component, buttonContainer, () => {
+                    loadComponent(component);
+                    updateVariableButtons(component); // Update variable buttons on component change
+                    updateButtonStyles(component, buttonContainer);
                 });
             });
 
-            // Set the first variable as selected by default
-            updateInfoCard(component, colnames[0]); // Update the info card for the first variable
-            updateVariableButtonStyles(colnames[0]); // Highlight the first variable button
-        }
+            // Function to update button styles for component buttons
+            function updateButtonStyles(selectedComponent, container) {
+                const buttons = container.querySelectorAll('button');
 
-        // Function to update button styles for variable buttons
-        function updateVariableButtonStyles(selectedVariable) {
-            const buttons = variableButtonContainer.querySelectorAll('button');
+                buttons.forEach(button => {
+                    if (button.textContent.toLowerCase() === selectedComponent) {
+                        button.classList.add('bg-blue-500', 'text-white');
+                        button.classList.remove('bg-white', 'text-blue-500', 'border');
+                    } else {
+                        button.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
+                        button.classList.remove('bg-blue-500', 'text-white');
+                    }
+                });
+            }
 
-            buttons.forEach(button => {
-                if (button.textContent.toLowerCase() === selectedVariable.toLowerCase()) {
-                    button.classList.add('bg-blue-500', 'text-white'); // Highlight selected variable
-                    button.classList.remove('bg-white', 'text-blue-500'); // Reset non-selected
-                } else {
-                    button.classList.add('bg-white', 'text-blue-500'); // Reset non-selected
-                    button.classList.remove('bg-blue-500', 'text-white'); // Remove highlight
-                }
-            });
-        }
 
-        const initialComponent = data.components[0];
-        loadComponent(initialComponent);
-        updateVariableButtons(initialComponent);
+            // Function to update variable buttons based on the selected component
+            function updateVariableButtons(component) {
+                variableButtonContainer.innerHTML = ''; // Clear existing variable buttons
+                const colnames = data.metadata.colname;
 
-        updateButtonStyles(data.components[0], buttonContainer);
+                colnames.forEach(variable => {
+                    createButton(variable, variableButtonContainer, () => {
+                        updateInfoCard(component,
+                            variable); // Update the info card with the variable's explanation
+                        updateVariableButtonStyles(
+                            variable); // Update button styles on variable selection
+                    });
+                });
+
+                // Set the first variable as selected by default
+                updateInfoCard(component, colnames[0]); // Update the info card for the first variable
+                updateVariableButtonStyles(colnames[0]); // Highlight the first variable button
+            }
+
+            // Function to update button styles for variable buttons
+            function updateVariableButtonStyles(selectedVariable) {
+                const buttons = variableButtonContainer.querySelectorAll('button');
+
+                buttons.forEach(button => {
+                    if (button.textContent.toLowerCase() === selectedVariable.toLowerCase()) {
+                        button.classList.add('bg-blue-500', 'text-white'); // Highlight selected variable
+                        button.classList.remove('bg-white', 'text-blue-500'); // Reset non-selected
+                    } else {
+                        button.classList.add('bg-white', 'text-blue-500'); // Reset non-selected
+                        button.classList.remove('bg-blue-500', 'text-white'); // Remove highlight
+                    }
+                });
+            }
+
+            const initialComponent = data.components[0];
+            loadComponent(initialComponent);
+            updateVariableButtons(initialComponent);
+
+            updateButtonStyles(data.components[0], buttonContainer);
+        });
     </script>
 @endsection

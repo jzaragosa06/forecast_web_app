@@ -324,7 +324,18 @@
                     },
                     toolbar: {
                         show: false,
-                    }
+                    },
+                    events: {
+                        markerClick: function(event, chartContext, opts) {
+                            console.log(opts);
+                            console.log(opts.seriesIndex);
+
+                            //well fetch the colname from the index
+                            handleExplanationSelection(colname_seriesIndexDict[opts.seriesIndex]);
+
+
+                        }
+                    },
                 },
                 series: seriesData,
                 xaxis: {
@@ -353,12 +364,14 @@
             chart.render();
 
 
-
             const explanations = data.explanations;
             // Populate explanation options
             const explanationOptionsContainer = document.getElementById('explanation-options');
             const explanationContent = document.getElementById('explanation-content');
             let selectedVar = colnames[0]; // Default selection
+
+            let colname_seriesIndexDict = {};
+
 
             colnames.forEach((col, index) => {
                 const optionButton = document.createElement('button');
@@ -367,6 +380,10 @@
                 optionButton.textContent = col;
                 optionButton.addEventListener('click', () => handleExplanationSelection(col));
                 explanationOptionsContainer.appendChild(optionButton);
+
+
+                //add data to the dict. well use the index as a key
+                colname_seriesIndexDict[index] = col;
             });
 
             // Handle the explanation selection
@@ -392,45 +409,5 @@
             explanationContent.textContent = explanations[selectedVar];
 
         });
-
-        // $(document).ready(function() {
-        //     const explanations = data.explanations;
-        //     // Populate explanation options
-        //     const explanationOptionsContainer = document.getElementById('explanation-options');
-        //     const explanationContent = document.getElementById('explanation-content');
-        //     let selectedVar = colnames[0]; // Default selection
-
-        //     colnames.forEach((col, index) => {
-        //         const optionButton = document.createElement('button');
-        //         optionButton.className =
-        //             `px-4 py-2 border rounded ${col === selectedVar ? 'bg-blue-500 text-white' : 'bg-white text-black'}`;
-        //         optionButton.textContent = col;
-        //         optionButton.addEventListener('click', () => handleExplanationSelection(col));
-        //         explanationOptionsContainer.appendChild(optionButton);
-        //     });
-
-        //     // Handle the explanation selection
-        //     function handleExplanationSelection(selectedCol) {
-        //         selectedVar = selectedCol;
-
-        //         // Update the explanation content
-        //         explanationContent.textContent = explanations[selectedCol];
-
-        //         // Update the selected button styles
-        //         Array.from(explanationOptionsContainer.children).forEach(button => {
-        //             if (button.textContent === selectedCol) {
-        //                 button.classList.remove('bg-white', 'text-black');
-        //                 button.classList.add('bg-blue-500', 'text-white');
-        //             } else {
-        //                 button.classList.remove('bg-blue-500', 'text-white');
-        //                 button.classList.add('bg-white', 'text-black');
-        //             }
-        //         });
-        //     }
-
-        //     // Set default explanation content
-        //     explanationContent.textContent = explanations[selectedVar];
-
-        // });
     </script>
 @endsection
