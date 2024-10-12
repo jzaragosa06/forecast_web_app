@@ -6,17 +6,12 @@
 
 
 @section('content')
-
-
-
-
     <div class="container mx-auto my-6 h-screen">
         <!-- Layout container with grid -->
         <div class="grid grid-cols-3 gap-4 h-full">
 
             <!-- Left Column (Buttons and Graphs) -->
             <div class="col-span-2 flex flex-col space-y-4 h-full">
-
                 <!-- Toggle buttons aligned to the top left -->
                 <div class="flex justify-start mb-4 space-x-2">
                     <button id="outsampleForecastBtn"
@@ -29,8 +24,6 @@
                     </button>
                 </div>
 
-
-
                 <!-- Outsample Forecast Section (Initially visible) -->
                 <div id="outsampleForecast" class="flex flex-col space-y-4 flex-1 h-full">
                     <!-- Graph (Top Section) -->
@@ -41,9 +34,8 @@
                     <!-- Notes Section (Bottom Section) -->
                     <div class="bg-white shadow-md rounded-lg p-4 flex-1 flex flex-col">
                         <h2 class="font-semibold text-gray-700">Notes</h2>
-                        <!-- Quill Editor Wrapper with scrolling -->
                         <div class="bg-white p-2 rounded overflow-y-auto flex-1">
-                            <div id="notesEditor" class="h-full"></div> <!-- Make Quill editor take full height -->
+                            <div id="notesEditor" class="h-full"></div>
                         </div>
                         <input type="hidden" id="notesContent" name="notesContent">
                         <div class="mt-4">
@@ -81,8 +73,9 @@
                 </div>
             </div>
 
-            <div class="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between h-full">
-                <!-- Info Section -->
+            <!-- Info Card Section -->
+            <div id="infoOutsample"
+                class="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between h-full overflow-y-auto max">
                 <div class="mb-4">
                     <p id="explanation-paragraph-out" class="text-gray-700 mb-4">Lorem ipsum dolor sit amet, consectetur
                         adipiscing elit.</p>
@@ -105,42 +98,46 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Detailed Metrics Section (for Detailed Result) -->
-                <div id="detailedMetrics" class="hidden">
-                    <p id="explanation-paragraph-test" class="text-gray-700 mb-4">Detailed explanation of test results.</p>
-                    <div class="flex flex-wrap">
-                        <div class="w-1/2 mb-2">
-                            <div><span class="font-semibold">MAE:</span>
-                                <div id="mae" class="text-gray-600"></div>
-                            </div>
-                            <div><span class="font-semibold">MSE:</span>
-                                <div id="mse" class="text-gray-600"></div>
-                            </div>
+
+            <div id="detailedMetrics" class="hidden bg-white shadow-md rounded-lg p-4 flex flex-col overflow-y-auto max">
+
+                <!-- Explanation Section -->
+                <p id="explanation-paragraph-test" class="text-gray-700 mb-4">
+                    Detailed explanation of test results.
+                </p>
+
+                <!-- Metrics Section -->
+                <div class="flex flex-wrap">
+                    <div class="w-1/2 mb-2">
+                        <div><span class="font-semibold">MAE:</span>
+                            <div id="mae" class="text-gray-600"></div>
                         </div>
-                        <div class="w-1/2 mb-2">
-                            <div><span class="font-semibold">RMSE:</span>
-                                <div id="rmse" class="text-gray-600"></div>
-                            </div>
-                            <div><span class="font-semibold">MAPE:</span>
-                                <div id="mape" class="text-gray-600"></div>
-                            </div>
+                        <div><span class="font-semibold">MSE:</span>
+                            <div id="mse" class="text-gray-600"></div>
+                        </div>
+                    </div>
+                    <div class="w-1/2 mb-2">
+                        <div><span class="font-semibold">RMSE:</span>
+                            <div id="rmse" class="text-gray-600"></div>
+                        </div>
+                        <div><span class="font-semibold">MAPE:</span>
+                            <div id="mape" class="text-gray-600"></div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
-
-        <!-- This is for Chat with AI-->
+        <!-- Chat with AI-->
         <button id="chatButton"
             class="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-500 focus:outline-none">
-            <!-- AI Chat Icon -->
             AI Chat 💬
         </button>
 
         <div id="chatBox" class="hidden fixed bottom-6 right-6 w-96 h-96 bg-white rounded-lg shadow-xl overflow-hidden">
-            <!-- Chat Header -->
             <div class="bg-gray-200 border-b p-3 flex justify-between items-center">
                 <h3 class="text-lg font-semibold text-gray-700">Chat with AI</h3>
                 <button id="closeChat" class="text-gray-400 hover:text-gray-600 focus:outline-none">
@@ -150,8 +147,6 @@
                     </svg>
                 </button>
             </div>
-
-            <!-- Chat Body -->
             <div id="chatMessages" class="p-4 h-64 overflow-y-auto bg-gray-50">
                 @if ($history)
                     {!! $history->history !!}
@@ -159,8 +154,6 @@
                     <div id="initial-message" class="text-sm text-gray-600">Welcome! How can I assist you today?</div>
                 @endif
             </div>
-
-            <!-- Chat Input -->
             <div class="bg-white p-3 border-t flex items-center space-x-2">
                 <input type="text" id="chatInput"
                     class="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -174,7 +167,6 @@
                 </button>
             </div>
         </div>
-
     </div>
 @endsection
 
@@ -197,18 +189,38 @@
             });
         });
 
-
-
         $(document).ready(function() {
-            // Toggle between Outsample Forecast and Detailed Result sections
+            const jsonData = @json($data);
+            const data = JSON.parse(jsonData);
+            const colname = data.metadata.colname;
+
+            $('#explanation-paragraph-out').html(data.forecast.pred_out_explanation.response1 + "<br>" + data
+                .forecast.pred_out_explanation.response2 + "<br>" + data.forecast.pred_out_explanation.response3
+            );
+            $('#explanation-paragraph-test').html(data.forecast.pred_test_explanation.response1);
+
+            $('#mae').text(data.forecast.metrics.mae);
+            $('#mse').text(data.forecast.metrics.mse);
+            $('#rmse').text(data.forecast.metrics.rmse);
+            $('#mape').text(data.forecast.metrics.mape);
+
+            $('#tstype').text(data.metadata.tstype);
+            $('#freq').text(data.metadata.freq);
+            $('#steps').text(data.metadata.steps);
+            $('#target').text(data.metadata.colname);
+
             const outsampleBtn = document.getElementById('outsampleForecastBtn');
             const detailedBtn = document.getElementById('detailedResultBtn');
             const outsampleSection = document.getElementById('outsampleForecast');
             const detailedSection = document.getElementById('detailedResult');
+            const infoOutsample = document.getElementById('infoOutsample');
+            const detailedMetrics = document.getElementById('detailedMetrics');
 
             outsampleBtn.addEventListener('click', function() {
                 outsampleSection.classList.remove('hidden');
                 detailedSection.classList.add('hidden');
+                infoOutsample.classList.remove('hidden');
+                detailedMetrics.classList.add('hidden');
                 outsampleBtn.classList.add('bg-blue-500', 'text-white');
                 outsampleBtn.classList.remove('bg-white', 'text-blue-500', 'border', 'border-blue-500');
                 detailedBtn.classList.remove('bg-blue-500', 'text-white');
@@ -218,14 +230,16 @@
             detailedBtn.addEventListener('click', function() {
                 outsampleSection.classList.add('hidden');
                 detailedSection.classList.remove('hidden');
+                infoOutsample.classList.add('hidden');
+                detailedMetrics.classList.remove('hidden');
                 detailedBtn.classList.add('bg-blue-500', 'text-white');
                 detailedBtn.classList.remove('bg-white', 'text-blue-500', 'border', 'border-blue-500');
                 outsampleBtn.classList.remove('bg-blue-500', 'text-white');
                 outsampleBtn.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
             });
-
-
         });
+
+
         $(document).ready(function() {
             // Initialize Quill editor with basic options
             var quill = new Quill('#notesEditor', {
@@ -383,19 +397,11 @@
 
         });
 
-
-
         $(document).ready(function() {
-
-
-
-
             // Fetch and parse JSON data from the server-side
             const jsonData = @json($data); // Server-side rendered data
             const data = JSON.parse(jsonData);
             const colname = data.metadata.colname;
-
-            console.log(colname);
 
             renderChart1();
             renderChart2();
@@ -408,49 +414,6 @@
                 "searching": false, // Remove the search box
                 "lengthChange": true // Remove the entries dropdown
             });
-
-            $(document).ready(function() {
-                $('#explanation-paragraph-out').text(data.forecast.pred_out_explanation);
-                $('#explanation-paragraph-test').text(data.forecast.pred_test_explanation);
-
-
-            });
-
-            $('#mae').text(data.forecast.metrics.mae);
-            $('#mse').text(data.forecast.metrics.mse);
-            $('#rmse').text(data.forecast.metrics.rmse);
-            $('#mape').text(data.forecast.metrics.mape);
-
-
-            $('#tstype').text(data.metadata.tstype);
-            $('#freq').text(data.metadata.freq);
-            $('#description').text(data.metadata.description);
-            $('#steps').text(data.metadata.steps);
-            $('#target').text(data.metadata.colname);
-
-
-            const detailedResultButton = document.getElementById("detailed_result_button");
-            const detailedResultDiv = document.getElementById("detailed_result");
-
-            detailedResultButton.addEventListener("click", function() {
-
-                if (detailedResultDiv.style.display === "none" || detailedResultDiv.style.display === "") {
-                    detailedResultDiv.style.display = "block";
-                    toggleButton.textContent = "Hide Detailed Result";
-                    toggleButton.classList.remove("bg-blue-500", "hover:bg-blue-600");
-                    toggleButton.classList.add("bg-red-500",
-                        "hover:bg-red-600"); // Change to a different color
-                } else {
-                    detailedResultDiv.style.display = "none";
-                    toggleButton.textContent = "Show Detailed Result";
-                    toggleButton.classList.remove("bg-red-500", "hover:bg-red-600");
-                    toggleButton.classList.add("bg-blue-500",
-                        "hover:bg-blue-600"); // Revert to original color
-                }
-            });
-
-
-
 
             function renderChart1() {
                 // Forecast index
@@ -580,9 +543,6 @@
                 chart2.render();
             }
 
-
-
-
             function renderForecastTable_out() {
                 let forecastIndex = data.forecast.pred_out.index;
                 let forecastValues = data.forecast.pred_out[`${colname}`];
@@ -601,38 +561,6 @@
 
                 tableBody.innerHTML = rows;
             }
-
-            //     function renderForecastTable_test() {
-            //         let forecastIndex = data.data.test_data.index;
-            //         let forecastValues = data.forecast.pred_test[`${colname}`];
-            //         let testValues = data.data.test_data[`${colname}`];
-            //         let tableBody = document.getElementById('forecastTableBody-test');
-
-            //         let rows = '';
-            //         forecastIndex.forEach((date, index) => {
-            //             const value = forecastValues[index];
-            //             const actualValue = testValues[index];
-            //             const error = value - actualValue;
-            //             const absoluteError = Math.abs(error);
-
-            //             // Calculate the error color based on the absolute error
-            //             const colorIntensity = Math.min(255, Math.max(0, absoluteError *
-            //                 10)); // Adjust multiplier as needed
-            //             const errorColor =
-            //                 `rgba(255, ${255 - colorIntensity}, ${255 - colorIntensity}, 0.5)`; // Gradient from white to red
-
-            //             rows += `
-        //     <tr class="border-b border-gray-200">
-        //         <td class="py-2 px-4">${date}</td>
-        //         <td class="py-2 px-4">${value}</td>
-        //         <td class="py-2 px-4">${actualValue}</td>
-        //         <td class="py-2 px-4" style="background-color: ${errorColor};">${error.toFixed(2)}</td>
-        //     </tr>
-        // `;
-            //         });
-
-            //         tableBody.innerHTML = rows;
-            //     }
 
             function renderForecastTable_test() {
                 let forecastIndex = data.data.test_data.index;
