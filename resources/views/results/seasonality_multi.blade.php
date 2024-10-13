@@ -313,14 +313,6 @@
                             show: false
                         },
                         events: {
-                            // markerClick: function(event, chartContext, opts) {
-                            //     console.log(opts);
-                            //     console.log(opts.seriesIndex);
-                            //     //update here. 
-
-
-                            // }
-
                             markerClick: function(event, chartContext, opts) {
                                 // Get the series index
                                 const selectedVariableIndex = opts.seriesIndex;
@@ -438,7 +430,9 @@
 
             // Function to update the info card with explanations
             function updateInfoCard(component, variable) {
-                const explanation = data.explanations[component][variable] || "No explanation available.";
+                // let explanation = data.explanations[component][variable].response1 + "<br>" + data.explanations[
+                //     component][variable].response2 || "No explanation available.";
+                let explanation = data.explanations[component][variable].response1 || "No explanation available.";
                 infoCard.innerHTML = `<p class="text-gray-700 text-sm">${explanation}</p>`;
             }
 

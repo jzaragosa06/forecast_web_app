@@ -39,7 +39,7 @@
             </div>
 
             <!-- Right Column (Info Card) -->
-            <div class="bg-white shadow-md rounded-lg p-3 flex flex-col justify-between h-full">
+            <div class="bg-white shadow-md rounded-lg p-3 flex flex-col justify-between h-full overflow-y-auto max">
                 <div id="info-card" class="mb-4">
                     <!-- Dynamic explanations will be shown here -->
                 </div>
@@ -254,6 +254,7 @@
                 chatBox.classList.add('hidden');
             });
         });
+
         const jsonData = @json($data);
         const data = JSON.parse(jsonData);
 
@@ -407,8 +408,10 @@
                         title = `${colname} - Weekly Seasonality`;
                     }
 
+                    let explanation_raw = data.explanations[component].response1 + "<br>" + data.explanations[
+                        component].response2;
                     createChart(title, labels, seriesData, isDatetime);
-                    infoCard.innerHTML = `<p class="text-gray-700 text-sm">${data.explanations[component]}</p>`;
+                    infoCard.innerHTML = `<p class="text-gray-700 text-sm">${explanation_raw}</p>`;
                 }
             });
         }
