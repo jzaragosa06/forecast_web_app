@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name', 'TagSalamisim') }}</title>
+    <title>{{ config('app.name', 'DataForesight') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes fade-in {
@@ -22,6 +22,11 @@
         .animate-fade-in {
             animation: fade-in 1s ease-out forwards;
         }
+
+        .content-section {
+            padding-top: 72px;
+            /* Adjust as needed based on your header height */
+        }
     </style>
 </head>
 
@@ -33,9 +38,9 @@
             <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <a class="flex items-center space-x-3 self-center text-2xl font-semibold whitespace-nowrap text-sky-600"
                     href="{{ url('/') }}">
-                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-10 w-10">
+                    <!-- <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-10 w-10"> -->
                     <!-- Adjust the size as needed -->
-                    <span>{{ config('app.name', 'TagSalamisim') }}</span>
+                    <span>{{ config('app.name', 'DataForesight') }}</span>
                 </a>
                 <div class="flex md:order-2 space-x-3">
                     {{-- Show "Get Started" only on the landing page --}}
@@ -84,20 +89,19 @@
                         class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 md:flex-row md:mt-0 md:border-0 md:bg-white">
 
                         <li>
-                            <a href="{{ url('/') }}"
-                                class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700"
-                                aria-current="page">Home</a>
+                            <a href="#home"
+                                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 bg-blue-500 text-white">Home</a>
                         </li>
                         <li>
-                            <a href="{{ url('/about') }}"
+                            <a href="#about"
                                 class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700">About</a>
                         </li>
                         <li>
-                            <a href="{{ url('/services') }}"
+                            <a href="#services"
                                 class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700">Services</a>
                         </li>
                         <li>
-                            <a href="{{ url('/contact') }}"
+                            <a href="#contact"
                                 class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700">Contact</a>
                         </li>
                     </ul>
@@ -108,7 +112,7 @@
 
 
     <!-- Main Content -->
-    <main class="mt-5">
+    <main class="">
         @yield('content')
     </main>
 
@@ -120,6 +124,58 @@
         <img src="https://via.placeholder.com/80x40" alt="Logo" class="h-10">
         <img src="https://via.placeholder.com/80x40" alt="Logo" class="h-10">
     </footer>
+
+    <script>
+        window.addEventListener('load', function () {
+            window.history.scrollRestoration = 'manual';
+            window.scrollTo(0, 0);
+        });
+        
+       document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('nav a[href^="#"]');
+            const sections = document.querySelectorAll('section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault(); // Prevent default jump
+
+                    const targetId = this.getAttribute('href'); // Get the #id
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) { // Check if the target element exists
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+
+                        // Remove active class from all links
+                        navLinks.forEach(link => link.classList.remove('bg-blue-500', 'text-white'));
+
+                        // Add active class to the clicked link
+                        this.classList.add('bg-blue-500', 'text-white');
+                    }
+
+                });
+            });
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+
+                    if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                        current = section.getAttribute('id'); 
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('bg-blue-500', 'text-white');
+                    if (link.href.includes(`#${current}`)) {
+                        link.classList.add('bg-blue-500', 'text-white');
+                    }
+                });
+            }); 
+        });
+    </script>
 
 </body>
 

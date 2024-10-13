@@ -118,3 +118,9 @@ Route::get('/response', function () {
 
 Route::get('/render', [RenderImageController::class, 'render']);
 Route::post('/save-chart-image', [RenderImageController::class, 'saveChartImage']);
+
+Route::get('/terms', function () {
+    $termsHtml = file_get_contents(resource_path('views/auth/terms.html'));
+    return view('terms', compact('termsHtml'));
+})->name('terms');
+
