@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\FileAssociation;
+use App\Models\FileUserShare;
 use Auth;
 
 use App\Models\User;
@@ -13,8 +16,11 @@ class ProfileController extends Controller
     public function index()
     {
         $user = User::where('id', Auth::id())->firstOrFail();
-
-        return view('profile.index', compact('user'));
+        // count of the results files created. 
+        // $resultsCount = FileAssociation::where('user_id', Auth::id())->count();
+        $resultCount = FileAssociation::distinct('file_assoc_id')->count('file_assoc_id');
+        $collabCount = FileUserShare::distinct('shared_to_user_id')->count('shared_to_user_id');
+        return view('profile.index', compact('user', 'resultCount', 'collabCount'));
 
 
     }
@@ -38,6 +44,7 @@ class ProfileController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Profile photo updated successfully');
+
 
 
     }

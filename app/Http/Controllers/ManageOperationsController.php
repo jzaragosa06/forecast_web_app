@@ -17,6 +17,7 @@ class ManageOperationsController extends Controller
 {
     public function manage(Request $request)
     {
+        // ini_set('max_execution_time', 180);
         $file_id = $request->get("file_id");
         $operation = $request->get("operation");
 
@@ -41,7 +42,7 @@ class ManageOperationsController extends Controller
 
             if ($type == 'univariate') {
                 try {
-                    $response = Http::timeout(300) // Increase timeout to 120 seconds
+                    $response = Http::timeout(300)
                         ->attach(
                             'inputFile',
                             $file_content,
@@ -86,7 +87,7 @@ class ManageOperationsController extends Controller
 
             } else {
                 try {
-                    $response = Http::timeout(300) // Increase timeout to 120 seconds
+                    $response = Http::timeout(300)
                         ->attach(
                             'inputFile',
                             $file_content,
@@ -139,7 +140,7 @@ class ManageOperationsController extends Controller
             dump('Operation: ' . $operation);
 
             try {
-                $response = Http::attach(
+                $response = Http::timeout(300)->attach(
                     'inputFile',
                     $file_content,
                     basename($file->filepath)
@@ -188,8 +189,43 @@ class ManageOperationsController extends Controller
             dump('File ID: ' . $file_id);
             dump('Operation: ' . $operation);
 
+            // $response = Http::timeout(300)->attach(
+            //     'inputFile',
+            //     $file_content,
+            //     basename($file->filepath)
+            // )->post('http://127.0.0.1:5000/api/seasonality', [
+            //             'type' => $type,
+            //             'freq' => $freq,
+            //             'description' => $description
+            //         ]);
+
+            // if ($response->successful()) {
+            //     $jsonFilename = pathinfo(basename($file->filepath), PATHINFO_FILENAME) . '-initial-' . now()->timestamp . '.json';
+            //     $jsonPath = 'resultJSON/' . $jsonFilename;
+            //     Storage::put($jsonPath, json_encode($response->body()));
+
+
+            //     $assoc_filename = 'seasonality-on-' . $file->filename . 'created-' . now()->timestamp;
+
+            //     FileAssociation::create([
+            //         'file_id' => $file_id,
+            //         'user_id' => Auth::id(),
+            //         'assoc_filename' => $assoc_filename,
+
+            //         'associated_file_path' => $jsonPath,
+            //         'operation' => $operation,
+            //     ]);
+
+
+            //     Logs::create([
+            //         'user_id' => Auth::id(),
+            //         'action' => 'Analyze Seasonality',
+            //         'description' => 'Successfully analyzed seasonality on ' . $file->filename . ' using Facebook Prophet.',
+            //     ]);
+            // }
+
             try {
-                $response = Http::attach(
+                $response = Http::timeout(300)->attach(
                     'inputFile',
                     $file_content,
                     basename($file->filepath)
