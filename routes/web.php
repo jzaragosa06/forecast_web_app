@@ -75,7 +75,7 @@ Route::prefix('profile')->group(function () {
 Route::prefix('llm')->group(function () {
     Route::post('/ask', [LLMController::class, 'ask'])->name('llm.ask');
     Route::post('/save', [LLMController::class, 'save'])->name('llm.save');
-            
+
 });
 
 Route::prefix('notes')->group(function () {
@@ -89,7 +89,7 @@ Route::prefix('sequence-alignment/series-alignment')->group(function () {
     Route::get('/multi/show', [TSSeqAlController::class, 'showMultivariateData'])->name('seqal.multi');
     Route::post('/temp/save', [TSSeqAlController::class, 'temporary_save'])->name('seqal.tempsave');
     Route::get('/preprocess/{id}', [TSSeqAlController::class, 'to_graph_for_preprocessing'])->name('seqal.preprocess');
-        
+
 });
 
 
@@ -102,13 +102,17 @@ Route::prefix('share')->group(function () {
     Route::post('/with_other', [ShareController::class, 'shareFileWithUsers'])->name('share.with_other');
     Route::get('/view/{file_assoc_id}/{user_id}', [ShareController::class, 'view_shared_file'])->name('share.view_file');
     Route::get('/', [ShareController::class, 'index'])->name('share.index');
-    
+
 });
 
 
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::post('/users/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
 });
+
+
 
 // ============================================================================================================================================================
 

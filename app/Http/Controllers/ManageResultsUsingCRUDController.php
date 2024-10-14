@@ -50,7 +50,7 @@ class ManageResultsUsingCRUDController extends Controller
     {
         // Find the FileAssociation entry by its ID
         // $fileAssociation = FileAssociation::findOrFail($file_assoc_id);
-        $fileAssociation = FileAssociation::where('file_assoc_id', $file_assoc_id)->firstOrFail();
+        $fileAssociation = FileAssociation::where('file_assoc_id', $file_assoc_id)->first();
 
 
         // Delete the file from the storage
@@ -97,5 +97,3 @@ class ManageResultsUsingCRUDController extends Controller
 
 
 }
-
-
