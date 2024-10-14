@@ -41,16 +41,15 @@
 
 
             <!-- Right Column (Info Card) -->
-            <div class="bg-white shadow-md rounded-lg p-3 flex flex-col h-full">
+            <div class="bg-white shadow-md rounded-lg p-3 flex flex-col h-full overflow-y-auto max">
                 <!-- Options Section -->
                 <div class="flex overflow-x-auto space-x-2 hide-scrollbar" id="explanation-options">
                     <!-- Options will be dynamically added here -->
                 </div>
 
                 <!-- Info Section (Explanation) -->
-                <div class="mt-4 flex-1">
-                    <h3 class="text-gray-700 font-semibold">Explanation</h3>
-                    <p id="explanation-content" class="text-gray-700 text-sm">Lorem ipsum dolor sit amet.</p>
+                <div id="explanation-content" class="mt-4 flex-1  overflow-y-auto max">
+                    <p class="text-gray-700 text-sm">Lorem ipsum dolor sit amet.</p>
                 </div>
             </div>
 
@@ -367,7 +366,7 @@
             const explanations = data.explanations;
             // Populate explanation options
             const explanationOptionsContainer = document.getElementById('explanation-options');
-            const explanationContent = document.getElementById('explanation-content');
+            // const explanationContent = document.getElementById('explanation-content');
             let selectedVar = colnames[0]; // Default selection
 
             let colname_seriesIndexDict = {};
@@ -391,7 +390,8 @@
                 selectedVar = selectedCol;
 
                 // Update the explanation content
-                explanationContent.textContent = explanations[selectedCol];
+                $("#explanation-content").html(explanations[selectedVar]['response1'] + "<br>" + explanations[
+                    selectedVar]['response2']);
 
                 // Update the selected button styles
                 Array.from(explanationOptionsContainer.children).forEach(button => {
@@ -406,7 +406,8 @@
             }
 
             // Set default explanation content
-            explanationContent.textContent = explanations[selectedVar];
+            $("#explanation-content").html(explanations[selectedVar]['response1'] + "<br>" + explanations[
+                selectedVar]['response2']);
 
         });
     </script>
