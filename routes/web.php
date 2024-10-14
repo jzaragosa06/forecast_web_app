@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InputFileGraphController;
 use App\Http\Controllers\LLMController;
@@ -102,6 +103,11 @@ Route::prefix('share')->group(function () {
     Route::get('/view/{file_assoc_id}/{user_id}', [ShareController::class, 'view_shared_file'])->name('share.view_file');
     Route::get('/', [ShareController::class, 'index'])->name('share.index');
     
+});
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 });
 
 // ============================================================================================================================================================
