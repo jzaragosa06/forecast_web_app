@@ -26,4 +26,16 @@ class AdminController extends Controller
 
         return redirect()->route('admin.users');
     }
+
+
+    public function data_source()
+    {
+        return view('admin.selections.index');
+    }
+
+
+    public function open_meteo()
+    {
+        return view('admin.selections.open-meteo');
+    }
 }

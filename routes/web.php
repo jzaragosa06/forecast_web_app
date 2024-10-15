@@ -109,7 +109,10 @@ Route::prefix('share')->group(function () {
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/data-source/external', [AdminController::class, 'data_source'])->name('admin.data-source');
+    Route::get('/open-meteo', [AdminController::class, 'open_meteo'])->name('admin.open_meteo');
     Route::post('/users/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
+
 });
 
 

@@ -4,8 +4,6 @@
 
 @section('page-title', 'Dashboard')
 
-
-
 @section('content')
     <p>cat</p>
 @endsection

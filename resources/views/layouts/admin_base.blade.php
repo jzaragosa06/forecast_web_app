@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -48,10 +46,10 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('home') }}"
-                        class="{{ request()->routeIs('home') ? 'text-white bg-indigo-700' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-3 rounded-lg transition duration-200">
+                    <a href="{{ route('admin.data-source') }}"
+                        class="{{ request()->routeIs('admin.data-source') ? 'text-white bg-indigo-700' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-3 rounded-lg transition duration-200">
                         <i class="fas fa-database mr-3"></i>
-                        <span>Data</span>
+                        <span>Data Source</span>
                     </a>
                 </li>
             </ul>
