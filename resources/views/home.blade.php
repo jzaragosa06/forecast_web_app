@@ -264,117 +264,42 @@
             <div class="modal-body  overflow-y-auto max-h-[75vh]">
                 <form action="" method="POST">
                     @csrf
+                 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        @php
+                            // Get all weather options from the config
+                            $weatherOptions = config('weather_options.daily');
+
+                            // Split the options into two groups
+                            $halfCount = ceil(count($weatherOptions) / 2);
+                            $firstHalf = array_slice($weatherOptions, 0, $halfCount, true);
+                            $secondHalf = array_slice($weatherOptions, $halfCount, null, true);
+                        @endphp
+
+                        {{-- First Column --}}
                         <div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="weather_code_daily" name="daily"
-                                    value="weather_code">
-                                <label class="ml-2" for="weather_code_daily">Weather code</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="temperature_2m_max_daily"
-                                    name="daily" value="temperature_2m_max">
-                                <label class="ml-2" for="temperature_2m_max_daily">Maximum Temperature (2 m)</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="temperature_2m_min_daily"
-                                    name="daily" value="temperature_2m_min">
-                                <label class="ml-2" for="temperature_2m_min_daily">Minimum Temperature (2 m)</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="temperature_2m_mean_daily"
-                                    name="daily" value="temperature_2m_mean">
-                                <label class="ml-2" for="temperature_2m_mean_daily">Mean Temperature (2 m)</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="apparent_temperature_max_daily"
-                                    name="daily" value="apparent_temperature_max">
-                                <label class="ml-2" for="apparent_temperature_max_daily">Maximum Apparent Temperature (2
-                                    m)</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="apparent_temperature_min_daily"
-                                    name="daily" value="apparent_temperature_min">
-                                <label class="ml-2" for="apparent_temperature_min_daily">Minimum Apparent Temperature (2
-                                    m)</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="apparent_temperature_mean_daily"
-                                    name="daily" value="apparent_temperature_mean">
-                                <label class="ml-2" for="apparent_temperature_mean_daily">Mean Apparent Temperature (2
-                                    m)</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="sunrise_daily" name="daily"
-                                    value="sunrise">
-                                <label class="ml-2" for="sunrise_daily">Sunrise</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="sunset_daily" name="daily"
-                                    value="sunset">
-                                <label class="ml-2" for="sunset_daily">Sunset</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="daylight_duration_daily" name="daily"
-                                    value="daylight_duration">
-                                <label class="ml-2" for="daylight_duration_daily">Daylight Duration</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="sunshine_duration_daily" name="daily"
-                                    value="sunshine_duration">
-                                <label class="ml-2" for="sunshine_duration_daily">Sunshine Duration</label>
-                            </div>
+                            @foreach ($firstHalf as $key => $label)
+                                <div class="flex items-center mb-2">
+                                    <input class="form-checkbox" type="checkbox" id="{{ $key }}"
+                                        name="daily" value="{{ $key }}">
+                                    <label class="ml-2" for="{{ $key }}">{{ $label }}</label>
+                                </div>
+                            @endforeach
                         </div>
+
+                        {{-- Second Column --}}
                         <div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="precipitation_sum_daily" name="daily"
-                                    value="precipitation_sum">
-                                <label class="ml-2" for="precipitation_sum_daily">Precipitation Sum</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="rain_sum_daily" name="daily"
-                                    value="rain_sum">
-                                <label class="ml-2" for="rain_sum_daily">Rain Sum</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="snowfall_sum_daily" name="daily"
-                                    value="snowfall_sum">
-                                <label class="ml-2" for="snowfall_sum_daily">Snowfall Sum</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="precipitation_hours_daily"
-                                    name="daily" value="precipitation_hours">
-                                <label class="ml-2" for="precipitation_hours_daily">Precipitation Hours</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="wind_speed_10m_max_daily"
-                                    name="daily" value="wind_speed_10m_max">
-                                <label class="ml-2" for="wind_speed_10m_max_daily">Maximum Wind Speed (10 m)</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="wind_gusts_10m_max_daily"
-                                    name="daily" value="wind_gusts_10m_max">
-                                <label class="ml-2" for="wind_gusts_10m_max_daily">Maximum Wind Gusts (10 m)</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="wind_direction_10m_dominant_daily"
-                                    name="daily" value="wind_direction_10m_dominant">
-                                <label class="ml-2" for="wind_direction_10m_dominant_daily">Dominant Wind Direction (10
-                                    m)</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="shortwave_radiation_sum_daily"
-                                    name="daily" value="shortwave_radiation_sum">
-                                <label class="ml-2" for="shortwave_radiation_sum_daily">Shortwave Radiation Sum</label>
-                            </div>
-                            <div class="flex items-center mb-2">
-                                <input class="form-checkbox" type="checkbox" id="et0_fao_evapotranspiration_daily"
-                                    name="daily" value="et0_fao_evapotranspiration">
-                                <label class="ml-2" for="et0_fao_evapotranspiration_daily">Reference Evapotranspiration
-                                    (ET₀)</label>
-                            </div>
+                            @foreach ($secondHalf as $key => $label)
+                                <div class="flex items-center mb-2">
+                                    <input class="form-checkbox" type="checkbox" id="{{ $key }}"
+                                        name="daily" value="{{ $key }}">
+                                    <label class="ml-2" for="{{ $key }}">{{ $label }}</label>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
+
+
                     <div class="mb-4">
                         <!-- Date Pickers -->
                         <label for="start-date" class="block text-sm font-medium mb-1">Start Date</label>
@@ -402,9 +327,14 @@
                         </p>
                     </div>
 
-                    <button type="submit" id="fetch-data-open-meteo-btn"
+
+
+
+                    <!-- Date Pickers and other elements -->
+                    <button id="fetch-data-open-meteo-btn" type="submit"
                         class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch</button>
                 </form>
+
             </div>
         </div>
     </div>
