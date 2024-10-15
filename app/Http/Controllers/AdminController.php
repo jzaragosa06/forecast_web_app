@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class AdminController extends Controller
 {
@@ -37,5 +38,21 @@ class AdminController extends Controller
     public function open_meteo()
     {
         return view('admin.selections.open-meteo');
+    }
+
+    public function update_options_open_meteo(Request $request)
+    {
+        $options = [];
+
+        foreach ($request->option_label as $index => $label) {
+            $key = $request->option_value[$index];
+            $options[$key] = $label;
+        }
+
+        // Update the config file
+        $configContent = '<?php return ' . var_export(['daily' => $options], true) . ';';
+        File::put(config_path('weather_options.php'), $configContent);
+
+        return redirect()->back()->with('success', 'Options updated successfully!');
     }
 }
