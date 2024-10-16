@@ -106,6 +106,9 @@ Route::prefix('share')->group(function () {
 
 
 Route::prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'login'])->name('admin.login');
+    Route::post('/login/submit', [AdminController::class, 'login_submit'])->name('admin.login_submit');
+    Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/data-source/external', [AdminController::class, 'data_source'])->name('admin.data-source');
