@@ -55,4 +55,26 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Options updated successfully!');
     }
+
+    public function stocks()
+    {
+        return view('admin.selections.stocks');
+    }
+
+
+    public function update_options_stocks(Request $request)
+    {
+        $options = [];
+
+        foreach ($request->option_label as $index => $label) {
+            $key = $request->option_value[$index];
+            $options[$key] = $label;
+        }
+
+        // Update the config file
+        $configContent = '<?php return ' . var_export(['stocks' => $options], true) . ';';
+        File::put(config_path('stock_options.php'), $configContent);
+
+        return redirect()->back()->with('success', 'Options updated successfully!');
+    }
 }

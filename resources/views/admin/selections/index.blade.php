@@ -35,8 +35,12 @@
                 Ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
                 lorem ipsum lorem ipsum lorem ipsum
             </p>
+
             <div class="flex justify-center">
-                <button class="bg-blue-500 text-white py-2 px-4 rounded">Edit</button>
+                <a href="{{ route('admin.stocks') }}">
+                    <button class="bg-blue-500 text-white py-2 px-4 rounded">Edit</button>
+                </a>
+
             </div>
         </div>
 

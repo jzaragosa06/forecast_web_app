@@ -110,8 +110,10 @@ Route::prefix('admin')->group(function () {
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/data-source/external', [AdminController::class, 'data_source'])->name('admin.data-source');
     Route::get('/open-meteo', [AdminController::class, 'open_meteo'])->name('admin.open_meteo');
+    Route::get('/stocks', [AdminController::class, 'stocks'])->name('admin.stocks');
     Route::post('/users/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
     Route::post('/update-options/open-meteo', [AdminController::class, 'update_options_open_meteo'])->name('admin.update_options_open_meteo');
+    Route::post('/update-options/stocks', [AdminController::class, 'update_options_stocks'])->name('admin.update_options_stocks');
 
 });
 
