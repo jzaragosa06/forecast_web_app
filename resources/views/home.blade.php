@@ -264,7 +264,7 @@
             <div class="modal-body  overflow-y-auto max-h-[75vh]">
                 <form action="" method="POST">
                     @csrf
-                 
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         @php
                             // Get all weather options from the config
@@ -363,11 +363,9 @@
                                 class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                                 placeholder="Enter stock symbol or select from the list">
                             <datalist id="stocks">
-                                <option value="AAPL">Apple (AAPL)</option>
-                                <option value="TSLA">Tesla (TSLA)</option>
-                                <option value="GOOG">Google (GOOG)</option>
-                                <option value="AMZN">Amazon (AMZN)</option>
-                                <option value="MSFT">Microsoft (MSFT)</option>
+                                @foreach (config('stock_options.stocks') as $key => $label)
+                                    <option value="{{ $key }}">{{ $label }}</option>
+                                @endforeach
                             </datalist>
                         </div>
 
