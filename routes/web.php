@@ -75,7 +75,6 @@ Route::prefix('profile')->group(function () {
 Route::prefix('llm')->group(function () {
     Route::post('/ask', [LLMController::class, 'ask'])->name('llm.ask');
     Route::post('/save', [LLMController::class, 'save'])->name('llm.save');
-
 });
 
 Route::prefix('notes')->group(function () {
@@ -107,11 +106,17 @@ Route::prefix('share')->group(function () {
 
 
 Route::prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'login'])->name('admin.login');
+    Route::post('/login/submit', [AdminController::class, 'login_submit'])->name('admin.login_submit');
+    Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/data-source/external', [AdminController::class, 'data_source'])->name('admin.data-source');
     Route::get('/open-meteo', [AdminController::class, 'open_meteo'])->name('admin.open_meteo');
+    Route::get('/stocks', [AdminController::class, 'stocks'])->name('admin.stocks');
     Route::post('/users/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
+    Route::post('/update-options/open-meteo', [AdminController::class, 'update_options_open_meteo'])->name('admin.update_options_open_meteo');
+    Route::post('/update-options/stocks', [AdminController::class, 'update_options_stocks'])->name('admin.update_options_stocks');
 
 });
 
@@ -158,15 +163,12 @@ Route::get('/alignment', function () {
 
 
 
+
 Route::get('/response', function () {
     return view('response');
 });
 
 
-
-// Route::get('/render', function () {
-//     return view('renderImage');
-// });
 
 Route::get('/render', [RenderImageController::class, 'render']);
 Route::post('/save-chart-image', [RenderImageController::class, 'saveChartImage']);
