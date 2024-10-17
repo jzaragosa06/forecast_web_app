@@ -445,6 +445,8 @@
             });
 
         });
+
+        
         $(document).ready(function() {
 
             // Iterate over each file data to create corresponding graphs
