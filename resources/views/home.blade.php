@@ -891,38 +891,6 @@
 
             });
 
-            // function extractToCSV(response) {
-            //     // Check if response has values array
-            //     if (!response || !response.values || response.values.length === 0) {
-            //         console.error("No values found in the response.");
-            //         return;
-            //     }
-
-            //     // Extract data from the values array
-            //     const values = response.values;
-
-            //     // Define the CSV headers
-            //     const headers = ['datetime', 'open', 'high', 'low', 'close', 'volume'];
-
-            //     // Create an array for CSV rows starting with the headers
-            //     let csvContent = headers.join(",") + "\n";
-
-            //     // Loop through the values and extract the fields to append to the CSV content
-            //     values.forEach(item => {
-            //         const row = [
-            //             convertDate(item.datetime),
-            //             item.open,
-            //             item.high,
-            //             item.low,
-            //             item.close,
-            //             item.volume
-            //         ].join(",");
-            //         csvContent += row + "\n";
-            //     });
-
-
-            //     return csvContent;
-            // }
             function extractToCSV(response) {
                 // Check if response has values array
                 if (!response || !response.values || response.values.length === 0) {
