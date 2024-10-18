@@ -130,7 +130,6 @@
                 <div class="relative group">
                     <a href="{{ route('share.index') }}"
                         class="{{ request()->routeIs('share.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
-                        {{-- <i class="fas fa-share-alt text-xl"></i> --}}
                         <i class="fas fa-share-square text-xl"></i>
                     </a>
                     <span
@@ -141,15 +140,15 @@
 
                 <div class="relative group">
                     <a href="{{ route('posts.index') }}"
-                        class="{{ request()->routeIs('post.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
-                        {{-- <i class="fas fa-share-alt text-xl"></i> --}}
-                        <i class="fas fa-share-square text-xl"></i>
+                        class="{{ request()->routeIs('posts.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
+                        <i class="fas fa-comments text-xl"></i>
                     </a>
                     <span
                         class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Post
+                        Discussion
                     </span>
                 </div>
+
             </nav>
 
             <!-- Settings Icon (at bottom) -->
