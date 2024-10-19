@@ -6,17 +6,7 @@
 
 @section('content')
     <div class="container mx-auto my-10">
-        {{-- <div>
-            <div>
-                <!-- Filename -->
-                {{ $timeSeriesData['filename'] }}
-            </div>
-            <div>
-                <!-- description -->
-                <p class="text-gray-700 mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua. ...</p>
-            </div>
-        </div> --}}
+       
 
         <div class="mb-6">
             <!-- Filename -->
@@ -30,27 +20,7 @@
         </div>
         <div id="chart"></div> <!-- Chart Container -->
 
-        <!-- DataTable -->
-        {{-- <table id="timeSeriesTable" class="min-w-full mt-8 border-collapse border border-gray-300 display">
-            <thead>
-                <tr class="bg-gray-200">
-                    @foreach ($timeSeriesData['header'] as $column)
-                        <th class="border border-gray-300 px-4 py-2 text-left">{{ $column }}</th>
-                    @endforeach
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($timeSeriesData['data'] as $row)
-                    <tr class="bg-white border-b">
-                        <td class="border border-gray-300 px-4 py-2">{{ $row['date'] }}</td>
-                        @foreach ($row['values'] as $value)
-                            <td class="border border-gray-300 px-4 py-2">{{ $value }}</td>
-                        @endforeach
-                    </tr>
-                @endforeach
-            </tbody>
-        </table> --}}
-
+ 
         <table id="timeSeriesTable" class="min-w-full mt-8 table-auto text-left">
             <thead>
                 <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">

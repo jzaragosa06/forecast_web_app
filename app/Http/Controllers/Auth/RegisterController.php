@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Auth;
-use Illuminate\Support\Facades\File; 
+use Illuminate\Support\Facades\File;
 
 
 
@@ -57,7 +57,6 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'contact_num' => ['required'],
             'password' => [
                 'required',
                 'string',
@@ -86,13 +85,11 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'contact_num' => $data['contact_num'],
             'password' => Hash::make($data['password']),
 
 
         ]);
     }
-
 
     protected function registered(Request $request, $user)
     {
@@ -102,7 +99,7 @@ class RegisterController extends Controller
             'description' => 'Registered a new user account',
         ]);
     }
-    
+
     public function showRegistrationForm()
     {
         // Load the terms.html file (adjust the path if necessary)

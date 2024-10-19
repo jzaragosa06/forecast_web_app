@@ -89,10 +89,12 @@
 
     <!-- JQuery UI -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    
+
     <!-- Include Flatpickr CSS and JS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 </head>
 
@@ -130,7 +132,6 @@
                 <div class="relative group">
                     <a href="{{ route('share.index') }}"
                         class="{{ request()->routeIs('share.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
-                        {{-- <i class="fas fa-share-alt text-xl"></i> --}}
                         <i class="fas fa-share-square text-xl"></i>
                     </a>
                     <span
@@ -138,6 +139,18 @@
                         Shared Files
                     </span>
                 </div>
+
+                <div class="relative group">
+                    <a href="{{ route('posts.index') }}"
+                        class="{{ request()->routeIs('posts.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
+                        <i class="fas fa-comments text-xl"></i>
+                    </a>
+                    <span
+                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Discussion
+                    </span>
+                </div>
+
             </nav>
 
             <!-- Settings Icon (at bottom) -->

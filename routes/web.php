@@ -16,6 +16,9 @@ use App\Http\Controllers\SaveInputController;
 use App\Http\Controllers\ShareController;
 use App\Http\Controllers\TSSeqAlController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -65,10 +68,12 @@ Route::prefix('files')->group(function () {
 });
 
 
-
 Route::prefix('profile')->group(function () {
     Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
     Route::post('/update/photo', [ProfileController::class, 'update_photo'])->name('profile.update.photo');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('user.update');
+
+
 });
 
 
@@ -120,8 +125,14 @@ Route::prefix('admin')->group(function () {
 
 });
 
+Route::prefix('posts')->group(function () {
+    Route::get('/', [PostController::class, 'index'])->name('posts.index');
+    Route::get('/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/store', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/show/{id}', [PostController::class, 'show'])->name('posts.show');
+});
 
-
+Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
 // ============================================================================================================================================================
 
 
