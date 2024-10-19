@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InputFileGraphController;
 use App\Http\Controllers\LLMController;
@@ -15,6 +16,9 @@ use App\Http\Controllers\SaveInputController;
 use App\Http\Controllers\ShareController;
 use App\Http\Controllers\TSSeqAlController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,47 +31,111 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
-
 Auth::routes();
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::post('upload/ts', [PreprocessInputFileController::class, 'preprocess_fillna'])->name('upload.ts');
-Route::post('save/ts', [SaveInputController::class, 'save'])->name('save');
-Route::post('manage/operations', action: [ManageOperationsController::class, 'manage'])->name('manage.operations');
-Route::post('manage/results/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results.post');
-Route::get('manage/results/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results.get');
 
 
-Route::get('/manage/results/crud/show', action: [ManageResultsUsingCRUDController::class, 'index'])->name('crud.index');
-// Route::post('/manage/results/crud/view/{file_assoc_id}', action: [ManageResultsUsingCRUDController::class, 'view'])->name('crud.view');
-Route::post('/manage/results/crud/delete/file_assoc/{file_assoc_id}', action: [ManageResultsUsingCRUDController::class, 'delete_file_assoc'])->name('crud.delete.file_assoc');
-Route::post('/manage/results/crud/delete/file/{file_id}', action: [ManageResultsUsingCRUDController::class, 'delete_file'])->name('crud.delete.file');
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-Route::post('/profile/update/photo', [ProfileController::class, 'update_photo'])->name('profile.update.photo');
+Route::prefix('upload')->group(function () {
+    Route::post('/time-series', [PreprocessInputFileController::class, 'preprocess_fillna'])->name('upload.ts');
+    Route::post('/save/time-series', [SaveInputController::class, 'save'])->name('save');
 
-Route::get('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.get');
-Route::post('inputFileGraph/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.post');
-Route::post('/llm/ask', [LLMController::class, 'ask'])->name('llm.ask');
-Route::post('/llm/save', [LLMController::class, 'save'])->name('llm.save');
+});
 
-Route::post('/notes/save', [NotesController::class, 'save'])->name('notes.save');
-Route::post('/ts/seq_al/index/{file_id}', [TSSeqAlController::class, 'index'])->name('seqal.index');
-Route::post('/ts/seq_al/save_preprocess_fillna_seqal', [TSSeqAlController::class, 'save_preprocess_fillna_seqal'])->name('seqal.save_preprocess');
-// Route::post('/ts/seq_al/to_graph', [TSSeqAlController::class, 'to_multi_preprocess'])->name('seqal.to_graph');
-Route::get('/ts/seq_al/multi', [TSSeqAlController::class, 'showMultivariateData'])->name('seqal.multi');
-Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+Route::prefix('analyze')->group(function () {
+    Route::post('/time-series', action: [ManageOperationsController::class, 'manage'])->name('manage.operations');
 
-Route::post('/share/with_other', [ShareController::class, 'shareFileWithUsers'])->name('share.with_other');
-// Route::post('share/view/{file_assoc_id}/{user_id}', [ShareController::class, 'view_shared_file'])->name('share.view_file');
-Route::get('share/view/{file_assoc_id}/{user_id}', [ShareController::class, 'view_shared_file'])->name('share.view_file');
+});
 
-Route::get('/share/index', [ShareController::class, 'index'])->name('share.index');
 
-Route::post('/ts/seq_al/temp/save', [TSSeqAlController::class, 'temporary_save'])->name('seqal.tempsave');
-Route::get('ts/seq_al/preprocess/{id}', [TSSeqAlController::class, 'to_graph_for_preprocessing'])->name('seqal.preprocess');
+Route::prefix('results')->group(function () {
+    Route::post('/view/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results.post');
+    Route::get('/view/results/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results.get');
+
+});
+
+Route::prefix('files')->group(function () {
+    Route::get('/', action: [ManageResultsUsingCRUDController::class, 'index'])->name('crud.index');
+    Route::post('/results/delete/{file_assoc_id}', action: [ManageResultsUsingCRUDController::class, 'delete_file_assoc'])->name('crud.delete.file_assoc');
+    Route::post('/inputs/delete/{file_id}', action: [ManageResultsUsingCRUDController::class, 'delete_file'])->name('crud.delete.file');
+    Route::get('input/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.get');
+    Route::post('input/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.post');
+
+});
+
+
+Route::prefix('profile')->group(function () {
+    Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/update/photo', [ProfileController::class, 'update_photo'])->name('profile.update.photo');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('user.update');
+
+
+});
+
+
+Route::prefix('llm')->group(function () {
+    Route::post('/ask', [LLMController::class, 'ask'])->name('llm.ask');
+    Route::post('/save', [LLMController::class, 'save'])->name('llm.save');
+});
+
+Route::prefix('notes')->group(function () {
+    Route::post('/save', [NotesController::class, 'save'])->name('notes.save');
+
+});
+
+Route::prefix('sequence-alignment/series-alignment')->group(function () {
+    Route::post('/index/{file_id}', [TSSeqAlController::class, 'index'])->name('seqal.index');
+    Route::post('/save_preprocess_fillna_seqal', [TSSeqAlController::class, 'save_preprocess_fillna_seqal'])->name('seqal.save_preprocess');
+    Route::get('/multi/show', [TSSeqAlController::class, 'showMultivariateData'])->name('seqal.multi');
+    Route::post('/temp/save', [TSSeqAlController::class, 'temporary_save'])->name('seqal.tempsave');
+    Route::get('/preprocess/{id}', [TSSeqAlController::class, 'to_graph_for_preprocessing'])->name('seqal.preprocess');
+
+});
+
+
+Route::prefix('logs')->group(function () {
+    Route::get('/', [LogController::class, 'index'])->name('logs.index');
+
+});
+
+Route::prefix('share')->group(function () {
+    Route::post('/with_other', [ShareController::class, 'shareFileWithUsers'])->name('share.with_other');
+    Route::get('/view/{file_assoc_id}/{user_id}', [ShareController::class, 'view_shared_file'])->name('share.view_file');
+    Route::get('/', [ShareController::class, 'index'])->name('share.index');
+
+});
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'login'])->name('admin.login');
+    Route::post('/login/submit', [AdminController::class, 'login_submit'])->name('admin.login_submit');
+    Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/data-source/external', [AdminController::class, 'data_source'])->name('admin.data-source');
+    Route::get('/open-meteo', [AdminController::class, 'open_meteo'])->name('admin.open_meteo');
+    Route::get('/stocks', [AdminController::class, 'stocks'])->name('admin.stocks');
+    Route::post('/users/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
+    Route::post('/update-options/open-meteo', [AdminController::class, 'update_options_open_meteo'])->name('admin.update_options_open_meteo');
+    Route::post('/update-options/stocks', [AdminController::class, 'update_options_stocks'])->name('admin.update_options_stocks');
+
+});
+
+Route::prefix('posts')->group(function () {
+    Route::get('/', [PostController::class, 'index'])->name('posts.index');
+    Route::get('/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/store', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/show/{id}', [PostController::class, 'show'])->name('posts.show');
+});
+
+Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
+// ============================================================================================================================================================
+
+
 
 Route::get('/test_base', function () {
     return view('test_base');
@@ -106,15 +174,12 @@ Route::get('/alignment', function () {
 
 
 
+
 Route::get('/response', function () {
     return view('response');
 });
 
 
-
-// Route::get('/render', function () {
-//     return view('renderImage');
-// });
 
 Route::get('/render', [RenderImageController::class, 'render']);
 Route::post('/save-chart-image', [RenderImageController::class, 'saveChartImage']);
@@ -123,4 +188,3 @@ Route::get('/terms', function () {
     $termsHtml = file_get_contents(resource_path('views/auth/terms.html'));
     return view('terms', compact('termsHtml'));
 })->name('terms');
-

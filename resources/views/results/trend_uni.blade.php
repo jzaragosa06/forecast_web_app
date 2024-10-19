@@ -20,6 +20,7 @@
                     <div id="chart1"></div> <!-- Placeholder for the graph -->
                 </div>
 
+
                 <!-- Notes Section (Bottom) -->
                 <div class="bg-white shadow-md rounded-lg p-3 flex-1 flex flex-col"> <!-- Reduced padding to p-3 -->
                     <h2 class="font-semibold text-gray-700 text-sm">Notes</h2> <!-- Reduced font size -->
@@ -39,10 +40,11 @@
             </div>
 
             <!-- Right Column (Info Card) -->
-            <div class="bg-white shadow-md rounded-lg p-3 flex flex-col justify-between h-full">
+            <div class="bg-white shadow-md rounded-lg p-3 flex flex-col justify-between h-full overflow-y-auto max">
                 <!-- Info Section -->
-                <div class="mb-4">
-                    <p class="text-gray-700 text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <div id="info-card-explanations" class="mb-4 overflow-y-auto max">
+                    <p class="text-gray-700 text-sm">Lorem ipsum dolor sit amet, consectetur
+                        adipiscing elit.</p>
                     <!-- Reduced font size -->
                 </div>
             </div>
@@ -274,7 +276,9 @@
 
             // Clean the data to handle missing values
             const trendData = cleanData(data.trend[`${data.metadata.colname}`]);
-
+            $('#info-card-explanations').html(data.explanations.response1 + "<br>" + data.explanations.response2 +
+                "<br>" +
+                data.explanations.response3);
 
             // Initialize the chart with ApexCharts
             var options = {
