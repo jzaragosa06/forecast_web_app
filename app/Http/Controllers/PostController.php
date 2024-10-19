@@ -48,10 +48,17 @@ class PostController extends Controller
     {
         $post = Post::with(['user', 'comments.replies.user'])->findOrFail($id);
         $file_assoc_id = $post->file_assoc_id;
+
+        // $file_assoc = DB::table('file_associations')
+        //     ->join('files', 'file_associations.file_id', '=', 'files.file_id')
+        //     ->where('file_associations.file_assoc_id', $file_assoc_id)
+        //     ->where('file_associations.user_id', Auth::id())
+        //     ->select('file_associations.*', 'files.type as file_type')
+        //     ->first();
+
         $file_assoc = DB::table('file_associations')
             ->join('files', 'file_associations.file_id', '=', 'files.file_id')
             ->where('file_associations.file_assoc_id', $file_assoc_id)
-            ->where('file_associations.user_id', Auth::id())
             ->select('file_associations.*', 'files.type as file_type')
             ->first();
 
@@ -71,7 +78,7 @@ class PostController extends Controller
             "operation" => $operation,
             "inputFileType" => $inputFileType,
             "file_assoc_id" => $file_assoc_id,
-            
+
         ];
 
         // ====================================================================
@@ -100,7 +107,6 @@ class PostController extends Controller
             'data' => $series,
         ];
         // ====================================================================
-
         return view('posts.show', compact('post', 'data', 'file_meta', 'timeSeriesData'));
     }
 
