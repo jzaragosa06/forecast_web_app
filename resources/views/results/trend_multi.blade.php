@@ -14,11 +14,9 @@
             <div class="col-span-2 flex flex-col space-y-3 h-full">
                 <!-- Graph Section (Top) -->
                 <div class="bg-white shadow-md rounded-lg p-1 h-1/2"> <!-- Reduced padding to p-2 -->
-
                     <!-- Placeholder for the graph -->
                     <div id="chart-container"></div>
                 </div>
-
                 <!-- Notes Section (Bottom) -->
                 <div class="bg-white shadow-md rounded-lg p-3 flex-1 flex flex-col">
                     <h2 class="font-semibold text-gray-700 text-sm">Notes</h2>

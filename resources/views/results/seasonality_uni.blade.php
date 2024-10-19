@@ -255,178 +255,183 @@
             });
         });
 
-        const jsonData = @json($data);
-        const data = JSON.parse(jsonData);
+
+        $(document).ready(function() {
+
+            const jsonData = @json($data);
+            const data = JSON.parse(jsonData);
 
 
-        const generateYearlyLabels = () => {
-            const labels = [];
-            const arbitraryYear = 2020; // Arbitrary non-leap year
-            let currentDate = new Date(arbitraryYear, 0, 1); // Start at January 1
+            const generateYearlyLabels = () => {
+                const labels = [];
+                const arbitraryYear = 2020; // Arbitrary non-leap year
+                let currentDate = new Date(arbitraryYear, 0, 1); // Start at January 1
 
-            while (currentDate.getFullYear() === arbitraryYear) {
-                // Convert to timestamp for ApexCharts datetime x-axis
-                labels.push(currentDate.getTime());
-                // Increment by 1 day
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
+                while (currentDate.getFullYear() === arbitraryYear) {
+                    // Convert to timestamp for ApexCharts datetime x-axis
+                    labels.push(currentDate.getTime());
+                    // Increment by 1 day
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
 
-            return labels;
-        };
+                return labels;
+            };
 
-        const weeklyLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        const yearlyLabels = generateYearlyLabels();
+            const weeklyLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const yearlyLabels = generateYearlyLabels();
 
-        // Reference to containers
-        const chartContainer = document.getElementById('chart-container');
-        const buttonContainer = document.getElementById('button-container');
-        const infoCard = document.getElementById('info-card');
+            // Reference to containers
+            const chartContainer = document.getElementById('chart-container');
+            const buttonContainer = document.getElementById('button-container');
+            const infoCard = document.getElementById('info-card');
 
-        // Function to create chart
-        function createChart(title, labels, seriesData, isDatetime = false) {
-            const cardDiv = document.createElement('div');
-            cardDiv.classList.add('bg-white', 'shadow-lg', 'rounded-lg', 'p-6', 'mb-6');
+            // Function to create chart
+            function createChart(title, labels, seriesData, isDatetime = false) {
+                const cardDiv = document.createElement('div');
+                cardDiv.classList.add('bg-white', 'shadow-lg', 'rounded-lg', 'p-6', 'mb-6');
 
-            const chartDiv = document.createElement('div');
-            chartDiv.style.marginBottom = '20px';
-            cardDiv.appendChild(chartDiv);
-            chartContainer.appendChild(cardDiv);
+                const chartDiv = document.createElement('div');
+                chartDiv.style.marginBottom = '20px';
+                cardDiv.appendChild(chartDiv);
+                chartContainer.appendChild(cardDiv);
 
-            const options = {
-                chart: {
-                    type: 'line',
-                    height: 350,
-                    animations: {
-                        enabled: true
+                const options = {
+                    chart: {
+                        type: 'line',
+                        height: 350,
+                        animations: {
+                            enabled: true
+                        },
+                        toolbar: {
+                            show: false
+                        }
                     },
-                    toolbar: {
-                        show: false
-                    }
-                },
-                title: {
-                    text: title,
-                    align: 'left'
-                },
-                xaxis: {
-                    type: isDatetime ? 'datetime' : 'category', // Use 'datetime' for yearly
-                    categories: labels,
-                    labels: {
-                        formatter: function(value, timestamp) {
-                            if (isDatetime) {
-                                // Format the datetime labels to only show month and day
-                                return new Date(timestamp).toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric'
-                                });
-                            } else {
-                                return value;
+                    title: {
+                        text: title,
+                        align: 'left'
+                    },
+                    xaxis: {
+                        type: isDatetime ? 'datetime' : 'category', // Use 'datetime' for yearly
+                        categories: labels,
+                        labels: {
+                            formatter: function(value, timestamp) {
+                                if (isDatetime) {
+                                    // Format the datetime labels to only show month and day
+                                    return new Date(timestamp).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric'
+                                    });
+                                } else {
+                                    return value;
+                                }
                             }
                         }
-                    }
-                },
-                series: seriesData,
-                stroke: {
-                    curve: 'smooth',
-                    width: 2
-                },
-                markers: {
-                    size: 0
-                },
-                tooltip: {
-                    shared: true,
-                    intersect: false,
-                    x: {
-                        format: 'MMM dd'
-                    }
-                },
-                yaxis: {
-                    title: {
-                        text: 'Value'
                     },
-                    labels: {
-                        formatter: (value) => value.toFixed(2)
+                    series: seriesData,
+                    stroke: {
+                        curve: 'smooth',
+                        width: 2
+                    },
+                    markers: {
+                        size: 0
+                    },
+                    tooltip: {
+                        shared: true,
+                        intersect: false,
+                        x: {
+                            format: 'MMM dd'
+                        }
+                    },
+                    yaxis: {
+                        title: {
+                            text: 'Value'
+                        },
+                        labels: {
+                            formatter: (value) => value.toFixed(2)
+                        }
                     }
-                }
-            };
+                };
 
-            const chart = new ApexCharts(chartDiv, options);
-            chart.render();
-        }
+                const chart = new ApexCharts(chartDiv, options);
+                chart.render();
+            }
 
 
-        // Function to create buttons
-        function createButton(component) {
-            const button = document.createElement('button');
-            button.classList.add('font-bold', 'py-2', 'px-4', 'rounded', 'focus:outline-none');
+            // Function to create buttons
+            function createButton(component) {
+                const button = document.createElement('button');
+                button.classList.add('font-bold', 'py-2', 'px-4', 'rounded', 'focus:outline-none');
 
-            // Set the button styles based on the component state
-            button.textContent = component.charAt(0).toUpperCase() + component.slice(1);
-            button.onclick = () => {
-                loadComponent(component);
-                updateButtonStyles(component);
-            };
+                // Set the button styles based on the component state
+                button.textContent = component.charAt(0).toUpperCase() + component.slice(1);
+                button.onclick = () => {
+                    loadComponent(component);
+                    updateButtonStyles(component);
+                };
 
-            // Return the button element
-            return button;
-        }
+                // Return the button element
+                return button;
+            }
 
-        // Function to update button styles
-        function updateButtonStyles(selectedComponent) {
-            const buttons = buttonContainer.querySelectorAll('button');
+            // Function to update button styles
+            function updateButtonStyles(selectedComponent) {
+                const buttons = buttonContainer.querySelectorAll('button');
 
-            buttons.forEach(button => {
-                if (button.textContent.toLowerCase() === selectedComponent) {
-                    button.classList.add('bg-blue-500', 'text-white');
-                    button.classList.remove('bg-white', 'text-blue-500', 'border');
-                } else {
-                    button.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
-                    button.classList.remove('bg-blue-500', 'text-white');
-                }
-            });
-        }
-
-        // Function to load the component (weekly or yearly)
-        function loadComponent(component) {
-            chartContainer.innerHTML = ''; // Clear previous charts
-            infoCard.innerHTML = ''; // Clear previous info
-
-            data.components.forEach(comp => {
-                if (comp === component) {
-                    let labels, title, isDatetime = false;
-                    const colname = data.metadata.colname;
-                    const seriesData = [{
-                        name: 'Value',
-                        data: data.seasonality_per_period[colname][component].values
-                    }];
-
-                    if (component === 'yearly') {
-                        labels = yearlyLabels;
-                        title = `${colname} - Yearly Seasonality`;
-                        isDatetime = true;
-                    } else if (component === 'weekly') {
-                        labels = weeklyLabels;
-                        title = `${colname} - Weekly Seasonality`;
+                buttons.forEach(button => {
+                    if (button.textContent.toLowerCase() === selectedComponent) {
+                        button.classList.add('bg-blue-500', 'text-white');
+                        button.classList.remove('bg-white', 'text-blue-500', 'border');
+                    } else {
+                        button.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
+                        button.classList.remove('bg-blue-500', 'text-white');
                     }
+                });
+            }
 
-                    let explanation_raw = data.explanations[component].response1 + "<br>" + data.explanations[
-                        component].response2;
-                    createChart(title, labels, seriesData, isDatetime);
-                    infoCard.innerHTML = `<p class="text-gray-700 text-sm">${explanation_raw}</p>`;
-                }
+            // Function to load the component (weekly or yearly)
+            function loadComponent(component) {
+                chartContainer.innerHTML = ''; // Clear previous charts
+                infoCard.innerHTML = ''; // Clear previous info
+
+                data.components.forEach(comp => {
+                    if (comp === component) {
+                        let labels, title, isDatetime = false;
+                        const colname = data.metadata.colname;
+                        const seriesData = [{
+                            name: 'Value',
+                            data: data.seasonality_per_period[colname][component].values
+                        }];
+
+                        if (component === 'yearly') {
+                            labels = yearlyLabels;
+                            title = `${colname} - Yearly Seasonality`;
+                            isDatetime = true;
+                        } else if (component === 'weekly') {
+                            labels = weeklyLabels;
+                            title = `${colname} - Weekly Seasonality`;
+                        }
+
+                        let explanation_raw = data.explanations[component].response1 + "<br>" + data
+                            .explanations[
+                                component].response2;
+                        createChart(title, labels, seriesData, isDatetime);
+                        infoCard.innerHTML = `<p class="text-gray-700 text-sm">${explanation_raw}</p>`;
+                    }
+                });
+            }
+
+
+            // Generate buttons based on available components
+            data.components.forEach(component => {
+                const button = createButton(component);
+                buttonContainer.appendChild(button);
             });
-        }
 
 
-        // Generate buttons based on available components
-        data.components.forEach(component => {
-            const button = createButton(component);
-            buttonContainer.appendChild(button);
+
+            // Initial loading of the first component
+            loadComponent(data.components[0]);
+            updateButtonStyles(data.components[0]);
         });
-
-
-
-        // Initial loading of the first component
-        loadComponent(data.components[0]);
-        updateButtonStyles(data.components[0]);
     </script>
 @endsection
