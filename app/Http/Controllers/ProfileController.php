@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FileAssociation;
 use App\Models\FileUserShare;
 use Auth;
+use App\Models\Post;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,7 +21,15 @@ class ProfileController extends Controller
         // $resultsCount = FileAssociation::where('user_id', Auth::id())->count();
         $resultCount = FileAssociation::distinct('file_assoc_id')->count('file_assoc_id');
         $collabCount = FileUserShare::distinct('shared_to_user_id')->count('shared_to_user_id');
-        return view('profile.index', compact('user', 'resultCount', 'collabCount'));
+
+        // Get the currently authenticated user ID
+        $currentUserId = Auth::id();
+        $file_assocs = FileAssociation::where('user_id', $currentUserId)->get();
+
+        // Separate posts made by the current user and others
+        $myPosts = Post::where('user_id', $currentUserId)->latest()->get();
+
+        return view('profile.index', compact('user', 'resultCount', 'collabCount', 'myPosts'));
 
     }
 
@@ -32,7 +41,15 @@ class ProfileController extends Controller
         // $resultsCount = FileAssociation::where('user_id', Auth::id())->count();
         $resultCount = FileAssociation::distinct('file_assoc_id')->count('file_assoc_id');
         $collabCount = FileUserShare::distinct('shared_to_user_id')->count('shared_to_user_id');
-        return view('profile.public', compact('user', 'resultCount', 'collabCount'));
+
+        // Get the currently authenticated user ID
+        $userId = $id;
+        $file_assocs = FileAssociation::where('user_id', $userId)->get();
+
+        // Separate posts made by the current user and others
+        $myPosts = Post::where('user_id', $userId)->latest()->get();
+
+        return view('profile.public', compact('user', 'resultCount', 'collabCount', 'myPosts'));
     }
 
     public function update_photo(Request $request)

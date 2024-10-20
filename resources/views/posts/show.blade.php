@@ -264,6 +264,14 @@
 
 
                             },
+                            title: {
+                                text: 'Forecast Result',
+                                align: 'left',
+                                style: {
+                                    fontSize: '18px', // Font size of the title
+                                    color: '#263238' // Color of the title
+                                }
+                            },
                             series: [{
                                 name: 'Pred Out',
                                 data: forecastValue,
@@ -347,6 +355,14 @@
 
 
                             },
+                            title: {
+                                text: 'Forecast Result',
+                                align: 'left',
+                                style: {
+                                    fontSize: '18px', // Font size of the title
+                                    color: '#263238' // Color of the title
+                                }
+                            },
                             series: [{
                                 name: 'Pred Out',
                                 data: forecastValue,
@@ -418,6 +434,14 @@
                             },
                             toolbar: {
                                 show: false,
+                            }
+                        },
+                        title: {
+                            text: 'Trend Result',
+                            align: 'left',
+                            style: {
+                                fontSize: '18px', // Font size of the title
+                                color: '#263238' // Color of the title
                             }
                         },
                         series: [{
@@ -528,6 +552,14 @@
                                 }
                             },
                         },
+                        title: {
+                            text: 'Trend Result',
+                            align: 'left',
+                            style: {
+                                fontSize: '18px', // Font size of the title
+                                color: '#263238' // Color of the title
+                            }
+                        },
                         series: seriesData,
                         xaxis: {
                             categories: data.trend.index, // x-axis labels (dates/times)
@@ -610,8 +642,12 @@
                                 }
                             },
                             title: {
-                                text: title,
-                                align: 'left'
+                                text: 'Seasonality Result',
+                                align: 'left',
+                                style: {
+                                    fontSize: '18px', // Font size of the title
+                                    color: '#263238' // Color of the title
+                                }
                             },
                             xaxis: {
                                 type: isDatetime ? 'datetime' : 'category', // Use 'datetime' for yearly
@@ -780,8 +816,12 @@
                                 }
                             },
                             title: {
-                                text: title,
-                                align: 'left'
+                                text: 'Seasonality Result',
+                                align: 'left',
+                                style: {
+                                    fontSize: '18px', // Font size of the title
+                                    color: '#263238' // Color of the title
+                                }
                             },
                             xaxis: {
                                 type: isDatetime ? 'datetime' : 'category',
@@ -907,6 +947,8 @@
                 });
             @endif
         @endif
+
+
 
         // Comment Functionality
         $(document).ready(function() {
