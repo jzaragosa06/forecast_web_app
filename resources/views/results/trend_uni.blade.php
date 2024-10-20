@@ -121,18 +121,6 @@
             // Initialize Quill editor with basic options
             var quill = new Quill('#notesEditor', {
                 theme: 'snow',
-                modules: {
-                    toolbar: [
-                        ['bold', 'italic', 'underline'], // Basic formatting
-                        [{
-                            'background': []
-                        }], // Highlighting
-                        [{
-                            'header': [1, 2, 3, false]
-                        }], // Header size
-                        ['clean'] // Clear formatting
-                    ]
-                }
             });
 
             @if ($note)
