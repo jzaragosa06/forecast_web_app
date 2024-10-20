@@ -292,6 +292,14 @@
                         show: false,
                     }
                 },
+                title: {
+                    text: 'Trend Result',
+                    align: 'left',
+                    style: {
+                        fontSize: '18px', // Font size of the title
+                        color: '#263238' // Color of the title
+                    }
+                },
                 series: [{
                     name: `${data.metadata.colname}`,
                     data: trendData,

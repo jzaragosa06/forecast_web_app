@@ -438,6 +438,14 @@
                             show: false,
                         }
                     },
+                    title: {
+                        text: 'Forecast Result',
+                        align: 'left',
+                        style: {
+                            fontSize: '18px', // Font size of the title
+                            color: '#263238' // Color of the title
+                        }
+                    },
                     series: [{
                         name: 'orig data',
                         data: origDataValue,
@@ -496,6 +504,14 @@
                         height: 300,
                         toolbar: {
                             show: false,
+                        }
+                    },
+                    title: {
+                        text: 'Forecast Result on Test Set',
+                        align: 'left',
+                        style: {
+                            fontSize: '18px', // Font size of the title
+                            color: '#263238' // Color of the title
                         }
                     },
                     series: [{
