@@ -16,39 +16,6 @@ use App\Models\Logs;
 
 class ManageResultsUsingCRUDController extends Controller
 {
-    // public function index()
-    // {
-
-    //     $files_input = File::where('user_id', Auth::id())->orderBy('created_at', 'desc')
-    //         ->get();
-
-    //     $files = DB::table('files')
-    //         ->leftJoin('file_associations', 'files.file_id', '=', 'file_associations.file_id')
-    //         ->where('files.user_id', Auth::id())
-    //         ->select(
-    //             'files.file_id',
-    //             'files.filename',
-    //             'files.filepath',
-    //             'file_associations.file_assoc_id',
-    //             'file_associations.assoc_filename',
-    //             'file_associations.associated_file_path',
-    //             'file_associations.operation'
-    //         )
-    //         ->get();
-    //     $files_assoc = FileAssociation::where('user_id', Auth::id())->orderBy('created_at', 'desc')
-    //         ->get();
-
-
-    //     // ===========================
-    //     $users = User::where('id', '!=', Auth::id())->get();
-    //     // ===========================
-
-
-    //     // Pass everything to the view
-    //     return view('CRUD.index', compact('files_assoc', 'files', 'files_input', 'users'));
-    // }
-
-
 
     public function index()
     {
