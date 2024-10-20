@@ -307,8 +307,12 @@
                         }
                     },
                     title: {
-                        text: title,
-                        align: 'left'
+                        text: 'Seasonality Result',
+                        align: 'left',
+                        style: {
+                            fontSize: '18px', // Font size of the title
+                            color: '#263238' // Color of the title
+                        }
                     },
                     xaxis: {
                         type: isDatetime ? 'datetime' : 'category', // Use 'datetime' for yearly
