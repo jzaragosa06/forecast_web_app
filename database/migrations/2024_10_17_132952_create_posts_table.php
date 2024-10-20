@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('file_assoc_id')->nullable();
             $table->string('title');
             $table->text('body');
+            $table->string('topics');
             $table->timestamps();
 
             // Foreign key constraint
