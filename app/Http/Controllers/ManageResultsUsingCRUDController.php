@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\FileUserShare;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\FileAssociation;
@@ -15,11 +16,44 @@ use App\Models\Logs;
 
 class ManageResultsUsingCRUDController extends Controller
 {
+    // public function index()
+    // {
+
+    //     $files_input = File::where('user_id', Auth::id())->orderBy('created_at', 'desc')
+    //         ->get();
+
+    //     $files = DB::table('files')
+    //         ->leftJoin('file_associations', 'files.file_id', '=', 'file_associations.file_id')
+    //         ->where('files.user_id', Auth::id())
+    //         ->select(
+    //             'files.file_id',
+    //             'files.filename',
+    //             'files.filepath',
+    //             'file_associations.file_assoc_id',
+    //             'file_associations.assoc_filename',
+    //             'file_associations.associated_file_path',
+    //             'file_associations.operation'
+    //         )
+    //         ->get();
+    //     $files_assoc = FileAssociation::where('user_id', Auth::id())->orderBy('created_at', 'desc')
+    //         ->get();
+
+
+    //     // ===========================
+    //     $users = User::where('id', '!=', Auth::id())->get();
+    //     // ===========================
+
+
+    //     // Pass everything to the view
+    //     return view('CRUD.index', compact('files_assoc', 'files', 'files_input', 'users'));
+    // }
+
+
+
     public function index()
     {
-
-        $files_input = File::where('user_id', Auth::id())->orderBy('created_at', 'desc')
-            ->get();
+        // Fetch files and associations as before
+        $files_input = File::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
 
         $files = DB::table('files')
             ->leftJoin('file_associations', 'files.file_id', '=', 'file_associations.file_id')
@@ -34,17 +68,17 @@ class ManageResultsUsingCRUDController extends Controller
                 'file_associations.operation'
             )
             ->get();
-        $files_assoc = FileAssociation::where('user_id', Auth::id())->orderBy('created_at', 'desc')
-            ->get();
-        // ===========================
+
+        $files_assoc = FileAssociation::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
         $users = User::where('id', '!=', Auth::id())->get();
-        // ===========================
 
+        // Fetch shared users for each file association
+        $shared_users = DB::table('file_user_shares')
+            ->where('shared_by_user_id', Auth::id())
+            ->get();
 
-        // the file_assoc contains the results, files contains the input files and results, and files_input contains the file inputs
-        return view('CRUD.index', compact('files_assoc', 'files', 'files_input', 'users'));
+        return view('CRUD.index', compact('files_assoc', 'files', 'files_input', 'users', 'shared_users'));
     }
-
 
     public function delete_file_assoc($file_assoc_id)
     {

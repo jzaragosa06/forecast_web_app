@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FileAssociation;
 use App\Models\FileUserShare;
 use Auth;
 use Illuminate\Http\Request;
@@ -17,19 +18,13 @@ class ShareController extends Controller
 {
     public function shareFileWithUsers(Request $request)
     {
-        // // Validate the incoming data
-        // $request->validate([
-        //     'file_assoc_id' => 'required|exists:file_associations,file_assoc_id',
-        //     'shared_to_user_ids' => 'required|array', // Array of user IDs
-        //     'shared_to_user_ids.*' => 'exists:users,id', // Validate each user ID exists
-        // ]);
-
         // Get the file association ID and the user IDs
         $fileAssocId = $request->input('file_assoc_id');
+
+
         $sharedToUserIds = $request->input('shared_to_user_ids');
         $sharedByUserId = Auth::id(); // ID of the user sharing the file
-
-        $file_association = FileUserShare::where('file_assoc_id', $fileAssocId)->first();
+        $file_association = FileAssociation::where('file_assoc_id', $fileAssocId)->first();
 
         // Loop through each user ID and insert into file_user_shares table
         foreach ($sharedToUserIds as $sharedToUserId) {
@@ -73,7 +68,7 @@ class ShareController extends Controller
 
 
         // Redirect back or return success response
-        return redirect()->route('home');
+        return redirect()->route('crud.index');
     }
 
     public function view_shared_file($file_assoc_id, $user_id)
