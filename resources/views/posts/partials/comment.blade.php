@@ -18,7 +18,8 @@
             <p class="text-gray-700">{{ $comment->body }}</p>
 
             <!-- Reply Button -->
-            <div class="flex items-center space-x-2 mt-2">
+            <div class="flex items-center space-x-2 mt-2"
+                onclick="document.getElementById('comment-form-section').scrollIntoView({ behavior: 'smooth' })">
                 <button class="text-sm text-gray-500 hover:text-blue-600 flex items-center reply-btn"
                     data-comment-id="{{ $comment->id }}" data-username="{{ $comment->user->name }}">
                     <!-- Reply Icon -->
