@@ -24,6 +24,17 @@ class ProfileController extends Controller
 
     }
 
+    //This displays the profile for public view
+    public function public($id)
+    {
+        $user = User::where('id', $id)->firstOrFail();
+        // count of the results files created. 
+        // $resultsCount = FileAssociation::where('user_id', Auth::id())->count();
+        $resultCount = FileAssociation::distinct('file_assoc_id')->count('file_assoc_id');
+        $collabCount = FileUserShare::distinct('shared_to_user_id')->count('shared_to_user_id');
+        return view('profile.public', compact('user', 'resultCount', 'collabCount'));
+    }
+
     public function update_photo(Request $request)
     {
         $user = User::where('id', Auth::id())->firstOrFail();

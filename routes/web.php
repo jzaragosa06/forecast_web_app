@@ -72,7 +72,7 @@ Route::prefix('profile')->group(function () {
     Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
     Route::post('/update/photo', [ProfileController::class, 'update_photo'])->name('profile.update.photo');
     Route::post('/profile', [ProfileController::class, 'update'])->name('user.update');
-
+    Route::get('/profile/public/view/{id}', [ProfileController::class, 'public'])->name('profile.public');
 
 });
 
