@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
+use App\Models\Post;
 
 class HomeController extends Controller
 {
@@ -39,9 +39,6 @@ class HomeController extends Controller
 
         $file_assocs = FileAssociation::where('user_id', Auth::id())->orderBy('created_at', 'desc')
             ->get();
-
-
-        // $files = Auth::user()->files;
 
         $files = File::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
 
@@ -75,7 +72,6 @@ class HomeController extends Controller
         }
 
 
-
         $userId = Auth::id();
 
         // Join the tables
@@ -92,8 +88,12 @@ class HomeController extends Controller
             )
             ->get();
 
+        $currentUserId = Auth::id();
+        // Separate posts made by the current user and others
+        $myPosts = Post::where('user_id', $currentUserId)->latest()->get();
+        $otherPosts = Post::where('user_id', '!=', $currentUserId)->latest()->get();
         // Pass the time series data to the view
-        return view('home', compact('timeSeriesData', 'files', 'file_assocs', 'sharedFiles'));
+        return view('home', compact('timeSeriesData', 'files', 'file_assocs', 'sharedFiles', 'otherPosts'));
     }
 
 

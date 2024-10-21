@@ -6,182 +6,626 @@
 
 
 @section('content')
-    <div class="container  mx-auto my-6">
-        <div class="container mx-auto p-4">
-            <div class="flex space-x-4">
+    <div class="container mx-auto my-6">
 
-                <div class="w-full md:w-1/3">
-                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
-                        <h4 class="text-lg font-semibold mb-4">Add Data</h4>
-                        <div class="flex-grow">
-                            <button type="button" id="ts-info"
-                                class="bg-blue-600 text-white px-4 py-2 rounded-md mb-2 hover:bg-blue-700"
-                                data-toggle="modal" data-target="#ts-info-form">
-                                Add More data via upload
-                            </button>
-                            <button type="button" id="ts-add-via-api-open-meteo-btn"
-                                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700" data-toggle="modal"
-                                data-target="#ts-add-via-api-open-meteo-modal">
-                                Add data from Open-Meteo
-                            </button>
+        <div class="container mx-auto mt-10">
+            {{-- <div class="grid grid-cols-4 gap-2"> --}}
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Left Side - Two horizontal blocks -->
+                <div class="bg-gray-50 col-span-3 space-y-4 h-full w-full">
+                    <div class="overflow-auto bg-white rounded-lg">
+                        <!-- Major Controls in Time Sereis Analysis -->
+                        <div class="w-full max-w-full">
+                            <div class="flex space-x-4">
+                                <!-- Add Data -->
+                                <div class="w-full sm:w-1/2 md:w-1/3 px-2">
+                                    <!-- Added px-2 for padding and sm:w-1/2 for better layout on smaller screens -->
+                                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
+                                        <h4 class="text-base font-semibold mb-2 text-gray-700">Add Data</h4>
+                                        <div class="space-y-4"> <!-- Adjusted space-y for better spacing -->
+                                            <!-- Upload Data Button -->
+                                            <div class="flex items-center space-x-2">
+                                                <p class="text-gray-600 text-xs flex-grow">Lorem ipsum dolor sit amet,
+                                                    consectetur adipiscing elit.</p>
+                                                <button type="button" id="ts-info"
+                                                    class="flex items-center bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 w-28 sm:w-32 md:w-full">
+                                                    <!-- Adjusted width on smaller screens -->
+                                                    <i class="fas fa-upload text-white"></i>
+                                                    <span class="ml-2 text-xs">Upload</span>
+                                                </button>
+                                            </div>
 
-                            {{-- Stocks --}}
-                            <button type="button" id="ts-add-via-api-stocks-btn"
-                                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                                Stocks
-                            </button>
+                                            <!-- Meteorological Data Button -->
+                                            <div class="flex items-center space-x-2">
+                                                <p class="text-gray-600 text-xs flex-grow">Lorem ipsum dolor sit amet,
+                                                    consectetur adipiscing elit.</p>
+                                                <button type="button" id="ts-add-via-api-open-meteo-btn"
+                                                    class="flex items-center bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 w-28 sm:w-32 md:w-full">
+                                                    <!-- Adjusted width on smaller screens -->
+                                                    <i class="fas fa-cloud-upload-alt text-white"></i>
+                                                    <span class="ml-2 text-xs">Weather</span>
+                                                </button>
+                                            </div>
 
-                        </div>
-                    </div>
-                </div>
+                                            <!-- Stocks Data Button -->
+                                            <div class="flex items-center space-x-2">
+                                                <p class="text-gray-600 text-xs flex-grow">Lorem ipsum dolor sit amet,
+                                                    consectetur adipiscing elit.</p>
+                                                <button type="button" id="ts-add-via-api-stocks-btn"
+                                                    class="flex items-center bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 w-28 sm:w-32 md:w-full">
+                                                    <!-- Adjusted width on smaller screens -->
+                                                    <i class="fas fa-dollar-sign text-white"></i>
+                                                    <span class="ml-2 text-xs">Stocks</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                <div class="w-full md:w-1/3">
-                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
-                        <h4 class="text-lg font-semibold mb-4">Analyze</h4>
-                        <form action="{{ route('manage.operations') }}" method="post" class="flex-grow">
-                            @csrf
-                            <div class="mb-4">
-                                <label for="file_id" class="block text-sm font-medium mb-1">Select File</label>
-                                <select name="file_id" id="file_id"
-                                    class="form-select block w-full border-gray-300 rounded-md shadow-sm">
-                                    @foreach (Auth::user()->files as $file)
-                                        <option value="{{ $file->file_id }}">{{ $file->filename }}</option>
-                                    @endforeach
-                                    <option value="" id="add-more-from-option">Add more data +</option>
-                                </select>
-                            </div>
+                                <!--Analyze data-->
+                                <div class="w-full md:w-1/3">
+                                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
+                                        <h4 class="text-base font-semibold mb-2 text-gray-700">Analyze Data</h4>
 
-                            <div class="mb-4">
-                                <label for="operation" class="block text-sm font-medium mb-1">Select Operation</label>
-                                <select name="operation" id="operation"
-                                    class="form-select block w-full border-gray-300 rounded-md shadow-sm">
-                                    <option value="trend">Trend</option>
-                                    <option value="seasonality">Seasonality</option>
-                                    <option value="forecast">Forecast</option>
-                                </select>
-                            </div>
-
-                            <button type="submit"
-                                class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">Analyze</button>
-                        </form>
-                    </div>
-                </div>
-
-
-
-                <div class="w-full md:w-1/3">
-                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
-                        <h4 class="text-lg font-semibold mb-4">Recent Results</h4>
-                        <div class="flex-grow">
-                            @if ($file_assocs->isEmpty())
-                                <p class="text-gray-500 text-center">No recent results found.</p>
-                            @else
-                                <ul class="list-disc pl-5">
-                                    @foreach ($file_assocs->slice(0, 5) as $file_assoc)
-                                        <li class="mb-2">
-                                            <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
-                                                class="text-blue-600 hover:underline">
-                                                <p>{{ $file_assoc->assoc_filename }}</p>
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @endif
-                        </div>
-
-                        {{-- Show "View More" link if there are more than 5 results --}}
-                        @if ($file_assocs->count() > 5)
-                            <div class="mt-4">
-                                <a href="{{ route('crud.index') }}" class="text-blue-600 hover:underline font-semibold">
-                                    View More
-                                </a>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-        <hr class="my-4">
-
-
-
-        <div class="flex space-x-4">
-            <!-- Input Button -->
-            <button id="input-via-uploads-Btn" class="bg-blue-600 text-white border border-blue-600 px-4 py-2 rounded-md">
-                Uploads
-            </button>
-            <!-- Results Button -->
-            <button id="input-via-openmeteo-Btn" class="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-md">
-                Open-Meteo
-            </button>
-        </div>
-
-        <div id="input-via-uploads-Container" class="mt-4">
-            <!-- Input container content -->
-            <div class="container mx-auto p-4">
-                @foreach ($timeSeriesData as $index => $fileData)
-                    @if ($files[$index]->source == 'uploads')
-                        <div class="bg-white border rounded-lg shadow-md mb-4">
-                            <div class="p-4">
-                                <div class="flex">
-                                    <div class="w-full lg:w-1/3">
-                                        <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
-                                        <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
-                                        <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
-                                        <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
-                                        <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
+                                        <form action="{{ route('manage.operations') }}" method="post" class="flex-grow">
                                             @csrf
-                                            <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq.
-                                                Al.</button>
+                                            <!-- First Select File -->
+                                            <div class="mb-4 relative">
+                                                <label for="file_id"
+                                                    class="block text-xs font-medium mb-1 text-gray-600">Select File</label>
+                                                <div class="flex items-center">
+                                                    <select name="file_id" id="file_id"
+                                                        class="form-select text-sm border-2 border-gray-300 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                        @foreach (Auth::user()->files as $file)
+                                                            <option value="{{ $file->file_id }}">{{ $file->filename }}
+                                                            </option>
+                                                        @endforeach
+                                                        <option value="" id="add-more-from-option">Add more data +
+                                                        </option>
+                                                    </select>
+                                                    <i id="file-info"
+                                                        class="fas fa-info-circle text-gray-400 ml-2 cursor-pointer"
+                                                        data-tooltip="Information about selecting a file."></i>
+                                                </div>
+                                            </div>
+
+                                            <!-- Second Select File -->
+                                            <div class="mb-4 relative">
+                                                <label for="operation"
+                                                    class="block text-xs font-medium mb-1 text-gray-600">Select
+                                                    Operation</label>
+                                                <div class="flex items-center">
+                                                    <select name="operation" id="operation"
+                                                        class="form-select text-sm border-2 border-gray-300 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                                        <option value="trend">Trend</option>
+                                                        <option value="seasonality">Seasonality</option>
+                                                        <option value="forecast">Forecast</option>
+                                                    </select>
+                                                    <i id="operation-info"
+                                                        class="fas fa-info-circle text-gray-400 ml-2 cursor-pointer"
+                                                        data-tooltip="Information about selecting an operation."></i>
+                                                </div>
+                                            </div>
+
+                                            <div class="flex justify-end mt-4"> <!-- Add this div for alignment -->
+                                                <button type="submit"
+                                                    class="flex items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                                    <i class="fas fa-chart-line text-white"></i>
+                                                    <!-- Changed icon for analysis -->
+                                                    <span class="ml-2 text-xs">Analyze</span> <!-- Reduced font size -->
+                                                </button>
+                                            </div>
+
+
                                         </form>
                                     </div>
-                                    <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
-                                        <div class="graph-container mt-4" style="height: 300px;">
-                                            <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                                    <!-- Tooltip Implementation -->
+                                    <style>
+                                        .tooltip {
+                                            position: absolute;
+                                            background: rgba(0, 0, 0, 0.75);
+                                            color: white;
+                                            border-radius: 4px;
+                                            padding: 5px;
+                                            font-size: 0.75rem;
+                                            z-index: 10;
+                                            white-space: nowrap;
+                                            display: none;
+                                        }
+                                    </style>
+                                    <div class="tooltip" id="tooltip"></div>
+
+                                    <script>
+                                        $(document).ready(function() {
+                                            const tooltip = $('#tooltip');
+
+                                            // Function to show the tooltip
+                                            function showTooltip(event) {
+                                                tooltip.text($(this).data('tooltip'));
+                                                tooltip.css({
+                                                    top: event.pageY + 10 + 'px',
+                                                    left: event.pageX + 10 + 'px',
+                                                });
+                                                tooltip.show();
+                                            }
+
+                                            // Function to hide the tooltip
+                                            function hideTooltip() {
+                                                tooltip.hide();
+                                            }
+
+                                            // Attach events to the info icons
+                                            $('#file-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
+                                            $('#operation-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
+                                        });
+                                    </script>
+                                </div>
+
+                                <!-- Recent Results -->
+                                <div class="w-full md:w-1/3">
+                                    <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
+                                        <h4 class="text-base font-semibold mb-2 text-gray-700">Recent Results</h4>
+                                        <div class="flex-grow">
+                                            @if ($file_assocs->isEmpty())
+                                                <p class="text-gray-500 text-xs text-center">No recent results found.</p>
+                                            @else
+                                                <ul class="space-y-2">
+                                                    @foreach ($file_assocs->slice(0, 5) as $index => $file_assoc)
+                                                        <li class="flex items-center mb-2">
+                                                            <!-- Number indicator -->
+                                                            <span
+                                                                class="w-6 h-6 bg-blue-600 text-white flex items-center justify-center  mr-3">
+                                                                {{ $index + 1 }}
+                                                            </span>
+
+                                                            <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
+                                                                class="text-gray-700 text-xs hover:underline truncate w-40">
+                                                                {{ Str::limit($file_assoc->assoc_filename, 30) }}
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
                                         </div>
+
+                                        @if ($file_assocs->count() > 5)
+                                            <div class="mt-4 text-right">
+                                                <a href="{{ route('crud.index') }}"
+                                                    class="text-blue-600 hover:underline font-semibold">
+                                                    View More
+                                                </a>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    @endif
-                @endforeach
-            </div>
+                    </div>
 
-        </div>
-        <div id="input-via-openmeteo-Container" class="mt-4 hidden">
-            <div class="container mx-auto p-4">
-                @foreach ($timeSeriesData as $index => $fileData)
-                    @if ($files[$index]->source == 'open-meteo')
-                        <div class="bg-white border rounded-lg shadow-md mb-4">
-                            <div class="p-4">
-                                <div class="flex">
-                                    <div class="w-full lg:w-1/3">
-                                        <h5 class="text-lg font-semibold mb-2">{{ $files[$index]->filename }}</h5>
-                                        <p class="text-sm mb-1">Type: {{ $files[$index]->type }}</p>
-                                        <p class="text-sm mb-1">Frequency: {{ $files[$index]->freq }}</p>
-                                        <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
-                                        <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
-                                            @csrf
-                                            <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq.
-                                                Al.</button>
+                    <div>
+                        <div>
+                            <!-- Buttons for switching inputs -->
+                            <div class="flex space-x-2 p-4"> <!-- Reduced space between buttons and padding -->
+                                <!-- Input Button -->
+                                <button id="input-via-uploads-Btn"
+                                    class="bg-blue-600 text-white border border-blue-600 px-3 py-1 rounded-md text-sm">
+                                    Uploads
+                                </button>
+                                <!-- Results Button -->
+                                <button id="input-via-openmeteo-Btn"
+                                    class="bg-white text-blue-600 border border-blue-600 px-3 py-1 rounded-md text-sm">
+                                    Open-Meteo
+                                </button>
+                                <button id="input-via-stocks-Btn"
+                                    class="bg-white text-blue-600 border border-blue-600 px-3 py-1 rounded-md text-sm">
+                                    Stocks
+                                </button>
+                            </div>
 
-                                        </form>
-                                    </div>
-                                    <div class="w-full lg:w-2/3 mt-4 lg:mt-0">
-                                        <div class="graph-container mt-4" style="height: 300px;">
-                                            <div id="graph-{{ $index }}" style="height: 100%;"></div>
+                            <!-- Graphs and description for uploads -->
+                            <div id="input-via-uploads-Container" class="">
+                                <div class="container mx-auto p-4">
+                                    @php
+                                        // Filter the timeSeriesData to check for 'uploads' source
+                                        $uploadsExist = false;
+                                        foreach ($files as $index => $fileData) {
+                                            if ($files[$index]->source == 'uploads') {
+                                                $uploadsExist = true;
+                                                break;
+                                            }
+                                        }
+                                    @endphp
+
+                                    @if ($uploadsExist)
+                                        <!-- Loop through timeSeriesData if there is data from 'uploads' -->
+                                        @foreach ($timeSeriesData as $index => $fileData)
+                                            @if ($files[$index]->source == 'uploads')
+                                                <div class="bg-white border rounded-lg shadow-md mb-4">
+                                                    <div class="p-4">
+                                                        <div class="flex">
+                                                            <!-- Left Section (Title, Type, Frequency, etc.) -->
+                                                            <div
+                                                                class="w-full lg:w-1/3 bg-gray-100 p-4 rounded-lg flex flex-col">
+                                                                <h4
+                                                                    class="text-base font-semibold mb-2 text-gray-700 hover:text-blue-600">
+
+                                                                    <a
+                                                                        href="{{ route('input.file.graph.view.post', $files[$index]->file_id) }}">{{ $files[$index]->filename }}
+                                                                    </a>
+                                                                </h4>
+                                                                <p class="text-xs mb-1">Type: {{ $files[$index]->type }}
+                                                                </p>
+                                                                <p class="text-xs mb-1">Frequency:
+                                                                    {{ $files[$index]->freq }}</p>
+
+                                                                <!-- Description section -->
+                                                                <div class="bg-gray-200 flex-grow p-4 rounded-lg">
+                                                                    <p class="text-xs mb-1">
+                                                                        {{ $files[$index]->description }}</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Right Section (Dropdown and Graph) -->
+                                                            <div
+                                                                class="w-full lg:w-2/3 flex flex-col justify-start items-end relative bg-gray-50 p-4 rounded-lg">
+                                                                <!-- Dropdown with Icon -->
+                                                                <div class="relative">
+                                                                    <button id="dropdownButton-{{ $index }}"
+                                                                        class="text-gray-600 hover:text-gray-800 focus:outline-none">
+                                                                        <!-- Icon (using Heroicons for example) -->
+                                                                        <svg class="w-6 h-6" fill="none"
+                                                                            stroke="currentColor" viewBox="0 0 24 24"
+                                                                            xmlns="http://www.w3.org/2000/svg">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round" stroke-width="2"
+                                                                                d="M19 9l-7 7-7-7"></path>
+                                                                        </svg>
+                                                                    </button>
+
+                                                                    <!-- Dropdown Menu -->
+                                                                    <div id="dropdownMenu-{{ $index }}"
+                                                                        class="hidden absolute right-0 bg-white shadow-md rounded-lg mt-2 w-48 z-10">
+                                                                        <ul class="py-2 text-sm text-gray-700">
+                                                                            {{-- <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Analyze
+                                                                                trend
+                                                                            </li>
+                                                                            <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Seasonality
+                                                                            </li>
+                                                                            <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Forecast
+                                                                            </li> --}}
+                                                                            <a
+                                                                                href="{{ route('seqal.index', $files[$index]->file_id) }}">
+                                                                                <li
+                                                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                    Series Alignment
+                                                                                </li>
+                                                                            </a>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Graph Container -->
+                                                                <div class="graph-container mt-4 w-full"
+                                                                    style="height: 300px;">
+                                                                    <div id="graph-{{ $index }}"
+                                                                        style="height: 100%; background-color: #f9fafb;">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <!-- Display if no 'uploads' data is found -->
+                                        <div class="bg-white border rounded-lg shadow-md mb-4 p-4 text-center">
+                                            <p class="text-lg font-semibold text-gray-600">No data exists</p>
                                         </div>
-                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Graphs and description for open-meteo -->
+                            <div id="input-via-openmeteo-Container" class="hidden">
+                                <div class="container mx-auto p-4">
+                                    @php
+                                        // Filter the timeSeriesData to check for 'uploads' source
+                                        $uploadsExist = false;
+                                        foreach ($files as $index => $fileData) {
+                                            if ($files[$index]->source == 'open-meteo') {
+                                                $uploadsExist = true;
+                                                break;
+                                            }
+                                        }
+                                    @endphp
+
+                                    @if ($uploadsExist)
+                                        <!-- Loop through timeSeriesData if there is data from 'uploads' -->
+                                        @foreach ($timeSeriesData as $index => $fileData)
+                                            @if ($files[$index]->source == 'open-meteo')
+                                                <div class="bg-white border rounded-lg shadow-md mb-4">
+                                                    <div class="p-4">
+                                                        <div class="flex">
+                                                            <!-- Left Section (Title, Type, Frequency, etc.) -->
+                                                            <div
+                                                                class="w-full lg:w-1/3 bg-gray-100 p-4 rounded-lg flex flex-col">
+                                                                <h4
+                                                                    class="text-base font-semibold mb-2 text-gray-700 hover:text-blue-600">
+
+                                                                    <a
+                                                                        href="{{ route('input.file.graph.view.post', $files[$index]->file_id) }}">{{ $files[$index]->filename }}
+                                                                    </a>
+                                                                </h4>
+                                                                <p class="text-xs mb-1">Type: {{ $files[$index]->type }}
+                                                                </p>
+                                                                <p class="text-xs mb-1">Frequency:
+                                                                    {{ $files[$index]->freq }}</p>
+
+                                                                <!-- Description section -->
+                                                                <div class="bg-gray-200 flex-grow p-4 rounded-lg">
+                                                                    <p class="text-xs mb-1">
+                                                                        {{ $files[$index]->description }}</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Right Section (Dropdown and Graph) -->
+                                                            <div
+                                                                class="w-full lg:w-2/3 flex flex-col justify-start items-end relative bg-gray-50 p-4 rounded-lg">
+                                                                <!-- Dropdown with Icon -->
+                                                                <div class="relative">
+                                                                    <button id="dropdownButton-{{ $index }}"
+                                                                        class="text-gray-600 hover:text-gray-800 focus:outline-none">
+                                                                        <!-- Icon (using Heroicons for example) -->
+                                                                        <svg class="w-6 h-6" fill="none"
+                                                                            stroke="currentColor" viewBox="0 0 24 24"
+                                                                            xmlns="http://www.w3.org/2000/svg">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round" stroke-width="2"
+                                                                                d="M19 9l-7 7-7-7"></path>
+                                                                        </svg>
+                                                                    </button>
+
+                                                                    <!-- Dropdown Menu -->
+                                                                    <div id="dropdownMenu-{{ $index }}"
+                                                                        class="hidden absolute right-0 bg-white shadow-md rounded-lg mt-2 w-48 z-10">
+                                                                        <ul class="py-2 text-sm text-gray-700">
+                                                                            {{-- <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Analyze
+                                                                                trend
+                                                                            </li>
+                                                                            <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Seasonality
+                                                                            </li>
+                                                                            <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Forecast
+                                                                            </li> --}}
+                                                                            <a
+                                                                                href="{{ route('seqal.index', $files[$index]->file_id) }}">
+                                                                                <li
+                                                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                    Series
+                                                                                    Alignment</li>
+                                                                            </a>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Graph Container -->
+                                                                <div class="graph-container mt-4 w-full"
+                                                                    style="height: 300px;">
+                                                                    <div id="graph-{{ $index }}"
+                                                                        style="height: 100%; background-color: #f9fafb;">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <!-- Display if no 'uploads' data is found -->
+                                        <div class="bg-white border rounded-lg shadow-md mb-4 p-4 text-center">
+                                            <p class="text-lg font-semibold text-gray-600">No data exists</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <!-- Graphs and description for stocks -->
+                            <div id="input-via-stocks-Container" class="hidden">
+                                <div class="container mx-auto p-4">
+                                    @php
+                                        // Filter the timeSeriesData to check for 'uploads' source
+                                        $uploadsExist = false;
+                                        foreach ($files as $index => $fileData) {
+                                            if ($files[$index]->source == 'stocks') {
+                                                $uploadsExist = true;
+                                                break;
+                                            }
+                                        }
+                                    @endphp
+
+                                    @if ($uploadsExist)
+                                        <!-- Loop through timeSeriesData if there is data from 'uploads' -->
+                                        @foreach ($timeSeriesData as $index => $fileData)
+                                            @if ($files[$index]->source == 'stocks')
+                                                <div class="bg-white border rounded-lg shadow-md mb-4">
+                                                    <div class="p-4">
+                                                        <div class="flex">
+                                                            <!-- Left Section (Title, Type, Frequency, etc.) -->
+                                                            <div
+                                                                class="w-full lg:w-1/3 bg-gray-100 p-4 rounded-lg flex flex-col">
+                                                                <h4
+                                                                    class="text-base font-semibold mb-2 text-gray-700 hover:text-blue-600">
+
+                                                                    <a
+                                                                        href="{{ route('input.file.graph.view.post', $files[$index]->file_id) }}">{{ $files[$index]->filename }}
+                                                                    </a>
+                                                                </h4>
+                                                                <p class="text-xs mb-1">Type: {{ $files[$index]->type }}
+                                                                </p>
+                                                                <p class="text-xs mb-1">Frequency:
+                                                                    {{ $files[$index]->freq }}</p>
+
+                                                                <!-- Description section -->
+                                                                <div class="bg-gray-200 flex-grow p-4 rounded-lg">
+                                                                    <p class="text-xs mb-1">
+                                                                        {{ $files[$index]->description }}</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Right Section (Dropdown and Graph) -->
+                                                            <div
+                                                                class="w-full lg:w-2/3 flex flex-col justify-start items-end relative bg-gray-50 p-4 rounded-lg">
+                                                                <!-- Dropdown with Icon -->
+                                                                <div class="relative">
+                                                                    <button id="dropdownButton-{{ $index }}"
+                                                                        class="text-gray-600 hover:text-gray-800 focus:outline-none">
+                                                                        <!-- Icon (using Heroicons for example) -->
+                                                                        <svg class="w-6 h-6" fill="none"
+                                                                            stroke="currentColor" viewBox="0 0 24 24"
+                                                                            xmlns="http://www.w3.org/2000/svg">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round" stroke-width="2"
+                                                                                d="M19 9l-7 7-7-7"></path>
+                                                                        </svg>
+                                                                    </button>
+
+                                                                    <!-- Dropdown Menu -->
+                                                                    <div id="dropdownMenu-{{ $index }}"
+                                                                        class="hidden absolute right-0 bg-white shadow-md rounded-lg mt-2 w-48 z-10">
+                                                                        <ul class="py-2 text-sm text-gray-700">
+                                                                            {{-- <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Analyze
+                                                                                trend
+                                                                            </li>
+                                                                            <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Seasonality
+                                                                            </li>
+                                                                            <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Forecast
+                                                                            </li> --}}
+                                                                            <a
+                                                                                href="{{ route('seqal.index', $files[$index]->file_id) }}">
+                                                                                <li
+                                                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                    Series
+                                                                                    Alignment</li>
+                                                                            </a>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Graph Container -->
+                                                                <div class="graph-container mt-4 w-full"
+                                                                    style="height: 300px;">
+                                                                    <div id="graph-{{ $index }}"
+                                                                        style="height: 100%; background-color: #f9fafb;">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <!-- Display if no 'uploads' data is found -->
+                                        <div class="bg-white border rounded-lg shadow-md mb-4 p-4 text-center">
+                                            <p class="text-lg font-semibold text-gray-600">No data exists</p>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+
+                <!-- Right side - one vertical block -->
+                <div class="border bg-gray-50 p-2 rounded-lg shadow-md h-full flex flex-col mt-4 md:mt-0">
+                    <h2 class="text-xl font-semibold text-gray-400 mb-4">Posts</h2>
+
+                    <!-- Added mt-4 for spacing on small screens -->
+                    @if ($otherPosts->isEmpty())
+                        <p class="text-sm text-gray-500">No posts available from other users.</p>
+                    @else
+                        <div id="other-posts-container" class="space-y-3">
+                            @foreach ($otherPosts as $post)
+                                <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative">
+                                    <!-- Add a blue arrow icon at the top-right -->
+                                    <a href="{{ route('posts.show', $post) }}"
+                                        class="absolute top-3 right-3 text-blue-600">
+                                        <i class="fas fa-sign-in-alt"></i>
+                                    </a>
+
+                                    <!-- Post title and other details -->
+                                    <h4 class="text-base font-semibold mb-2 text-blue-600">
+                                        <a href="{{ route('posts.show', $post) }}"
+                                            class="hover:text-blue-600">{{ $post->title }}</a>
+                                    </h4>
+                                    <p class="text-xs text-gray-500 mb-2">Posted by: {{ $post->user->name }}</p>
+                                    <p class="text-xs text-gray-500 !important">{!! Str::limit($post->body, 100) !!}</p>
+
+                                    <!-- Topics section -->
+                                    <div class="flex flex-wrap mt-2">
+                                        @foreach (explode(',', $post->topics) as $topic)
+                                            <span
+                                                class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">{{ $topic }}</span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     @endif
-                @endforeach
+                </div>
+
             </div>
         </div>
+    </div>
 
+    <!-- Forecast modal -->
+    <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="forecast-modal"
+        style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Forecast Settings</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('manage.operations') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="file_id" id="modal_file_id">
+                    <input type="hidden" name="operation" value="forecast">
+
+                    <div class="mb-4">
+                        <label for="horizon" class="block text-sm font-medium mb-1">Forecast Horizon</label>
+
+                        <input type="number" name="horizon" id="horizon"
+                            class="form-input block w-full border-2 border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="e.g., 12" required>
+                    </div>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Run
+                        Forecast</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <!-- Upload Modal -->
@@ -220,37 +664,7 @@
             </div>
         </div>
     </div>
-
-    <!-- Forecast Modal -->
-    <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="forecast-modal"
-        style="display:none;">
-        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
-            <div class="flex justify-between items-center border-b pb-2 mb-2">
-                <h5 class="text-lg font-semibold">Forecast Settings</h5>
-                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
-                    aria-label="Close">
-                    &times;
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('manage.operations') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="file_id" id="modal_file_id">
-                    <input type="hidden" name="operation" value="forecast">
-
-                    <div class="mb-4">
-                        <label for="horizon" class="block text-sm font-medium mb-1">Forecast Horizon</label>
-                        <input type="number" name="horizon" id="horizon"
-                            class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
-                    </div>
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Run
-                        Forecast</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    {{-- Fetch data from open-meteo modal --}}
+    <!-- Fetch data from open-meteo modal -->
     <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden"
         id="ts-add-via-api-open-meteo-modal" style="display:none;">
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-2/3">
@@ -412,41 +826,79 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('scripts')
+
+    <script>
+        // Toggle dropdown visibility
+        document.querySelectorAll('[id^=dropdownButton-]').forEach(button => {
+            button.addEventListener('click', function() {
+                const index = this.id.split('-')[1];
+                const dropdownMenu = document.getElementById('dropdownMenu-' + index);
+                dropdownMenu.classList.toggle('hidden');
+            });
+        });
+    </script>
     <script>
         $(document).ready(function() {
             const uploadsBtn = document.getElementById('input-via-uploads-Btn');
             const openmeteoBtn = document.getElementById('input-via-openmeteo-Btn');
+            const stocksBtn = document.getElementById('input-via-stocks-Btn');
             const uploadsContainer = document.getElementById('input-via-uploads-Container');
             const openmeteoContainer = document.getElementById('input-via-openmeteo-Container');
+            const stocksContainer = document.getElementById('input-via-stocks-Container');
 
-            // Event listeners to toggle between buttons
-            uploadsBtn.addEventListener('click', () => {
-                uploadsBtn.classList.add('bg-blue-600', 'text-white');
-                uploadsBtn.classList.remove('bg-white', 'text-blue-600');
-                openmeteoBtn.classList.add('bg-white', 'text-blue-600');
-                openmeteoBtn.classList.remove('bg-blue-600', 'text-white');
-
-                uploadsContainer.classList.remove('hidden');
-                openmeteoContainer.classList.add('hidden');
-            });
-
-            openmeteoBtn.addEventListener('click', () => {
-                openmeteoBtn.classList.add('bg-blue-600', 'text-white');
-                openmeteoBtn.classList.remove('bg-white', 'text-blue-600');
+            // Function to reset button styles
+            function resetButtons() {
                 uploadsBtn.classList.add('bg-white', 'text-blue-600');
                 uploadsBtn.classList.remove('bg-blue-600', 'text-white');
 
+                openmeteoBtn.classList.add('bg-white', 'text-blue-600');
+                openmeteoBtn.classList.remove('bg-blue-600', 'text-white');
+
+                stocksBtn.classList.add('bg-white', 'text-blue-600');
+                stocksBtn.classList.remove('bg-blue-600', 'text-white');
+            }
+
+            // Function to hide all containers
+            function hideAllContainers() {
                 uploadsContainer.classList.add('hidden');
+                openmeteoContainer.classList.add('hidden');
+                stocksContainer.classList.add('hidden');
+            }
+
+            // Event listeners to toggle between buttons and containers
+            uploadsBtn.addEventListener('click', () => {
+                resetButtons();
+                uploadsBtn.classList.add('bg-blue-600', 'text-white');
+                uploadsBtn.classList.remove('bg-white', 'text-blue-600');
+
+                hideAllContainers();
+                uploadsContainer.classList.remove('hidden');
+            });
+
+            openmeteoBtn.addEventListener('click', () => {
+                resetButtons();
+                openmeteoBtn.classList.add('bg-blue-600', 'text-white');
+                openmeteoBtn.classList.remove('bg-white', 'text-blue-600');
+
+                hideAllContainers();
                 openmeteoContainer.classList.remove('hidden');
             });
 
+            stocksBtn.addEventListener('click', () => {
+                resetButtons();
+                stocksBtn.classList.add('bg-blue-600', 'text-white');
+                stocksBtn.classList.remove('bg-white', 'text-blue-600');
+
+                hideAllContainers();
+                stocksContainer.classList.remove('hidden');
+            });
         });
 
-        
+
+
         $(document).ready(function() {
 
             // Iterate over each file data to create corresponding graphs

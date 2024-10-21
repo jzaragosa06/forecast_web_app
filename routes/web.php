@@ -88,7 +88,8 @@ Route::prefix('notes')->group(function () {
 });
 
 Route::prefix('sequence-alignment/series-alignment')->group(function () {
-    Route::post('/index/{file_id}', [TSSeqAlController::class, 'index'])->name('seqal.index');
+    // Route::post('/index/{file_id}', [TSSeqAlController::class, 'index'])->name('seqal.index');
+    Route::get('/index/{file_id}', [TSSeqAlController::class, 'index'])->name('seqal.index');
     Route::post('/save_preprocess_fillna_seqal', [TSSeqAlController::class, 'save_preprocess_fillna_seqal'])->name('seqal.save_preprocess');
     Route::get('/multi/show', [TSSeqAlController::class, 'showMultivariateData'])->name('seqal.multi');
     Route::post('/temp/save', [TSSeqAlController::class, 'temporary_save'])->name('seqal.tempsave');
