@@ -111,22 +111,25 @@
                 <h2 class="text-3xl font-bold text-gray-800 mb- 4">Get in Touch</h2>
                 <p class="text-gray-500 mb-6">Have a question or want to learn more about our platform? We'd love to hear
                     from you.</p>
-                <form>
+                <form action="{{ route('queries.submit') }}" method="POST">
+                    @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="name" class="text-gray-800">Name:</label>
-                            <input type="text" id="name" class="w-full p-2 border border-gray-400 rounded-lg">
+                            <input type="text" name="name" id="name"
+                                class="w-full p-2 border border-gray-400 rounded-lg" required>
                         </div>
                         <div>
                             <label for="email" class="text-gray-800">Email:</label>
-                            <input type="email" id="email" class="w-full p-2 border border-gray-400 rounded-lg">
+                            <input type="email" name="email" id="email"
+                                class="w-full p-2 border border-gray-400 rounded-lg" required>
                         </div>
                     </div>
                     <div class="mt-4">
                         <label for="message" class="text-gray-800">Message:</label>
-                        <textarea id="message" class="w-full p-2 border border-gray-400 rounded-lg"></textarea>
+                        <textarea id="message" name="message" class="w-full p-2 border border-gray-400 rounded-lg" required></textarea>
                     </div>
-                    <button
+                    <button type="submit"
                         class="bg-blue-500 hover:bg-blue-600 text-white font-medium px-8 py-3 rounded-lg shadow-lg transition duration-300 ease-in-out mt-4">Send
                         Message</button>
                 </form>

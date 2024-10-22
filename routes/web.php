@@ -15,6 +15,7 @@ use App\Http\Controllers\RenderImageController;
 use App\Http\Controllers\SaveInputController;
 use App\Http\Controllers\ShareController;
 use App\Http\Controllers\TSSeqAlController;
+use App\Http\Controllers\UserQueriesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
@@ -123,6 +124,9 @@ Route::prefix('admin')->group(function () {
     Route::post('/users/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
     Route::post('/update-options/open-meteo', [AdminController::class, 'update_options_open_meteo'])->name('admin.update_options_open_meteo');
     Route::post('/update-options/stocks', [AdminController::class, 'update_options_stocks'])->name('admin.update_options_stocks');
+    Route::get('/queries', [AdminController::class, 'queries'])->name('admin.queries');
+    Route::post('queries/respond/{id}', [AdminController::class, 'respond'])->name('queries.respond');
+
 
 });
 
@@ -131,6 +135,12 @@ Route::prefix('posts')->group(function () {
     Route::get('/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/store', [PostController::class, 'store'])->name('posts.store');
     Route::get('/show/{id}', [PostController::class, 'show'])->name('posts.show');
+
+});
+
+
+Route::prefix('queries')->group(function () {
+    Route::post('/submit', [UserQueriesController::class, 'submit'])->name('queries.submit');
 });
 
 Route::post('comments', [CommentController::class, 'store'])->name('comments.store');

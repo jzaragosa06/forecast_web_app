@@ -51,6 +51,14 @@
                         <span>Data Source</span>
                     </a>
                 </li>
+
+                <li>
+                    <a href="{{ route('admin.queries') }}"
+                        class="{{ request()->routeIs('admin.queries') ? 'text-white bg-indigo-700' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-3 rounded-lg transition duration-200">
+                        <i class="fas fa-database mr-3"></i>
+                        <span>Queries</span>
+                    </a>
+                </li>
             </ul>
         </nav>
 

@@ -106,6 +106,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admins;
 use App\Models\User;
+use App\Models\UserQueries;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
@@ -258,4 +259,23 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Options updated successfully!');
     }
+
+    public function queries()
+    {
+        $userQueries = UserQueries::all(); // Fetch all queries from the database
+        return view('admin.queries', compact('userQueries'));
+    }
+
+    public function respond(Request $request, $id)
+    {
+        $query = UserQueries::find($id);
+
+        if ($query) {
+            $query->has_responded = $request->responded;
+            $query->save();
+        }
+
+        return redirect()->route('admin.queries');
+    }
+
 }
