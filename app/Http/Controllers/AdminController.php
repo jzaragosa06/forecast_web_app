@@ -61,15 +61,7 @@ class AdminController extends Controller
         return redirect()->route('admin.login');
     }
 
-    // Ensure user is logged in before accessing this route
-    // public function dashboard()
-    // {
-    //     if (!Session::has('admin_logged_in')) {
-    //         return redirect()->route('admin.login');
-    //     }
 
-    //     return view('admin.dashboard');
-    // }
 
     public function dashboard()
     {
