@@ -49,10 +49,7 @@ class TSSeqAlController extends Controller
         if ($request->hasFile('csv_file')) {
             $csvFile = $request->file('csv_file');
             $filename = $request->get('filename');
-            // $filename = explode('.', $filename)[0] . '_' . now();
             $path = $csvFile->storeAs('seqal_temporary_uploads', $filename);
-
-
 
             $uploadedFile = SeqalTempFiles::create([
                 'file_id' => $request->get('file_id'),
@@ -63,13 +60,12 @@ class TSSeqAlController extends Controller
                 'description' => $request->get('description'),
                 'filepath' => $path,
             ]);
+
             return response()->json([
                 'redirect_url' => route('seqal.preprocess', $uploadedFile->id)
             ]);
-
         }
     }
-
 
     public function to_graph_for_preprocessing($id)
     {
@@ -91,56 +87,56 @@ class TSSeqAlController extends Controller
         return view('uploadData.multivariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
     }
 
-    // public function save_preprocess_fillna_seqal(Request $request)
-    // {
-    //     // Log the incoming request to see if all data is present
-    //     \Log::info('Request Data: ', $request->all());
+    // ===========================================================================================================
+    //this will temporarily save data from third-party source
+    public function temporary_save_external(Request $request)
+    {
+        if ($request->hasFile('csv_file')) {
+            $csvFile = $request->file('csv_file');
+            $filename = $request->get('filename');
+            $path = $csvFile->storeAs('seqal_temporary_uploads', $filename);
 
-    //     $file_id = $request->get('file_id');
-    //     $type = $request->get('type');
-    //     $freq = $request->get('freq');
-    //     $filename = $request->get('filename');
-    //     $description = $request->get('description');
-    //     $headers = $request->get('headers');
-    //     $data = $request->get('data');
-
-    //     // Log important variables for debugging
-    //     \Log::info('File ID: ' . $file_id);
-    //     \Log::info('Headers: ' . print_r($headers, true));
-    //     \Log::info('Data: ' . print_r($data, true));
-
-    //     // return view('uploadData.multivariate', data: compact(var_name: var_name: 'data', 'headers', 'type', 'freq', 'description', 'filename'));
-
-    //     return response()->json([
-    //         'redirect_url' => route('seqal.multi', [
-    //             'file_id' => $file_id,
-    //             'type' => $type,
-    //             'freq' => $freq,
-    //             'filename' => $filename,
-    //             'description' => $description,
-    //             'headers' => $headers,
-    //             'data' => $data
-    //         ])
-    //     ]);
-    // }
+            $uploadedFile = SeqalTempFiles::create([
+                'file_id' => 1,
+                'user_id' => Auth::id(),
+                'type' => $request->get('type'),
+                'freq' => $request->get('freq'),
+                'filename' => $filename,
+                'description' => $request->get('description'),
+                'filepath' => $path,
+                'source' => $request->get('source'),
+            ]);
+            return response()->json([
+                'redirect_url' => route('seqal.preprocess_external', $uploadedFile->id)
+            ]);
+        }
+    }
 
 
-    // public function showMultivariateData(Request $request)
-    // {
-    //     // Extract all the required data from the request (coming from the redirect URL)
-    //     $data = $request->get('data');
-    //     $headers = $request->get('headers');
-    //     $type = $request->get('type');
-    //     $freq = $request->get('freq');
-    //     $description = $request->get('description');
-    //     $filename = $request->get('filename');
+    public function to_graph_for_preprocessing_external($id)
+    {
+        // the id here is the id of the temporary uplodaded file. 
+        $file = SeqalTempFiles::where('id', $id)->first();
+
+        $filepath = $file->filepath;
+        $fileContent = Storage::get($filepath);
+        $data = array_map('str_getcsv', explode("\n", $fileContent)); // Convert CSV to array
+        $headers = array_shift($data); // Get header row
+
+        $type = $file->type;
+        $freq = $file->freq;
+        $description = $file->description;
+        $filename = $file->filename;
+        $source = $file->source;
 
 
-    //     return view('uploadData.multivariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
-    // }
+        if ($type == "univariate") {
+            return view('uploadData.univariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename', 'source'));
 
+        } else {
+            return view('uploadData.multivariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename', 'source'));
 
+        }
 
-
-
+    }
 }

@@ -1,5 +1,3 @@
-
-
 @extends('layouts.base')
 
 @section('title', 'Profile')
@@ -22,7 +20,6 @@
                         <i class="fas fa-edit"></i> <!-- Edit Icon -->
                     </span>
                 </div>
-
 
                 <!-- Hidden Form for Image Upload -->
                 <form id="editForm" class="hidden mt-4" action="{{ route('profile.update.photo') }}" method="POST"
@@ -90,12 +87,50 @@
                 </div>
             </div>
 
-            <!-- Right Section (Placeholder for posts) -->
-            <div class="w-2/3 bg-gray-100 shadow-inner rounded-lg ml-6">
-                <div class="p-6 text-center text-gray-500">
-                    List of posts by the user.
+            <div class="w-2/3 flex space-x-6">
+                <!-- First Part -->
+                <div class="w-1/2 bg-gray-100 shadow-inner rounded-lg">
+                    <div class="p-6 text-left text-gray-500">
+                        <!-- Title for the first part -->
+                        <h2 class="text-xl font-semibold text-gray-400 mb-4">Posts</h2>
+
+                        @if ($myPosts->isEmpty())
+                            <p class="text-sm text-gray-500">No post yet</p>
+                        @else
+                            <div id="my-posts-container" class="space-y-3">
+                                @foreach ($myPosts as $post)
+                                    <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition">
+                                        <h3 class="text-lg font-semibold mb-1">
+                                            <a href="{{ route('posts.show', $post->id) }}"
+                                                class="hover:text-blue-600">{{ $post->title }}</a>
+                                        </h3>
+                                        <p class="text-xs text-gray-500 mb-2">Posted by: {{ $post->user->name }}</p>
+                                        <p class="text-xs text-gray-500">{!! Str::limit($post->body, 100) !!}</p>
+                                        <div class="flex flex-wrap mt-2">
+                                            @foreach (explode(',', $post->topics) as $topic)
+                                                <span
+                                                    class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">{{ $topic }}</span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Second Part -->
+                <div class="w-1/2 bg-gray-100 shadow-inner rounded-lg">
+                    <div class="p-6 text-left text-gray-500">
+                        <!-- Title for the second part -->
+                        <h2 class="text-xl font-semibold text-gray-400 mb-4">Second Part Title</h2>
+                        Second part content here.
+                    </div>
                 </div>
             </div>
+
+
+
         </div>
     </div>
 

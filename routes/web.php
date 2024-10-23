@@ -15,6 +15,7 @@ use App\Http\Controllers\RenderImageController;
 use App\Http\Controllers\SaveInputController;
 use App\Http\Controllers\ShareController;
 use App\Http\Controllers\TSSeqAlController;
+use App\Http\Controllers\UserQueriesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
@@ -72,7 +73,7 @@ Route::prefix('profile')->group(function () {
     Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
     Route::post('/update/photo', [ProfileController::class, 'update_photo'])->name('profile.update.photo');
     Route::post('/profile', [ProfileController::class, 'update'])->name('user.update');
-
+    Route::get('/profile/public/view/{id}', [ProfileController::class, 'public'])->name('profile.public');
 
 });
 
@@ -88,12 +89,16 @@ Route::prefix('notes')->group(function () {
 });
 
 Route::prefix('sequence-alignment/series-alignment')->group(function () {
-    Route::post('/index/{file_id}', [TSSeqAlController::class, 'index'])->name('seqal.index');
+    Route::get('/index/{file_id}', [TSSeqAlController::class, 'index'])->name('seqal.index');
     Route::post('/save_preprocess_fillna_seqal', [TSSeqAlController::class, 'save_preprocess_fillna_seqal'])->name('seqal.save_preprocess');
     Route::get('/multi/show', [TSSeqAlController::class, 'showMultivariateData'])->name('seqal.multi');
-    Route::post('/temp/save', [TSSeqAlController::class, 'temporary_save'])->name('seqal.tempsave');
-    Route::get('/preprocess/{id}', [TSSeqAlController::class, 'to_graph_for_preprocessing'])->name('seqal.preprocess');
 
+    Route::post('/temp/save', [TSSeqAlController::class, 'temporary_save'])->name('seqal.tempsave');
+
+    Route::get('/preprocess/{id}', [TSSeqAlController::class, 'to_graph_for_preprocessing'])->name('seqal.preprocess');
+    // =======================================================================================
+    Route::post('/temp/external/save', [TSSeqAlController::class, 'temporary_save_external'])->name('seqal.tempsave_external');
+    Route::get('/preprocess/external/{id}', [TSSeqAlController::class, 'to_graph_for_preprocessing_external'])->name('seqal.preprocess_external');
 });
 
 
@@ -122,6 +127,9 @@ Route::prefix('admin')->group(function () {
     Route::post('/users/delete/{id}', [AdminController::class, 'delete'])->name('admin.delete');
     Route::post('/update-options/open-meteo', [AdminController::class, 'update_options_open_meteo'])->name('admin.update_options_open_meteo');
     Route::post('/update-options/stocks', [AdminController::class, 'update_options_stocks'])->name('admin.update_options_stocks');
+    Route::get('/queries', [AdminController::class, 'queries'])->name('admin.queries');
+    Route::post('queries/respond/{id}', [AdminController::class, 'respond'])->name('queries.respond');
+
 
 });
 
@@ -130,6 +138,12 @@ Route::prefix('posts')->group(function () {
     Route::get('/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/store', [PostController::class, 'store'])->name('posts.store');
     Route::get('/show/{id}', [PostController::class, 'show'])->name('posts.show');
+
+});
+
+
+Route::prefix('queries')->group(function () {
+    Route::post('/submit', [UserQueriesController::class, 'submit'])->name('queries.submit');
 });
 
 Route::post('comments', [CommentController::class, 'store'])->name('comments.store');

@@ -1,114 +1,18 @@
 <?php
 
-// namespace App\Http\Controllers;
-
-// use App\Models\Admins;
-// use App\Models\User;
-// use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\File;
-
-// class AdminController extends Controller
-// {
-
-//     public function login()
-//     {
-//         return view('admin.auth.login');
-//     }
-
-//     public function login_submit(Request $request)
-//     {
-//         $validatedData = $request->validate([
-//             'username' => 'required|string',
-//             'password' => 'required|string',
-//         ]);
-
-//         $admin = Admins::where("username", $validatedData["username"])->first();
-
-//         if ($admin && $admin->password === $validatedData["password"]) {
-//             return redirect()->route('admin.dashboard');
-//         }
-//         return response()->json(['message' => 'Invalid credentials'], 401);
-
-//     }
-//     public function dashboard()
-//     {
-//         return view('admin.dashboard');
-//     }
-
-//     public function users()
-//     {
-//         $users = User::get();
-
-//         return view('admin.users', compact('users'));
-//     }
-
-//     public function delete($id)
-//     {
-//         $user = User::where('id', $id)->first();
-//         $user->delete();
-
-//         return redirect()->route('admin.users');
-//     }
-
-
-//     public function data_source()
-//     {
-//         return view('admin.selections.index');
-//     }
-
-
-//     public function open_meteo()
-//     {
-//         return view('admin.selections.open-meteo');
-//     }
-
-//     public function update_options_open_meteo(Request $request)
-//     {
-//         $options = [];
-
-//         foreach ($request->option_label as $index => $label) {
-//             $key = $request->option_value[$index];
-//             $options[$key] = $label;
-//         }
-
-//         // Update the config file
-//         $configContent = '<?php return ' . var_export(['daily' => $options], true) . ';';
-//         File::put(config_path('weather_options.php'), $configContent);
-
-//         return redirect()->back()->with('success', 'Options updated successfully!');
-//     }
-
-//     public function stocks()
-//     {
-//         return view('admin.selections.stocks');
-//     }
-
-
-//     public function update_options_stocks(Request $request)
-//     {
-//         $options = [];
-
-//         foreach ($request->option_label as $index => $label) {
-//             $key = $request->option_value[$index];
-//             $options[$key] = $label;
-//         }
-
-//         // Update the config file
-//         $configContent = '<?php return ' . var_export(['stocks' => $options], true) . ';';
-//         File::put(config_path('stock_options.php'), $configContent);
-
-//         return redirect()->back()->with('success', 'Options updated successfully!');
-//     }
-
-// }
-
 namespace App\Http\Controllers;
 
 use App\Models\Admins;
+use App\Models\Comment;
+use App\Models\FileAssociation;
+use App\Models\Post;
 use App\Models\User;
+use App\Models\UserQueries;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+use App\Models\File;
 use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
+
 
 class AdminController extends Controller
 {
@@ -157,14 +61,36 @@ class AdminController extends Controller
         return redirect()->route('admin.login');
     }
 
-    // Ensure user is logged in before accessing this route
+
+
     public function dashboard()
     {
+
         if (!Session::has('admin_logged_in')) {
             return redirect()->route('admin.login');
         }
+        // Get the number of users and files analyzed
+        $numberOfUsers = User::count();
+        $numberOfFilesAnalyzed = FileAssociation::count();
 
-        return view('admin.dashboard');
+        // Data for the graph
+        $dateRange = Carbon::now()->subDays(30); // Last 30 days
+
+        $filesAnalyzed = FileAssociation::where('created_at', '>=', $dateRange)->selectRaw('DATE(created_at) as date, count(*) as count')->groupBy('date')->pluck('count', 'date');
+        $postsMade = Post::where('created_at', '>=', $dateRange)->selectRaw('DATE(created_at) as date, count(*) as count')->groupBy('date')->pluck('count', 'date');
+        $commentsMade = Comment::where('created_at', '>=', $dateRange)->selectRaw('DATE(created_at) as date, count(*) as count')->groupBy('date')->pluck('count', 'date');
+        $newAccounts = User::where('created_at', '>=', $dateRange)->selectRaw('DATE(created_at) as date, count(*) as count')->groupBy('date')->pluck('count', 'date');
+        $filesCreated = File::where('created_at', '>=', $dateRange)->selectRaw('DATE(created_at) as date, count(*) as count')->groupBy('date')->pluck('count', 'date');
+
+        return view('admin.dashboard', compact(
+            'numberOfUsers',
+            'numberOfFilesAnalyzed',
+            'filesAnalyzed',
+            'postsMade',
+            'commentsMade',
+            'newAccounts',
+            'filesCreated'
+        ));
     }
 
     // Ensure user is logged in before accessing this route
@@ -258,4 +184,23 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Options updated successfully!');
     }
+
+    public function queries()
+    {
+        $userQueries = UserQueries::all(); // Fetch all queries from the database
+        return view('admin.queries', compact('userQueries'));
+    }
+
+    public function respond(Request $request, $id)
+    {
+        $query = UserQueries::find($id);
+
+        if ($query) {
+            $query->has_responded = $request->responded;
+            $query->save();
+        }
+
+        return redirect()->route('admin.queries');
+    }
+
 }

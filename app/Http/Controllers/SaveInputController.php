@@ -9,6 +9,7 @@ use App\Models\Logs;
 
 class SaveInputController extends Controller
 {
+
     public function save(Request $request)
     {
 
@@ -25,8 +26,8 @@ class SaveInputController extends Controller
                 'freq' => $request->get('freq'),
                 'description' => $request->get('description'),
                 'source' => $request->get('source'),
-            ]);
 
+            ]);
 
             Logs::create([
                 'user_id' => Auth::id(),
@@ -34,13 +35,11 @@ class SaveInputController extends Controller
                 'description' => 'Fill the missing values and save the input file in user account',
             ]);
 
+            session()->flash('success', 'Data saved successfully!');
+
             return response()->json([
-                'redirect_url' => route('home')
+                'redirect_url' => route('home'),
             ]);
-
-
-
-
         }
     }
 }

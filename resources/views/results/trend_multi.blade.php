@@ -119,18 +119,7 @@
             // Initialize Quill editor with basic options
             var quill = new Quill('#notesEditor', {
                 theme: 'snow',
-                modules: {
-                    toolbar: [
-                        ['bold', 'italic', 'underline'], // Basic formatting
-                        [{
-                            'background': []
-                        }], // Highlighting
-                        [{
-                            'header': [1, 2, 3, false]
-                        }], // Header size
-                        ['clean'] // Clear formatting
-                    ]
-                }
+
             });
 
             @if ($note)
@@ -333,6 +322,14 @@
 
                         }
                     },
+                },
+                title: {
+                    text: 'Trend Result',
+                    align: 'left',
+                    style: {
+                        fontSize: '18px', // Font size of the title
+                        color: '#263238' // Color of the title
+                    }
                 },
                 series: seriesData,
                 xaxis: {

@@ -12,16 +12,12 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('seqal_temp_files', function (Blueprint $table) {
+        Schema::create('user_quiries', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('file_id');
-            $table->unsignedBigInteger('user_id');
-            $table->string('type');
-            $table->string('freq');
-            $table->string('filename');
-            $table->text('description');
-            $table->string('filepath');
-            $table->string('source');
+            $table->string('name');
+            $table->string('email');
+            $table->text('message');
+            $table->string('has_responded')->default("0");
             $table->timestamps();
         });
     }
@@ -33,6 +29,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('seqal_temp_files');
+        Schema::dropIfExists('user_quiries');
     }
 };

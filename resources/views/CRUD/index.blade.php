@@ -41,12 +41,6 @@
                         @if ($file->assoc_filename)
                             <li class="flex items-center justify-between"> <!-- Flex container for alignment -->
                                 <p class="w-3/4">{{ $file->assoc_filename }}</p>
-                                <!-- Set consistent width to align buttons -->
-                                {{-- <form action="{{ route('manage.results.post', $file->file_assoc_id) }}" method="post">
-                                    @csrf
-                                    <button type="submit"
-                                        class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">View</button>
-                                </form> --}}
                             </li>
                             <hr>
                         @else
@@ -67,23 +61,27 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Input File Datatable -->
                 <div class="bg-white rounded-lg shadow p-4">
-                    <h5 class="text-lg font-semibold mb-4">Files</h5>
+                    <h5 class="text-base font-semibold mb-2 text-gray-700">Files</h5>
                     <table id="filesTable" class="min-w-full divide-y divide-gray-200 text-left">
                         <thead class="bg-gray-100">
                             <tr>
-                                <th class="px-4 py-2">ID</th>
-                                <th class="px-4 py-2">File Name</th>
-                                <th class="px-4 py-2">Type</th>
-                                <th class="px-4 py-2">Description</th>
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
+                                    ID</th>
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
+                                    File Name</th>
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
+                                    Type</th>
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
+                                    Description</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach ($files_input as $file)
                                 <tr>
-                                    <td class="px-4 py-2">{{ $file->file_id }}</td>
-                                    <td class="px-4 py-2">{{ $file->filename }}</td>
-                                    <td class="px-4 py-2">{{ $file->type }}</td>
-                                    <td class="px-4 py-2 flex space-x-2">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $file->file_id }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $file->filename }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $file->type }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex space-x-2">
 
                                         <form action="{{ route('input.file.graph.view.post', $file->file_id) }}"
                                             method="post" class="inline-block">
@@ -107,23 +105,31 @@
 
                 <!-- Result Files Datatable -->
                 <div class="bg-white rounded-lg shadow p-4">
-                    <h5 class="text-lg font-semibold mb-4">Result Files (Forecast, Trend, Seasonality Analysis)</h5>
+                    <h5 class="text-base font-semibold mb-2 text-gray-700">Result Files (Forecast, Trend, Seasonality
+                        Analysis)</h5>
                     <table id="resultsTable" class="min-w-full divide-y divide-gray-200 text-left">
                         <thead class="bg-gray-100">
                             <tr>
-                                <th class="px-4 py-2">File ID</th>
-                                <th class="px-4 py-2">Result File Name</th>
-                                <th class="px-4 py-2">Operation</th>
-                                <th class="px-4 py-2">Actions</th>
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
+                                    File ID</th>
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
+                                    Result File Name</th>
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
+                                    Operation</th>
+                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
+                                    Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach ($files_assoc as $file_assoc)
                                 <tr>
-                                    <td class="px-4 py-2">{{ $file_assoc->file_assoc_id }}</td>
-                                    <td class="px-4 py-2">{{ $file_assoc->assoc_filename }}</td>
-                                    <td class="px-4 py-2">{{ $file_assoc->operation }}</td>
-                                    <td class="px-4 py-2 flex space-x-2">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $file_assoc->file_assoc_id }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $file_assoc->assoc_filename }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $file_assoc->operation }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex space-x-2">
                                         <button type="button" class="bg-blue-500 text-white px-3 py-1 rounded"
                                             id="shareButton" data-file-assoc-id="{{ $file_assoc->file_assoc_id }}">
                                             Share
@@ -149,26 +155,43 @@
             </div>
         </div>
 
-        <!-- Modal -->
+
         <div id="shareModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
-            <div class="bg-white rounded-lg shadow-lg w-1/3 p-6">
+            <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-1/3 p-6">
                 <h3 class="text-lg font-semibold mb-4">Share with Users</h3>
+
+                <input type="text" id="userSearch" placeholder="Search users..."
+                    class="mb-4 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
                 <form method="POST" action="{{ route('share.with_other') }}">
                     @csrf
                     <input type="hidden" name="file_assoc_id" id="fileAssocId"> <!-- Hidden field for file_assoc_id -->
 
-                    <div>
+                    <div class="max-h-64 overflow-y-auto border border-gray-300 rounded p-2 mb-4" id="userList">
                         @foreach ($users as $user)
-                            <div>
+                            <div class="flex items-center space-x-2 mb-2">
+                                <img src="{{ $user->profile_photo ? asset('storage/' . $user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                    class="w-8 h-8 object-cover rounded-full" alt="Profile Photo">
+                                <div class="flex-1">
+                                    <p class="text-sm">{{ $user->name }}</p>
+                                    <p class="text-xs text-gray-500">{{ $user->email }}</p>
+                                </div>
                                 <input type="checkbox" name="shared_to_user_ids[]" value="{{ $user->id }}"
-                                    id="user_{{ $user->id }}">
-                                <label for="user_{{ $user->id }}">{{ $user->name }}</label>
+                                    id="user_{{ $user->id }}" class="user-checkbox">
                             </div>
                         @endforeach
                     </div>
 
+                    <div class="border border-gray-300 rounded p-2 mb-4">
+                        <h4 class="text-sm font-semibold">Selected Users:</h4>
+                        <div id="selectedUsers" class="text-gray-500">
+                            Please select
+                        </div>
+                    </div>
+
                     <div class="mt-4">
-                        <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                        <button type="submit"
+                            class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
                             Share
                         </button>
                         <button type="button" id="closeModalButton"
@@ -179,6 +202,103 @@
                 </form>
             </div>
         </div>
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const userCheckboxes = document.querySelectorAll('.user-checkbox');
+                const selectedUsersDiv = document.getElementById('selectedUsers');
+                const userSearchInput = document.getElementById('userSearch');
+
+                const sharedUsers = @json($shared_users); // Pass the shared users data to JS
+
+                // Function to update selected users display
+                function updateSelectedUsers() {
+                    const selectedUsers = Array.from(userCheckboxes)
+                        .filter(checkbox => checkbox.checked)
+                        .map(checkbox => {
+                            const userDiv = checkbox.closest('div'); // Get the user div
+                            const name = userDiv.querySelector('p.text-sm').innerText; // Get the user name
+                            const email = userDiv.querySelector('p.text-xs').innerText; // Get the user email
+                            const profilePic = userDiv.querySelector('img').src; // Get the user profile picture
+                            return `<div class="flex items-center space-x-2 mt-2">
+                                <img src="${profilePic}" class="w-8 h-8 object-cover rounded-full" alt="Profile Photo">
+                                <div>
+                                    <p class="text-sm">${name}</p>
+                                    <p class="text-xs text-gray-500">${email}</p>
+                                </div>
+                            </div>`;
+                        });
+
+                    selectedUsersDiv.innerHTML = selectedUsers.length > 0 ? selectedUsers.join('') : 'Please select';
+                }
+
+                // Function to check which users the file is shared with
+                function checkSharedUsers(fileAssocId) {
+                    userCheckboxes.forEach(checkbox => {
+                        const userId = checkbox.value;
+                        // Check if the user is already shared for this file_assoc_id
+                        const isShared = sharedUsers.some(share => share.file_assoc_id == fileAssocId && share
+                            .shared_to_user_id == userId);
+                        checkbox.checked = isShared;
+                    });
+                    updateSelectedUsers();
+                }
+
+                // Add event listener to checkboxes
+                userCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', updateSelectedUsers);
+                });
+
+                // Search functionality
+                userSearchInput.addEventListener('input', function() {
+                    const filter = userSearchInput.value.toLowerCase();
+                    userCheckboxes.forEach(checkbox => {
+                        const userDiv = checkbox.closest('div'); // Get the user div
+                        const name = userDiv.querySelector('p.text-sm').innerText
+                            .toLowerCase(); // Get user name
+                        userDiv.style.display = name.includes(filter) ? '' :
+                            'none'; // Show/Hide based on search
+                    });
+
+                    // Reset selected users display on search
+                    selectedUsersDiv.innerHTML = 'Please select';
+                });
+
+                // Get modal and button elements
+                const shareButtons = document.querySelectorAll('#shareButton');
+                const shareModal = document.getElementById('shareModal');
+                const closeModalButton = document.getElementById('closeModalButton');
+                const fileAssocIdInput = document.getElementById('fileAssocId');
+
+                // Show modal when clicking any Share button
+                shareButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const fileAssocId = this.dataset
+                            .fileAssocId; // Get the associated file_assoc_id
+                        fileAssocIdInput.value = fileAssocId; // Set the hidden input value
+                        checkSharedUsers(fileAssocId); // Check shared users
+                        shareModal.classList.remove('hidden');
+                        shareModal.classList.add('block');
+                    });
+                });
+
+                // Hide modal when clicking the Close button
+                closeModalButton.addEventListener('click', function() {
+                    shareModal.classList.remove('block');
+                    shareModal.classList.add('hidden');
+                });
+
+                // Hide modal when clicking outside the modal content
+                window.addEventListener('click', function(event) {
+                    if (event.target === shareModal) {
+                        shareModal.classList.remove('block');
+                        shareModal.classList.add('hidden');
+                    }
+                });
+            });
+        </script>
+
     </div>
 @endsection
 

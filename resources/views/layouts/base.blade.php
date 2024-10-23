@@ -154,11 +154,11 @@
             </nav>
 
             <!-- Settings Icon (at bottom) -->
-            <div class="mt-auto">
+            {{-- <div class="mt-auto">
                 <a href="#" class="text-gray-600 hover:text-indigo-500">
                     <i class="fas fa-cog text-xl"></i>
                 </a>
-            </div>
+            </div> --}}
         </div>
 
         <!-- Main Content -->
