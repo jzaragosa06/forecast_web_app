@@ -12,7 +12,6 @@ use PhpParser\Node\Stmt\TryCatch;
 use Storage;
 use App\Models\Logs;
 
-
 class ManageOperationsController extends Controller
 {
     public function manage(Request $request)
@@ -32,14 +31,9 @@ class ManageOperationsController extends Controller
         $freq = $file->freq;
         $description = $file->description;
 
-        // Log the file ID and operation
-        dump('File ID: ' . $file_id);
-        dump('Operation: ' . $operation);
-
         if ($operation == "forecast") {
             $steps = $request->get("horizon");
             $method = "without_refit";
-
             if ($type == 'univariate') {
                 try {
                     $response = Http::timeout(300)
@@ -132,12 +126,12 @@ class ManageOperationsController extends Controller
                 }
             }
 
+            session()->flash('operation_success', 'Data analyzed successfully!');
+
             return redirect()->route('home');
 
         } elseif ($operation == "trend") {
-            // Log the file ID and operation
-            dump('File ID: ' . $file_id);
-            dump('Operation: ' . $operation);
+
 
             try {
                 $response = Http::timeout(300)->attach(
@@ -182,47 +176,13 @@ class ManageOperationsController extends Controller
                 ]);
             }
 
+            session()->flash('operation_success', 'Data analyzed successfully!');
+
             return redirect()->route('home');
 
         } else {
             // Handle seasonality
-            dump('File ID: ' . $file_id);
-            dump('Operation: ' . $operation);
 
-            // $response = Http::timeout(300)->attach(
-            //     'inputFile',
-            //     $file_content,
-            //     basename($file->filepath)
-            // )->post('http://127.0.0.1:5000/api/seasonality', [
-            //             'type' => $type,
-            //             'freq' => $freq,
-            //             'description' => $description
-            //         ]);
-
-            // if ($response->successful()) {
-            //     $jsonFilename = pathinfo(basename($file->filepath), PATHINFO_FILENAME) . '-initial-' . now()->timestamp . '.json';
-            //     $jsonPath = 'resultJSON/' . $jsonFilename;
-            //     Storage::put($jsonPath, json_encode($response->body()));
-
-
-            //     $assoc_filename = 'seasonality-on-' . $file->filename . 'created-' . now()->timestamp;
-
-            //     FileAssociation::create([
-            //         'file_id' => $file_id,
-            //         'user_id' => Auth::id(),
-            //         'assoc_filename' => $assoc_filename,
-
-            //         'associated_file_path' => $jsonPath,
-            //         'operation' => $operation,
-            //     ]);
-
-
-            //     Logs::create([
-            //         'user_id' => Auth::id(),
-            //         'action' => 'Analyze Seasonality',
-            //         'description' => 'Successfully analyzed seasonality on ' . $file->filename . ' using Facebook Prophet.',
-            //     ]);
-            // }
 
             try {
                 $response = Http::timeout(300)->attach(
@@ -267,7 +227,7 @@ class ManageOperationsController extends Controller
                     'description' => 'Failed to analyzed seasonality on ' . $file->filename . ' using Facebook Prophet.',
                 ]);
             }
-
+            session()->flash('operation_success', 'Data analyzed successfully!');
             return redirect()->route('home');
         }
     }

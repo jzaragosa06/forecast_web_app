@@ -29,7 +29,6 @@ class SaveInputController extends Controller
 
             ]);
 
-
             Logs::create([
                 'user_id' => Auth::id(),
                 'action' => 'Saved Input File',

@@ -12,6 +12,11 @@
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
             {{ session('success') }}
         </div>
+    @elseif (session('operation_success'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('operation_success') }}
+        </div>
     @endif
 
     <script>
@@ -99,7 +104,8 @@
                                     <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
                                         <h4 class="text-base font-semibold mb-2 text-gray-700">Analyze Data</h4>
 
-                                        <form action="{{ route('manage.operations') }}" method="post" class="flex-grow">
+                                        <form id="analyze-form1" action="{{ route('manage.operations') }}" method="post"
+                                            class="flex-grow">
                                             @csrf
                                             <!-- First Select File -->
                                             <div class="mb-4 relative">
@@ -146,9 +152,39 @@
                                                     <!-- Changed icon for analysis -->
                                                     <span class="ml-2 text-xs">Analyze</span> <!-- Reduced font size -->
                                                 </button>
+
                                             </div>
 
+                                            <div id="loadingModal1"
+                                                class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 hidden">
+                                                <div
+                                                    class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg flex items-center justify-center">
+                                                    <div
+                                                        class="loader border-t-transparent border-solid animate-spin rounded-full border-blue-500 border-4 h-12 w-12">
+                                                    </div>
+                                                    <span class="ml-4 text-white">Processing...</span>
+                                                </div>
+                                            </div>
 
+                                            <script>
+                                                $(document).ready(function() {
+                                                    $('#analyze-form1').on('submit', function(e) {
+                                                        // Show the modal
+                                                        $('#loadingModal1').removeClass('hidden');
+
+                                                        // Allow the form to submit
+                                                        return true;
+                                                    });
+
+                                                    // Prevent modal from closing when clicking outside of the modal content
+                                                    $('#loadingModal1').on('click', function(e) {
+                                                        // Only allow clicks outside the modal content to trigger event blocking
+                                                        if (!$(e.target).closest('.modal-content').length) {
+                                                            e.stopPropagation(); // Prevent the modal from closing
+                                                        }
+                                                    });
+                                                });
+                                            </script>
                                         </form>
                                     </div>
                                     <!-- Tooltip Implementation -->
@@ -221,9 +257,9 @@
                                         </div>
 
                                         @if ($file_assocs->count() > 5)
-                                            <div class="mt-4 text-right">
+                                            <div class="mt-2 text-center">
                                                 <a href="{{ route('crud.index') }}"
-                                                    class="text-blue-600 hover:underline font-semibold">
+                                                    class="text-blue-600 text-sm hover:underline font-semibold">
                                                     View More
                                                 </a>
                                             </div>
@@ -618,7 +654,7 @@
     </div>
 
     <!-- Forecast modal -->
-    <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="forecast-modal"
+    {{-- <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="forecast-modal"
         style="display:none;">
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
             <div class="flex justify-between items-center border-b pb-2 mb-2">
@@ -629,7 +665,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('manage.operations') }}" method="POST">
+                <form id="analyze-form2" action="{{ route('manage.operations') }}" method="POST">
                     @csrf
                     <input type="hidden" name="file_id" id="modal_file_id">
                     <input type="hidden" name="operation" value="forecast">
@@ -644,9 +680,106 @@
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Run
                         Forecast</button>
                 </form>
+
+                <div id="loadingModal2"
+                    class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 hidden">
+                    <div class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg flex items-center justify-center">
+                        <div
+                            class="loader border-t-transparent border-solid animate-spin rounded-full border-blue-500 border-4 h-12 w-12">
+                        </div>
+                        <span class="ml-4 text-white">Processing...</span>
+                    </div>
+                </div>
+
+                <script>
+                    $(document).ready(function() {
+                        $('#analyze-form2').on('submit', function(e) {
+                            // Hide the forecast modal
+                            $('#forecast-modal').hide()
+                            // Show the modal
+                            $('#loadingModal2').removeClass('hidden');
+
+                            // Allow the form to submit
+                            return true;
+                        });
+
+                        // Prevent modal from closing when clicking outside of the modal content
+                        $('#loadingModal2').on('click', function(e) {
+                            // Only allow clicks outside the modal content to trigger event blocking
+                            if (!$(e.target).closest('.modal-content').length) {
+                                e.stopPropagation(); // Prevent the modal from closing
+                            }
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div> --}}
+
+    <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="forecast-modal"
+        style="display:none;">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Forecast Settings</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="analyze-form2" action="{{ route('manage.operations') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="file_id" id="modal_file_id">
+                    <input type="hidden" name="operation" value="forecast">
+
+                    <div class="mb-4">
+                        <label for="horizon" class="block text-sm font-medium mb-1">Forecast Horizon</label>
+
+                        <input type="number" name="horizon" id="horizon"
+                            class="form-input block w-full border-2 border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="e.g., 12" required>
+                    </div>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Run
+                        Forecast</button>
+                </form>
+
+
             </div>
         </div>
     </div>
+
+    <div id="loadingModal2" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 hidden">
+        <div class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg flex items-center justify-center">
+            <div
+                class="loader border-t-transparent border-solid animate-spin rounded-full border-blue-500 border-4 h-12 w-12">
+            </div>
+            <span class="ml-4 text-white">Processing...</span>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#analyze-form2').on('submit', function(e) {
+                // Hide the forecast modal
+                $('#forecast-modal').hide();
+
+                // Show the loading modal
+                $('#loadingModal2').removeClass('hidden');
+
+                // Allow the form to submit
+                return true;
+            });
+
+            // Prevent modal from closing when clicking outside of the modal content
+            $('#loadingModal2').on('click', function(e) {
+                // Only allow clicks outside the modal content to trigger event blocking
+                if (!$(e.target).closest('.modal-content').length) {
+                    e.stopPropagation(); // Prevent the modal from closing
+                }
+            });
+        });
+    </script>
+
 
     <!-- Upload Modal -->
     <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="ts-info-form"
@@ -740,28 +873,11 @@
                         <input type="date" id="start-date"
                             class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
                     </div>
-
                     <div class="mb-4">
                         <label for="end-date" class="block text-sm font-medium mb-1">End Date</label>
                         <input type="date" id="end-date"
                             class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
                     </div>
-
-                    {{-- <div class="mb-4">
-                        <!-- Map Display -->
-                        <button type="button" id="use-current-loc-btn"
-                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all">
-                            Use Current Location
-                        </button>
-                        <button type="button" id="get-from-maps-btn"
-                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Open Map</button>
-
-                        <div id="map" class="mt-4 h-96 hidden"></div>
-                        <p id="selected-location" class="mt-2 text-sm">Latitude: <span id="lat"></span>, Longitude:
-                            <span id="long"></span>
-                        </p>
-                    </div> --}}
-
 
                     <div class="mb-4">
                         <!-- Map Display -->
@@ -1061,11 +1177,11 @@
                 function showSpinner($button, loadingText) {
                     // Change button content to show spinner and loading text
                     $button.html(`
-            <div class="flex items-center justify-center space-x-2">
-                <div class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-                <span>${loadingText}</span>
-            </div>
-        `);
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <div class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                                        <span>${loadingText}</span>
+                                    </div>
+                                `);
                     $button.prop('disabled', true); // Disable button to prevent multiple clicks
                     $button.removeClass('bg-blue-600 hover:bg-blue-700').addClass(
                         'bg-blue-400 cursor-not-allowed');
