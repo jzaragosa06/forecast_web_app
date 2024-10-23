@@ -197,7 +197,7 @@
             $('#explanation-paragraph-out').html(data.forecast.pred_out_explanation.response1 + "<br>" + data
                 .forecast.pred_out_explanation.response2 + "<br>" + data.forecast.pred_out_explanation.response3
             );
-            
+
             $('#explanation-paragraph-test').html(data.forecast.pred_test_explanation.response1);
 
             $('#mae').text(data.forecast.metrics.mae);
@@ -245,18 +245,7 @@
             // Initialize Quill editor with basic options
             var quill = new Quill('#notesEditor', {
                 theme: 'snow',
-                modules: {
-                    toolbar: [
-                        ['bold', 'italic', 'underline'], // Basic formatting
-                        [{
-                            'background': []
-                        }], // Highlighting
-                        [{
-                            'header': [1, 2, 3, false]
-                        }], // Header size
-                        ['clean'] // Clear formatting
-                    ]
-                }
+
             });
 
 
@@ -436,6 +425,14 @@
                             show: false,
                         }
                     },
+                    title: {
+                        text: 'Forecast Result',
+                        align: 'left',
+                        style: {
+                            fontSize: '18px', // Font size of the title
+                            color: '#263238' // Color of the title
+                        }
+                    },
                     series: [{
                         name: 'orig data',
                         data: origDataValue,
@@ -494,6 +491,14 @@
                         height: 300,
                         toolbar: {
                             show: false,
+                        }
+                    },
+                    title: {
+                        text: 'Forecast Result in Test Set',
+                        align: 'left',
+                        style: {
+                            fontSize: '18px', // Font size of the title
+                            color: '#263238' // Color of the title
                         }
                     },
                     series: [{

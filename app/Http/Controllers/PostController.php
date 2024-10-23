@@ -30,14 +30,15 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'body' => 'required|string',
+            'topics' => 'required|string',
         ]);
 
         Post::create([
-
             'user_id' => Auth::id(),
             'title' => $request->title,
             'file_assoc_id' => $request->file_assoc_id,
             'body' => $request->body,
+            'topics' => $request->topics,
         ]);
 
         return redirect()->route('posts.index');
@@ -49,12 +50,6 @@ class PostController extends Controller
         $post = Post::with(['user', 'comments.replies.user'])->findOrFail($id);
         $file_assoc_id = $post->file_assoc_id;
 
-        // $file_assoc = DB::table('file_associations')
-        //     ->join('files', 'file_associations.file_id', '=', 'files.file_id')
-        //     ->where('file_associations.file_assoc_id', $file_assoc_id)
-        //     ->where('file_associations.user_id', Auth::id())
-        //     ->select('file_associations.*', 'files.type as file_type')
-        //     ->first();
 
         $file_assoc = DB::table('file_associations')
             ->join('files', 'file_associations.file_id', '=', 'files.file_id')
@@ -84,6 +79,7 @@ class PostController extends Controller
         // ====================================================================
         $file = File::where('file_id', $file_id)->firstOrFail();
         $filepath = $file->filepath;
+        $fileDescription = $file->description;
         $fileContent = Storage::get($filepath);
         $rows = array_map('str_getcsv', explode("\n", $fileContent)); // Convert CSV to array
         $header = array_shift($rows); // Get header row
@@ -104,6 +100,7 @@ class PostController extends Controller
             'file_id' => $file_id,
             'filename' => $file->filename,
             'header' => $header,
+            'description' => $fileDescription, 
             'data' => $series,
         ];
         // ====================================================================

@@ -541,7 +541,6 @@
                     type: 'text/csv'
                 });
 
-
                 const formData = new FormData();
                 formData.append('csv_file', blob, 'data.csv');
 
@@ -551,7 +550,7 @@
                 formData.append('freq', timeSeriesData['freq']);
                 formData.append('description', timeSeriesData['description']);
 
-
+                
                 $.ajax({
                     url: '{{ route('seqal.tempsave') }}', // Replace with your actual route
                     method: 'POST',

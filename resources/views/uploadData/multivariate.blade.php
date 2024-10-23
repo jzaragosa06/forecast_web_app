@@ -340,13 +340,6 @@
             tempData = dataCopy;
         }
 
-
-
-
-
-
-
-
         function convertToCSV(headers, data) {
             const csvRows = [];
             csvRows.push(headers.join(','));
@@ -398,7 +391,7 @@
             const type = @json($type);
             const description = $('#description').val();
             const filename = $('#filename').val();
-
+            const source = @json($source);
 
 
 
@@ -413,7 +406,7 @@
             formData.append('freq', freq);
             formData.append('description', description);
             formData.append('filename', filename);
-            formData.append('source', 'uploads');
+            formData.append('source', source);
 
             // Inspect FormData
             for (let [key, value] of formData.entries()) {

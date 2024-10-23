@@ -16,7 +16,7 @@ class PreprocessInputFileController extends Controller
 
         $file = $request->file('file');
         $filename = $file->getClientOriginalName();
-
+        $source = "uploads";
         // Extract the variables from the request
         $type = "";
         // $freq = $request->get('freq');
@@ -34,24 +34,12 @@ class PreprocessInputFileController extends Controller
         }
 
         if ($type === 'multivariate') {
-            return view('uploadData.multivariate', compact('data', 'headers', 'type', 'description', 'filename'));
+            return view('uploadData.multivariate', compact('data', 'headers', 'type', 'description', 'filename', 'source'));
         } else {
-            return view('uploadData.univariate', compact('data', 'headers', 'type', 'description', 'filename'));
+            return view('uploadData.univariate', compact('data', 'headers', 'type', 'description', 'filename', 'source'));
         }
 
-        // if ($request->input('type') === 'multivariate') {
-        //     $data = array_map('str_getcsv', file($file->getRealPath()));
-        //     $headers = $data[0];
-        //     array_shift($data);
 
-        //     return view('uploadData.multivariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
-        // } else {
-        //     $data = array_map('str_getcsv', file($file->getRealPath()));
-        //     $headers = $data[0];
-        //     array_shift($data);
-
-        //     return view('uploadData.univariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
-        // }
     }
 
 

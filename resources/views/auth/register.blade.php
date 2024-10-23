@@ -13,7 +13,7 @@
                         @csrf
 
                         <!-- Name Field -->
-                        <div class="relative z-0 w-full mb-5">
+                        {{-- <div class="relative z-0 w-full mb-5">
                             <input type="text" name="name" id="name" autocomplete="name"
                                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-sky-600 peer"
                                 placeholder=" " value="{{ old('name') }}" required />
@@ -24,7 +24,39 @@
                             @error('name')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
+                        </div> --}}
+
+                        <!-- First Name and Last Name Fields in the Same Row -->
+                        <div class="flex space-x-4">
+                            <!-- First Name Field -->
+                            <div class="relative z-0 w-1/2 mb-5">
+                                <input type="text" name="first_name" id="first_name" autocomplete="given-name"
+                                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-sky-600 peer"
+                                    placeholder=" " value="{{ old('first_name') }}" required />
+                                <label for="first_name"
+                                    class="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 left-0 z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    {{ __('First Name') }}
+                                </label>
+                                @error('first_name')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Last Name Field -->
+                            <div class="relative z-0 w-1/2 mb-5">
+                                <input type="text" name="last_name" id="last_name" autocomplete="family-name"
+                                    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-sky-600 peer"
+                                    placeholder=" " value="{{ old('last_name') }}" required />
+                                <label for="last_name"
+                                    class="absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 left-0 z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    {{ __('Last Name') }}
+                                </label>
+                                @error('last_name')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
+
 
                         <!-- Email Field -->
                         <div class="relative z-0 w-full mb-5">
@@ -68,15 +100,15 @@
 
                         <!-- Terms and Condition Field -->
                         <!-- <div class="flex items-center mb-4">
-                            <input id="terms" type="checkbox"
-                                class="w-4 h-4 text-sky-600 bg-gray-100 border-gray-300 rounded focus:ring-sky-500 focus:ring-2"
-                                name="terms" required>
-                            <span for="terms" class="ml-2 text-sm font-medium text-gray-900">
-                                I agree to the
-                                <a href="{{ route('terms') }}" class="text-sky-500 hover:underline" target="_blank">Terms
-                                    and Conditions</a>
-                            </span>
-                        </div> -->
+                                    <input id="terms" type="checkbox"
+                                        class="w-4 h-4 text-sky-600 bg-gray-100 border-gray-300 rounded focus:ring-sky-500 focus:ring-2"
+                                        name="terms" required>
+                                    <span for="terms" class="ml-2 text-sm font-medium text-gray-900">
+                                        I agree to the
+                                        <a href="{{ route('terms') }}" class="text-sky-500 hover:underline" target="_blank">Terms
+                                            and Conditions</a>
+                                    </span>
+                                </div> -->
                         <div class="flex items-center mb-4">
                             <label class="flex items-center">
                                 <input type="checkbox" name="terms" id="terms" required
