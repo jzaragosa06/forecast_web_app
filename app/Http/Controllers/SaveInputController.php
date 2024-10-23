@@ -36,14 +36,11 @@ class SaveInputController extends Controller
                 'description' => 'Fill the missing values and save the input file in user account',
             ]);
 
+            session()->flash('success', 'Data saved successfully!');
+
             return response()->json([
-                'redirect_url' => route('home')
+                'redirect_url' => route('home'),
             ]);
-
-
-
-
-
         }
     }
 }

@@ -6,6 +6,39 @@
 
 
 @section('content')
+    @if (session('success'))
+        <!-- Notification Popup -->
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const notification = document.getElementById('notification');
+
+            if (notification) {
+                // Hide after 3 seconds (3000 milliseconds)
+                setTimeout(() => {
+                    notification.classList.add('opacity-0');
+                }, 3000);
+
+                // Remove the element completely after the fade-out
+                setTimeout(() => {
+                    notification.remove();
+                }, 3500);
+            }
+        });
+    </script>
+
+    <style>
+        .transition-opacity {
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+
+    <!-- Main Content -->
     <div class="container mx-auto my-6">
         <div class="container mx-auto mt-10">
 
@@ -714,16 +747,36 @@
                             class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
                     </div>
 
-                    <div class="mb-4">
+                    {{-- <div class="mb-4">
                         <!-- Map Display -->
                         <button type="button" id="use-current-loc-btn"
-                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Use Current
-                            Location</button>
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all">
+                            Use Current Location
+                        </button>
                         <button type="button" id="get-from-maps-btn"
                             class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Open Map</button>
 
                         <div id="map" class="mt-4 h-96 hidden"></div>
                         <p id="selected-location" class="mt-2 text-sm">Latitude: <span id="lat"></span>, Longitude:
+                            <span id="long"></span>
+                        </p>
+                    </div> --}}
+
+
+                    <div class="mb-4">
+                        <!-- Map Display -->
+                        <button type="button" id="use-current-loc-btn"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all">
+                            Use Current Location
+                        </button>
+                        <button type="button" id="get-from-maps-btn"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all">
+                            Open Map
+                        </button>
+
+                        <div id="map" class="mt-4 h-96 hidden"></div>
+                        <p id="selected-location" class="mt-2 text-white text-sm">Latitude: <span id="lat"></span>,
+                            Longitude:
                             <span id="long"></span>
                         </p>
                     </div>
@@ -885,8 +938,6 @@
             });
         });
 
-
-
         $(document).ready(function() {
 
             // Iterate over each file data to create corresponding graphs
@@ -996,83 +1047,173 @@
                 }
             });
 
-            // Initialize and show Google Map when "Open Map" button is clicked
-            $('#get-from-maps-btn').on('click', function() {
-                $('#map').css('display', 'block');
 
-                // Initialize Google Map
-                if (!map) {
-                    map = new google.maps.Map(document.getElementById('map'), {
-                        center: {
-                            lat: -34.397,
-                            lng: 150.644
-                        }, // Set default center
-                        zoom: 8
-                    });
 
-                    // Add marker on click
-                    map.addListener('click', function(e) {
-                        placeMarkerAndPanTo(e.latLng, map);
-                    });
+            $(document).ready(function() {
+                const $useCurrentLocBtn = $(
+                    '#use-current-loc-btn'); // jQuery reference for Use Current Location button
+                const $getFromMapsBtn = $('#get-from-maps-btn'); // jQuery reference for Open Map button
+                let originalButtonText = $useCurrentLocBtn
+                    .html(); // Save original text for Use Current Location button
+                let map; // Declare map variable globally
+                let marker; // Declare marker variable globally
+
+                function showSpinner($button, loadingText) {
+                    // Change button content to show spinner and loading text
+                    $button.html(`
+            <div class="flex items-center justify-center space-x-2">
+                <div class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                <span>${loadingText}</span>
+            </div>
+        `);
+                    $button.prop('disabled', true); // Disable button to prevent multiple clicks
+                    $button.removeClass('bg-blue-600 hover:bg-blue-700').addClass(
+                        'bg-blue-400 cursor-not-allowed');
+                }
+
+                function hideSpinner($button, successText, colorClass) {
+                    // Revert button content to indicate completion and success
+                    $button.html(successText);
+                    $button.prop('disabled', false); // Enable button
+                    $button.removeClass('bg-blue-400 cursor-not-allowed').addClass(colorClass);
+                }
+
+                function resetButtons() {
+                    // Reset both buttons to blue color and original text
+                    $useCurrentLocBtn.html(originalButtonText).removeClass(
+                        'bg-green-600 hover:bg-green-700').addClass('bg-blue-600 hover:bg-blue-700');
+                    $getFromMapsBtn.html('Open Map').removeClass('bg-green-600 hover:bg-green-700')
+                        .addClass('bg-blue-600 hover:bg-blue-700');
+                    $useCurrentLocBtn.prop('disabled', false);
+                    $getFromMapsBtn.prop('disabled', false);
+                }
+
+                // Geolocation: Use current location
+                $useCurrentLocBtn.on('click', function() {
+                    resetButtons(); // Reset both buttons to blue
+                    showSpinner($useCurrentLocBtn, 'Fetching Location...'); // Show spinner
+
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(position) {
+                            let lat = position.coords.latitude;
+                            let lon = position.coords.longitude;
+
+                            console.log(lat);
+                            console.log(lon);
+
+                            if (map) {
+                                // Update the map's center and place a marker
+                                let currentLocation = new google.maps.LatLng(lat, lon);
+                                map.setCenter(currentLocation);
+                                placeMarkerAndPanTo(currentLocation, map);
+                            }
+
+                            // Update the latitude and longitude in the HTML
+                            $('#lat').text(lat);
+                            $('#long').text(lon);
+
+                            hideSpinner($useCurrentLocBtn,
+                                `Location Selected (${lat.toFixed(2)}, ${lon.toFixed(2)})`,
+                                'bg-green-600 hover:bg-green-700'
+                            ); // Hide spinner and indicate success
+                        }, function(error) {
+                            console.error("Error retrieving location: ", error);
+                            resetButtons(); // Reset both buttons on error
+                        });
+                    } else {
+                        alert("Geolocation is not supported by this browser.");
+                    }
+                });
+
+                // Button to open the map
+                $getFromMapsBtn.on('click', function() {
+                    if ($('#map').is(':visible')) {
+                        // If the map is already open, close it and reset buttons
+                        $('#map').hide();
+                        resetButtons();
+                        return;
+                    }
+
+                    resetButtons(); // Reset both buttons to blue
+                    showSpinner($getFromMapsBtn, 'Loading Map...'); // Show spinner
+
+                    // Show map
+                    $('#map').css('display', 'block');
+
+                    // Initialize Google Map
+                    if (!map) {
+                        map = new google.maps.Map(document.getElementById('map'), {
+                            center: {
+                                lat: -34.397,
+                                lng: 150.644
+                            }, // Set default center
+                            zoom: 8
+                        });
+
+                        // Add marker on click
+                        map.addListener('click', function(e) {
+                            placeMarkerAndPanTo(e.latLng, map);
+                        });
+                    }
+
+                    // Simulate map loading completion
+                    setTimeout(() => {
+                        hideSpinner($getFromMapsBtn, 'Map Opened',
+                            'bg-green-600 hover:bg-green-700'
+                        ); // Hide spinner and indicate success
+                    }, 1000); // Simulating delay, you can adjust or remove this as necessary
+                });
+
+                // Place a marker on map and pan to it
+                function placeMarkerAndPanTo(latLng, map) {
+                    if (marker) {
+                        marker.setPosition(latLng);
+                    } else {
+                        marker = new google.maps.Marker({
+                            position: latLng,
+                            map: map
+                        });
+                    }
+                    map.panTo(latLng);
+
+                    let lat = latLng.lat();
+                    let lon = latLng.lng();
+
+                    // Update the latitude and longitude in the form
+                    $('#lat').text(lat);
+                    $('#long').text(lon);
                 }
             });
 
-            // Place a marker on map and pan to it
-            function placeMarkerAndPanTo(latLng, map) {
 
-
-                if (marker) {
-                    marker.setPosition(latLng);
-                } else {
-                    marker = new google.maps.Marker({
-                        position: latLng,
-                        map: map
-                    });
-                }
-                map.panTo(latLng);
-
-                lat = latLng.lat();
-                lon = latLng.lng();
-
-
-
-                // Update the latitude and longitude in the form
-                $('#lat').text(lat);
-                $('#long').text(lon);
-            }
-
-            // Geolocation: Use current location
-            $('#use-current-loc-btn').on('click', function() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-
-                        lat = position.coords.latitude;
-                        lon = position.coords.longitude;
-
-                        console.log(lat);
-                        console.log(lon);
-
-                        if (map) {
-                            // Update the map's center and place a marker
-                            let currentLocation = new google.maps.LatLng(lat, lon);
-                            map.setCenter(currentLocation);
-                            placeMarkerAndPanTo(currentLocation, map);
-                        }
-
-                        $('#lat').text(lat);
-                        $('#long').text(lon);
-
-                    }, function(error) {
-                        console.error("Error retrieving location: ", error);
-                    });
-                } else {
-                    alert("Geolocation is not supported by this browser.");
-                }
-            });
 
             // Listen for click event on the fetch button
             $('#fetch-data-open-meteo-btn').on('click', function(e) {
                 e.preventDefault();
+
+                // Use jQuery for the button for consistency
+                const $button = $('#fetch-data-open-meteo-btn');
+
+                function showSpinner() {
+                    // Use jQuery to manipulate button content
+                    $button.html(`
+                <div class="flex items-center justify-center space-x-2">
+                    <div class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                    <span>Loading...</span>
+                </div>
+            `);
+                    $button.prop('disabled', true); // Disable button
+                    $button.addClass('opacity-50 cursor-not-allowed');
+                }
+
+                function hideSpinner() {
+                    $button.html('Submit'); // Revert button text
+                    $button.prop('disabled', false); // Re-enable button
+                    $button.removeClass('opacity-50 cursor-not-allowed');
+                }
+
+                showSpinner();
+
 
                 // Extract latitude and longitude
                 let lat = $('#lat').text().trim(); // Assuming lat and long values are stored here
@@ -1135,31 +1276,6 @@
                             type = "multivariate";
                         }
 
-                        // formData.append('type', type);
-                        // formData.append('freq', freq);
-                        // formData.append('description', description);
-                        // formData.append('filename', filename);
-                        // formData.append('source', 'open-meteo');
-
-                        // $.ajax({
-                        //     url: '{{ route('save') }}', // URL to your Laravel route
-                        //     type: 'POST',
-                        //     headers: {
-                        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                        //             'content') // Add CSRF token here
-                        //     },
-                        //     data: formData,
-                        //     processData: false, // Prevent jQuery from automatically transforming the data into a query string
-                        //     contentType: false, // Let the browser set the content type
-                        //     success: function(response) {
-                        //         console.log('Data saved successfully:');
-                        //         window.location.href = response.redirect_url;
-                        //     },
-                        //     error: function(xhr, status, error) {
-                        //         console.error('Error saving data:', error);
-                        //     }
-                        // });
-
 
                         formData.append('type', type);
                         formData.append('freq', freq);
@@ -1179,15 +1295,18 @@
                             contentType: false, // Let the browser set the content type
                             success: function(response) {
                                 console.log('Data saved successfully:');
+                                hideSpinner();
                                 window.location.href = response.redirect_url;
                             },
                             error: function(xhr, status, error) {
+                                hideSpinner();
                                 console.error('Error saving data:', error);
                             }
                         });
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching data:', error);
+                        hideSpinner();
                         alert('Failed to fetch data. Please try again.');
                     }
                 });
@@ -1265,6 +1384,30 @@
 
             $('#fetch-data-stocks').click(function(e) {
                 e.preventDefault();
+                // Use jQuery for the button for consistency
+                const $button = $('#fetch-data-stocks');
+
+                function showSpinner() {
+                    // Use jQuery to manipulate button content
+                    $button.html(`
+                <div class="flex items-center justify-center space-x-2">
+                    <div class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                    <span>Loading...</span>
+                </div>
+            `);
+                    $button.prop('disabled', true); // Disable button
+                    $button.addClass('opacity-50 cursor-not-allowed');
+                }
+
+                function hideSpinner() {
+                    $button.html('Submit'); // Revert button text
+                    $button.prop('disabled', false); // Re-enable button
+                    $button.removeClass('opacity-50 cursor-not-allowed');
+                }
+
+                showSpinner();
+
+
 
                 // Fetch the values from the inputs
                 const stockSymbol = $('#stock-selection').val(); // Fetch stock symbol input
@@ -1306,6 +1449,7 @@
                     url: requestURLStocks,
 
                     success: function(response) {
+
                         console.log('success', response);
                         let csvData = extractToCSV(response);
                         console.log(csvData);
@@ -1341,38 +1485,16 @@
                             processData: false, // Prevent jQuery from automatically transforming the data into a query string
                             contentType: false, // Let the browser set the content type
                             success: function(response) {
+                                hideSpinner();
                                 console.log('Data saved successfully:');
                                 window.location.href = response.redirect_url;
                             },
                             error: function(xhr, status, error) {
+                                hideSpinner();
                                 console.error('Error saving data:', error);
                             }
                         });
 
-                        // formData.append('type', type);
-                        // formData.append('freq', freq);
-                        // formData.append('description', description);
-                        // formData.append('filename', filename);
-                        // formData.append('source', 'stocks');
-
-                        // $.ajax({
-                        //     url: '{{ route('save') }}', // URL to your Laravel route
-                        //     type: 'POST',
-                        //     headers: {
-                        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                        //             'content') // Add CSRF token here
-                        //     },
-                        //     data: formData,
-                        //     processData: false, // Prevent jQuery from automatically transforming the data into a query string
-                        //     contentType: false, // Let the browser set the content type
-                        //     success: function(response) {
-                        //         console.log('Data saved successfully:');
-                        //         window.location.href = response.redirect_url;
-                        //     },
-                        //     error: function(xhr, status, error) {
-                        //         console.error('Error saving data:', error);
-                        //     }
-                        // });
 
 
 
@@ -1381,6 +1503,7 @@
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching data:', error);
+                        hideSpinner();
                         alert('Failed to fetch data. Please try again.');
                     }
                 });
