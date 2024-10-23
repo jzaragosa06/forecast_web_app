@@ -10,6 +10,7 @@
         <div class="container mx-auto p-4">
             <div class="flex space-x-4">
 
+            <!-- Add Data section -->
                 <div class="w-full md:w-1/3">
                     <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
                         <h4 class="text-lg font-semibold mb-4">Add Data</h4>
@@ -34,7 +35,7 @@
                         </div>
                     </div>
                 </div>
-
+            <!-- Analyze section -->
                 <div class="w-full md:w-1/3">
                     <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
                         <h4 class="text-lg font-semibold mb-4">Analyze</h4>
@@ -68,7 +69,7 @@
                 </div>
 
 
-
+            <!-- Recent result section -->
                 <div class="w-full md:w-1/3">
                     <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
                         <h4 class="text-lg font-semibold mb-4">Recent Results</h4>
@@ -99,8 +100,10 @@
                         @endif
                     </div>
                 </div>
-
-
+            <!-- Toggle Walkthrough Button -->
+            <div class="mt-8">
+                <button id="toggleWalkthroughBtn" class="btn-primary">Show Walkthrough Again</button>
+            </div>
             </div>
         </div>
         <hr class="my-4">
@@ -133,7 +136,7 @@
                                         <p class="text-sm mb-1">Description: {{ $files[$index]->description }}</p>
                                         <form action="{{ route('seqal.index', $files[$index]->file_id) }}" method="post">
                                             @csrf
-                                            <button type ="submit" class="text-gray-600 hover:text-gray-800">Seq.
+                                        <button type="submit" class="text-gray-600 hover:text-gray-800">Seq.
                                                 Al.</button>
                                         </form>
                                     </div>
@@ -507,8 +510,8 @@
             @endforeach
         });
 
-        $(document).ready(function() {
-            $('#operation').on('change', function() {
+    $(document).ready(function () {
+        $('#operation').on('change', function () {
                 if ($(this).val() === 'forecast') {
                     $('#forecast-modal').removeClass('hidden').hide().fadeIn(200);
                     $('#forecast-modal > div').removeClass('scale-95').addClass('scale-100');
@@ -517,13 +520,13 @@
             });
 
             // Open the 'Add More data' modal when 'Add more data' is selected
-            $('#file_id').on('change', function() {
+        $('#file_id').on('change', function () {
                 if ($(this).val() === '') {
                     $('#ts-info-form').modal('show');
                 }
             });
 
-            $('#ts-info').click(function() {
+        $('#ts-info').click(function () {
                 $('#ts-info-form').removeClass('hidden').hide().fadeIn(200);
                 $('#ts-info-form > div').removeClass('scale-95').addClass('scale-100');
             });
