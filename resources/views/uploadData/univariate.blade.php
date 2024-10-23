@@ -346,7 +346,7 @@
 
                 const description = $('#description').val();
                 const filename = $('#filename').val();
-
+                const source = @json($source);
 
 
                 // Create a FormData object to send the CSV and other data
@@ -360,7 +360,7 @@
                 formData.append('freq', freq);
                 formData.append('description', description);
                 formData.append('filename', filename);
-                formData.append('source', 'uploads');
+                formData.append('source', source);
 
 
                 // Inspect FormData

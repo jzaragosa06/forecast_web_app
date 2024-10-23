@@ -7,9 +7,8 @@
 
 @section('content')
     <div class="container mx-auto my-6">
-
         <div class="container mx-auto mt-10">
-            {{-- <div class="grid grid-cols-4 gap-2"> --}}
+
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Left Side - Two horizontal blocks -->
                 <div class="bg-gray-50 col-span-3 space-y-4 h-full w-full">
@@ -286,19 +285,7 @@
                                                                     <div id="dropdownMenu-{{ $index }}"
                                                                         class="hidden absolute right-0 bg-white shadow-md rounded-lg mt-2 w-48 z-10">
                                                                         <ul class="py-2 text-sm text-gray-700">
-                                                                            {{-- <li
-                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                                                                Analyze
-                                                                                trend
-                                                                            </li>
-                                                                            <li
-                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                                                                Seasonality
-                                                                            </li>
-                                                                            <li
-                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                                                                Forecast
-                                                                            </li> --}}
+
                                                                             <a
                                                                                 href="{{ route('seqal.index', $files[$index]->file_id) }}">
                                                                                 <li
@@ -840,6 +827,7 @@
             });
         });
     </script>
+
     <script>
         $(document).ready(function() {
             const uploadsBtn = document.getElementById('input-via-uploads-Btn');
@@ -1147,6 +1135,32 @@
                             type = "multivariate";
                         }
 
+                        // formData.append('type', type);
+                        // formData.append('freq', freq);
+                        // formData.append('description', description);
+                        // formData.append('filename', filename);
+                        // formData.append('source', 'open-meteo');
+
+                        // $.ajax({
+                        //     url: '{{ route('save') }}', // URL to your Laravel route
+                        //     type: 'POST',
+                        //     headers: {
+                        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                        //             'content') // Add CSRF token here
+                        //     },
+                        //     data: formData,
+                        //     processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                        //     contentType: false, // Let the browser set the content type
+                        //     success: function(response) {
+                        //         console.log('Data saved successfully:');
+                        //         window.location.href = response.redirect_url;
+                        //     },
+                        //     error: function(xhr, status, error) {
+                        //         console.error('Error saving data:', error);
+                        //     }
+                        // });
+
+
                         formData.append('type', type);
                         formData.append('freq', freq);
                         formData.append('description', description);
@@ -1154,7 +1168,7 @@
                         formData.append('source', 'open-meteo');
 
                         $.ajax({
-                            url: '{{ route('save') }}', // URL to your Laravel route
+                            url: '{{ route('seqal.tempsave_external') }}', // URL to your Laravel route
                             type: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
@@ -1317,7 +1331,7 @@
                         formData.append('source', 'stocks');
 
                         $.ajax({
-                            url: '{{ route('save') }}', // URL to your Laravel route
+                            url: '{{ route('seqal.tempsave_external') }}', // URL to your Laravel route
                             type: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
@@ -1334,6 +1348,34 @@
                                 console.error('Error saving data:', error);
                             }
                         });
+
+                        // formData.append('type', type);
+                        // formData.append('freq', freq);
+                        // formData.append('description', description);
+                        // formData.append('filename', filename);
+                        // formData.append('source', 'stocks');
+
+                        // $.ajax({
+                        //     url: '{{ route('save') }}', // URL to your Laravel route
+                        //     type: 'POST',
+                        //     headers: {
+                        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                        //             'content') // Add CSRF token here
+                        //     },
+                        //     data: formData,
+                        //     processData: false, // Prevent jQuery from automatically transforming the data into a query string
+                        //     contentType: false, // Let the browser set the content type
+                        //     success: function(response) {
+                        //         console.log('Data saved successfully:');
+                        //         window.location.href = response.redirect_url;
+                        //     },
+                        //     error: function(xhr, status, error) {
+                        //         console.error('Error saving data:', error);
+                        //     }
+                        // });
+
+
+
 
 
                     },

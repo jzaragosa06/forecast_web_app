@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->string('filename');
             $table->text('description');
             $table->string('filepath');
+            $table->string('source');
             $table->timestamps();
         });
     }

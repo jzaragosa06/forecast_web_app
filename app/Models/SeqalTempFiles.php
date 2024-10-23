@@ -12,5 +12,5 @@ class SeqalTempFiles extends Model
     protected $table = 'seqal_temp_files';
 
     // Specify which fields are mass assignable
-    protected $fillable = ['file_id', 'user_id', 'type', 'freq', 'filename', 'description', 'filepath'];
+    protected $fillable = ['file_id', 'user_id', 'type', 'freq', 'filename', 'description', 'filepath', 'source'];
 }

@@ -9,6 +9,7 @@ use App\Models\Logs;
 
 class SaveInputController extends Controller
 {
+
     public function save(Request $request)
     {
 
@@ -25,6 +26,7 @@ class SaveInputController extends Controller
                 'freq' => $request->get('freq'),
                 'description' => $request->get('description'),
                 'source' => $request->get('source'),
+
             ]);
 
 
@@ -37,6 +39,7 @@ class SaveInputController extends Controller
             return response()->json([
                 'redirect_url' => route('home')
             ]);
+
 
 
 

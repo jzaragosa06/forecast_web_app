@@ -20,7 +20,9 @@
 
 
                 <!-- Comments Section -->
-                <div class="mt-6 bg-white p-4 rounded-lg shadow-md relative">-
+                {{-- <div class="mt-6 bg-white p-4 rounded-lg shadow-md relative"> --}}
+                <div class="mt-6 bg-white p-4 rounded-lg relative">
+
                     <h2 class="text-xl font-semibold mb-4 flex items-center justify-between">
                         Comments
                         <!-- Font Awesome Comment Icon -->
