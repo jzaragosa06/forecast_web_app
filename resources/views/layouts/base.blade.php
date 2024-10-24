@@ -99,7 +99,6 @@
 </head>
 
 <body class="bg-gray-100">
-
     <div class="flex h-screen">
         <!-- Sidebar -->
         <div class="w-20 bg-white border-r flex flex-col items-center py-6">
@@ -162,19 +161,150 @@
         </div>
 
         <!-- Main Content -->
-
         <div class="flex-1 flex flex-col">
-
             <!-- Navbar -->
             <div class="flex justify-between items-center bg-white shadow p-4 rounded-lg">
                 <!-- Title -->
                 <h1 class="text-lg font-semibold text-gray-700">@yield('page-title')</h1>
-
                 <!-- Search Bar -->
-                <div class="relative w-1/3">
-                    <input type="text" placeholder="Search"
-                        class="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring focus:ring-indigo-200">
+                <!-- Search Bar -->
+                <div class="relative w-1/3 flex">
+                    <!-- Search Input -->
+                    <input id="search-input" type="text" placeholder="Search"
+                        class="w-full bg-gray-100 border border-gray-300 rounded-l-lg py-2 px-4 focus:outline-none focus:ring focus:ring-indigo-200">
+
+                    <!-- Search Icon -->
+                    <button class="bg-blue-600 p-2 rounded-r-lg">
+                        <i class="fas fa-search text-white"></i>
+                    </button>
+
+                    <!-- Search Results Container -->
+                    <div id="search-results"
+                        class="absolute left-0 top-full w-full bg-white border border-gray-300 rounded-lg p-4 hidden z-50 max-h-60 overflow-y-auto">
+                        <h3 class="text-lg font-bold">Search Results</h3>
+                        <div id="results-container"></div>
+                    </div>
                 </div>
+
+                <script>
+                    let searchData = {
+                        users: @json($users),
+                        posts: @json($posts),
+                        files: @json($files),
+                        results: @json($results)
+                    };
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const searchInput = document.getElementById('search-input');
+                        const resultsContainer = document.getElementById('results-container');
+                        const searchResults = document.getElementById('search-results');
+
+                        // Function to handle search
+                        searchInput.addEventListener('input', function() {
+                            const query = searchInput.value.toLowerCase();
+                            resultsContainer.innerHTML = ''; // Clear previous results
+
+                            if (query === '') {
+                                searchResults.classList.add('hidden'); // Hide results if input is empty
+                                return;
+                            }
+
+                            let hasResults = false;
+
+                            // Search Users
+                            const filteredUsers = searchData.users.filter(user => user.name.toLowerCase().startsWith(
+                                query));
+                            if (filteredUsers.length > 0) {
+                                hasResults = true;
+                                resultsContainer.innerHTML +=
+                                    `<div class="mb-4"><h4 class="font-semibold mt-2">Users</h4>`;
+                                filteredUsers.forEach(user => {
+
+                                    resultsContainer.innerHTML += `
+                        <div class="flex items-center space-x-3 mb-2">
+                            <img id="profileImage"
+                                 src="${user.profile_photo ? '/storage/' + user.profile_photo : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png'}"
+                                 class="w-8 h-8 object-cover rounded-full" alt="Profile Photo">
+                            <div>
+                                 <a href="{{ url('profile/public/view') }}/${user.id}"><p class="text-gray-700 font-medium hover:text-blue-600">${user.name}</p></a>
+                                <p class="text-gray-600 text-sm">${user.email}</p>
+                            </div>
+                        </div>`;
+                                });
+                                resultsContainer.innerHTML += `</div>`; // Close user results container
+                            }
+
+                            // Search Posts
+                            const filteredPosts = searchData.posts.filter(post => post.title.toLowerCase().includes(
+                                query) || post.body.toLowerCase().includes(query));
+                            if (filteredPosts.length > 0) {
+                                hasResults = true;
+                                resultsContainer.innerHTML +=
+                                    `<div class="mb-4"><h4 class="font-semibold mt-2">Posts</h4>`;
+                                filteredPosts.forEach(post => {
+                                    const topicsArray = post.topics.split(','); // Split the topics by commas
+                                    let topicsHtml = '<div class="flex flex-wrap mt-2">';
+                                    topicsArray.forEach(topic => {
+                                        topicsHtml += `
+                            <span class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">${topic.trim()}</span>
+                        `;
+                                    });
+                                    topicsHtml += '</div>';
+                                    resultsContainer.innerHTML += `
+                        <div class="post mb-2">
+                             <a href="{{ url('/posts/show') }}/${post.id}"><h4 class="mt-2 text-gray-800 font-medium hover:text-blue-600">${post.title}</h4></a>
+                            <p class="text-gray-700 text-sm">Posted by: ${post.user.name}</p>
+                            ${topicsHtml}
+                        </div>
+                    `;
+                                });
+                                resultsContainer.innerHTML += `</div>`; // Close post results container
+                            }
+
+                            // Search Files
+                            const filteredFiles = searchData.files.filter(file => file.filename.toLowerCase().includes(
+                                query));
+                            if (filteredFiles.length > 0) {
+                                hasResults = true;
+                                resultsContainer.innerHTML +=
+                                    `<div class="mb-4"><h4 class="font-semibold mt-2">Files</h4>`;
+                                filteredFiles.forEach(file => {
+                                    resultsContainer.innerHTML += `
+                        <div class="mb-2">
+                             <a href="{{ url('/files/input/view') }}/${file.file_id}"><p class="text-gray-700 font-medium hover:text-blue-600">${file.filename}</p></a>
+                            <p class="text-gray-600 text-sm">${file.description.length > 20 ? file.description.substring(0, 20) + '...' : file.description}</p>
+                        </div>
+                    `;
+                                });
+                                resultsContainer.innerHTML += `</div>`; // Close files results container
+                            }
+
+                            // Search File Associations (Results)
+                            const filteredResults = searchData.results.filter(result => result.assoc_filename
+                                .toLowerCase().includes(query));
+                            if (filteredResults.length > 0) {
+                                hasResults = true;
+                                resultsContainer.innerHTML +=
+                                    `<div class="mb-4"><h4 class="font-semibold mt-2">Results</h4>`;
+                                filteredResults.forEach(result => {
+                                    resultsContainer.innerHTML += `
+                        <div class="mb-2">
+                            <a href="{{ url('/results/view/results') }}/${result.file_assoc_id}"><p class="text-gray-700 font-medium hover:text-blue-600">${result.assoc_filename}</p></a>
+                            <p class="text-gray-600 text-sm">Operation: ${result.operation}</p>
+                        </div>
+                    `;
+                                });
+                                resultsContainer.innerHTML += `</div>`; // Close results container
+                            }
+
+                            if (hasResults) {
+                                searchResults.classList.remove('hidden'); // Show the results container
+                            } else {
+                                resultsContainer.innerHTML = `<p class="text-gray-500">No results found.</p>`;
+                                searchResults.classList.remove('hidden'); // Show 'no results' message
+                            }
+                        });
+                    });
+                </script>
 
                 <!-- Notification and Profile -->
                 <div class="flex items-center space-x-4">
@@ -209,14 +339,7 @@
                                                     <div class="text-xs text-gray-500">
                                                         {{ $notification->notification_time }}</div>
                                                 </div>
-                                                {{-- <form
-                                                    action="{{ route('share.view_file', ['file_assoc_id' => $notification->file_assoc_id, 'user_id' => $notification->user_id]) }}"
-                                                    method="post">
-                                                    <button type="submit"
-                                                        class="ml-2 bg-indigo-500 text-white text-xs px-3 py-1 rounded-full hover:bg-indigo-600 focus:outline-none">
-                                                        View
-                                                    </button>
-                                                </form> --}}
+
                                                 <a
                                                     href="{{ route('share.view_file', ['file_assoc_id' => $notification->file_assoc_id, 'user_id' => $notification->user_id]) }}">
                                                     <button
@@ -239,27 +362,7 @@
                         </div>
                     </div>
 
-                    <!-- Profile Icon with Dropdown -->
-                    {{-- <div class="relative">
-                        <button id="profileDropdownButton"
-                            class="flex items-center text-gray-600 hover:text-indigo-500 focus:outline-none">
-                            <i class="fas fa-user-circle text-xl"></i>
-                        </button>
-                        <div id="profileDropdown"
-                            class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
-                            <a class="block px-4 py-2 text-gray-800 hover:bg-gray-100" href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                            <div>
-                                <a href="{{ route('logs.index') }}">Logs</a>
-                            </div>
-                        </div>
-                    </div> --}}
+
 
                     <div class="relative">
                         <!-- Profile button -->
@@ -303,15 +406,9 @@
                 </div>
             </div>
 
-            {{-- <div class="mt-6 bg-white border border-gray-200 rounded-lg flex items-center justify-center p-6">
-                @yield('content')
-            </div> --}}
-
             <div class="mt-6 bg-white border border-gray-200 rounded-lg flex-1 overflow-y-auto p-6">
                 @yield('content')
             </div>
-
-
         </div>
     </div>
 

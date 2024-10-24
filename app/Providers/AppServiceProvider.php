@@ -6,6 +6,10 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\File;
+use App\Models\FileAssociation;
+use App\Models\Post;
+use App\Models\User;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -46,8 +50,19 @@ class AppServiceProvider extends ServiceProvider
                 ->orderBy('notifications.created_at', 'desc')
                 ->get();
 
+            //additional data for search feature. 
+            //files
+            $files = File::where('user_id', $userId)->get();
+            //results
+            $results = FileAssociation::where('user_id', $userId)->get();
+            //users
+            $users = User::where('id', '!=', $userId)->get();
+            //post
+            $posts = Post::with('user')->get();
+
+
             // Share the notifications with the base view
-            $view->with('notifications', $notifications);
+            $view->with(['notifications' => $notifications, 'files' => $files, 'results' => $results, 'posts' => $posts, 'users' => $users]);
         });
     }
 }

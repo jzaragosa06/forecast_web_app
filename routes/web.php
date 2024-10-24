@@ -40,7 +40,6 @@ Route::get('/', function () {
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
 Route::prefix('upload')->group(function () {
     Route::post('/time-series', [PreprocessInputFileController::class, 'preprocess_fillna'])->name('upload.ts');
     Route::post('/save/time-series', [SaveInputController::class, 'save'])->name('save');
@@ -65,18 +64,14 @@ Route::prefix('files')->group(function () {
     Route::post('/inputs/delete/{file_id}', action: [ManageResultsUsingCRUDController::class, 'delete_file'])->name('crud.delete.file');
     Route::get('input/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.get');
     Route::post('input/view/{file_id}', [InputFileGraphController::class, 'index'])->name('input.file.graph.view.post');
-
 });
-
 
 Route::prefix('profile')->group(function () {
     Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
     Route::post('/update/photo', [ProfileController::class, 'update_photo'])->name('profile.update.photo');
-    Route::post('/profile', [ProfileController::class, 'update'])->name('user.update');
-    Route::get('/profile/public/view/{id}', [ProfileController::class, 'public'])->name('profile.public');
-
+    Route::post('/update/info', [ProfileController::class, 'update'])->name('user.update');
+    Route::get('/public/view/{id}', [ProfileController::class, 'public'])->name('profile.public');
 });
-
 
 Route::prefix('llm')->group(function () {
     Route::post('/ask', [LLMController::class, 'ask'])->name('llm.ask');
@@ -140,7 +135,6 @@ Route::prefix('posts')->group(function () {
     Route::get('/show/{id}', [PostController::class, 'show'])->name('posts.show');
 
 });
-
 
 Route::prefix('queries')->group(function () {
     Route::post('/submit', [UserQueriesController::class, 'submit'])->name('queries.submit');
