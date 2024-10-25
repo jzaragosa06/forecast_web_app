@@ -154,11 +154,6 @@
             <div class="mt-4 h-96 overflow-y-auto">
                 {!! $termsHtml !!}
             </div>
-            <div class="mt-4 flex justify-end">
-                <button id="closeModalBottom" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-                    Close
-                </button>
-            </div>
         </div>
     </div>
 

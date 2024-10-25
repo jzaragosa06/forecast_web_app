@@ -89,13 +89,57 @@
     </main>
 
     <!-- Partner logos -->
-    <footer class="flex justify-center items-center py-6 space-x-6">
-        <img src="https://via.placeholder.com/80x40" alt="Logo" class="h-10">
-        <img src="https://via.placeholder.com/80x40" alt="Logo" class="h-10">
-        <img src="https://via.placeholder.com/80x40" alt="Logo" class="h-10">
-        <img src="https://via.placeholder.com/80x40" alt="Logo" class="h-10">
-        <img src="https://via.placeholder.com/80x40" alt="Logo" class="h-10">
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-xl font-semibold">DataForesight</h3>
+                    <p class="mt-4 text-gray-400">
+                        DataForesight is a leading time series forecasting platform that helps businesses gain insights
+                        and make data-driven decisions with confidence.
+                    </p>
+                    <p class="mt-4 text-gray-400">
+                        &copy; 2024 DataForesight. All Rights Reserved.
+                    </p>
+                </div>
+
+                <!-- Partnerships -->
+                <div>
+                    <h3 class="text-xl font-semibold">Partnerships</h3>
+                    <ul class="mt-4 space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-blue-400">Tech Innovators</a></li>
+                        <li><a href="#" class="hover:text-blue-400">Market Masters</a></li>
+                        <li><a href="#" class="hover:text-blue-400">FinCorp</a></li>
+                        <li><a href="#" class="hover:text-blue-400">Data Solutions Inc.</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-xl font-semibold">Contact Us</h3>
+                    <ul class="mt-4 space-y-2 text-gray-400">
+                        <li>Email: <a href="mailto:info@dataforesight.com"
+                                class="hover:text-blue-400">info@dataforesight.com</a></li>
+                        <li>Phone: <a href="tel:+1234567890" class="hover:text-blue-400">+1 (234) 567-890</a></li>
+                        <li>Address: 123 Forecasting Lane, Data City, DC 45678</li>
+                    </ul>
+                    <div class="mt-6">
+                        <a href="#" class="text-blue-400 hover:text-white mr-4">
+                            <i class="fab fa-facebook fa-2x"></i>
+                        </a>
+                        <a href="#" class="text-blue-400 hover:text-white mr-4">
+                            <i class="fab fa-twitter fa-2x"></i>
+                        </a>
+                        <a href="#" class="text-blue-400 hover:text-white">
+                            <i class="fab fa-linkedin fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const inputs = document.querySelectorAll("input");
