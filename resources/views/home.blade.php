@@ -1471,7 +1471,7 @@
                 const stockSymbol = $('#stock-selection').val(); // Fetch stock symbol input
                 const startDate = $('#start-date-stocks').val(); // Extracting start date
                 const endDate = $('#end-date-stocks').val(); // Extracting end date
-                const interval = $('#interval').val(); // Fetch interval dropdown
+                let interval = $('#interval').val(); // Fetch interval dropdown
 
 
                 // Validation logic: Check if any field is empty
@@ -1502,7 +1502,6 @@
                 // build the http request. 
                 let requestURLStocks =
                     `https://api.twelvedata.com/time_series?apikey=e7bd90a9e6b24f85aec8b6d9a0f07b10&interval=${interval}&end_date=${endDate}&start_date=${startDate}&symbol=${stockSymbol}&format=JSON`;
-
                 $.ajax({
                     type: "GET",
                     url: requestURLStocks,
@@ -1522,16 +1521,16 @@
                         let currentDate = new Date().toISOString().split('T')[0];
                         let type = "multivariate";
                         let freq;
-                        if interval == "1day" {
+                        if (interval === "1day") {
                             freq = 'D';
                         }
-                        if interval == "1week" {
+                        if (interval === "1week") {
                             freq = 'W';
-
                         }
-                        if interval == "1month" {
+                        if (interval === "1month") {
                             freq = 'M';
                         }
+
                         let description =
                             `Time sereis data involving the ${stockSymbol} stocks between ${startDate} and ${endDate}. `;
                         let filename = `Stock-${stockSymbol}-${currentDate}.csv`;
