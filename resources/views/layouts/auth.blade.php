@@ -122,7 +122,7 @@
                         <li>Email: <a href="mailto:info@dataforesight.com"
                                 class="hover:text-blue-400">info@dataforesight.com</a></li>
                         <li>Phone: <a href="tel:+1234567890" class="hover:text-blue-400">+1 (234) 567-890</a></li>
-                        <li>Address: 123 Forecasting Lane, Data City, DC 45678</li>
+                        <li>Address: P.S.U Village, San Vicente East, Urdaneta, Pangasinan</li>
                     </ul>
                     <div class="mt-6">
                         <a href="#" class="text-blue-400 hover:text-white mr-4">

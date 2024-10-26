@@ -22,10 +22,10 @@
 
 <body class="bg-gray-200">
 
-    <div class="flex h-screen">
+    <div class="flex">
         <!-- Sidebar -->
-        <nav class="w-64 bg-white text-gray-700 shadow-md p-4">
-            <div class="mb-8">
+        <nav class="w-64 bg-white text-gray-700 shadow-md p-4 fixed h-full">
+            <div class="mb-8 relative group">
                 <div class="text-indigo-500 text-3xl font-bold">DataForesight</div>
             </div>
 
@@ -84,7 +84,7 @@
             </div>
         </div> --}}
 
-        <div class="flex-grow p-6">
+        <div class="flex-grow p-6 ml-64">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-3xl font-bold text-gray-800">@yield('page-title')</h2>
 
