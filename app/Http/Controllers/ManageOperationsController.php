@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\FileAssociation;
 use App\Models\File;
 use Illuminate\Http\Request;
@@ -16,13 +14,11 @@ class ManageOperationsController extends Controller
 {
     public function manage(Request $request)
     {
-        // ini_set('max_execution_time', 180);
         $file_id = $request->get("file_id");
         $operation = $request->get("operation");
 
         // Get the file information using the file ID and user ID
         $file = File::where('user_id', Auth::id())->where('file_id', $file_id)->firstOrFail();
-
         // Retrieve the file content from storage
         $file_content = Storage::get($file->filepath);
 
@@ -30,10 +26,11 @@ class ManageOperationsController extends Controller
         $type = $file->type;
         $freq = $file->freq;
         $description = $file->description;
+        //Set the default forecast method to without_refit. Though we removed the with_refit in our flask server.
+        $method = "without_refit";
 
         if ($operation == "forecast") {
             $steps = $request->get("horizon");
-            $method = "without_refit";
             if ($type == 'univariate') {
                 try {
                     $response = Http::timeout(300)
@@ -70,6 +67,16 @@ class ManageOperationsController extends Controller
                             'action' => 'Perform Forecast',
                             'description' => 'Successfully performed a forecast on file ' . $file->filename,
                         ]);
+                        session()->flash('operation_success', 'Data analyzed successfully!');
+
+                    } else {
+                        Logs::create([
+                            'user_id' => Auth::id(),
+                            'action' => 'Perform Forecast',
+                            'description' => 'Failed to performed a forecast on file ' . $file->filename,
+                        ]);
+                        session()->flash('operation_failed', 'Failed to analyze data!');
+
                     }
                 } catch (\Throwable $th) {
                     Logs::create([
@@ -77,6 +84,8 @@ class ManageOperationsController extends Controller
                         'action' => 'Perform Forecast',
                         'description' => 'Failed to performed a forecast on file ' . $file->filename,
                     ]);
+                    session()->flash('operation_failed', 'Failed to analyze data!');
+
                 }
 
             } else {
@@ -116,6 +125,17 @@ class ManageOperationsController extends Controller
                             'action' => 'Perform Forecast',
                             'description' => 'Successfully performed a forecast on file ' . $file->filename,
                         ]);
+
+                        session()->flash('operation_success', 'Data analyzed successfully!');
+
+                    } else {
+                        Logs::create([
+                            'user_id' => Auth::id(),
+                            'action' => 'Perform Forecast',
+                            'description' => 'Failed to performed a forecast on file ' . $file->filename,
+                        ]);
+                        session()->flash('operation_failed', 'Failed to analyze data!');
+
                     }
                 } catch (\Throwable $th) {
                     Logs::create([
@@ -123,16 +143,16 @@ class ManageOperationsController extends Controller
                         'action' => 'Perform Forecast',
                         'description' => 'Failed to performed a forecast on file ' . $file->filename,
                     ]);
+                    session()->flash('operation_failed', 'Failed to analyze data!');
+
                 }
+
             }
 
-            session()->flash('operation_success', 'Data analyzed successfully!');
 
             return redirect()->route('home');
 
         } elseif ($operation == "trend") {
-
-
             try {
                 $response = Http::timeout(300)->attach(
                     'inputFile',
@@ -148,7 +168,6 @@ class ManageOperationsController extends Controller
                     $jsonFilename = pathinfo(basename($file->filepath), PATHINFO_FILENAME) . '-initial-' . now()->timestamp . '.json';
                     $jsonPath = 'resultJSON/' . $jsonFilename;
                     Storage::put($jsonPath, json_encode($response->body()));
-
                     $assoc_filename = 'trend-on-' . $file->filename . 'created-' . now()->timestamp;
 
 
@@ -166,6 +185,17 @@ class ManageOperationsController extends Controller
                         'action' => 'Analyze Trend',
                         'description' => 'Successfully analyzed trend on ' . $file->filename . ' using Facebook Prophet.',
                     ]);
+
+                    session()->flash('operation_success', 'Data analyzed successfully!');
+                } else {
+                    Logs::create([
+                        'user_id' => Auth::id(),
+                        'action' => 'Analyze Trend',
+                        'description' => 'Failed analyzed trend on ' . $file->filename . ' using Facebook Prophet.',
+                    ]);
+
+                    session()->flash('operation_failed', 'Failed to analyze data!');
+
                 }
 
             } catch (\Throwable $th) {
@@ -174,16 +204,14 @@ class ManageOperationsController extends Controller
                     'action' => 'Analyze Trend',
                     'description' => 'Failed analyzed trend on ' . $file->filename . ' using Facebook Prophet.',
                 ]);
+
+                session()->flash('operation_failed', 'Failed to analyze data!');
+
             }
 
-            session()->flash('operation_success', 'Data analyzed successfully!');
-
             return redirect()->route('home');
-
         } else {
             // Handle seasonality
-
-
             try {
                 $response = Http::timeout(300)->attach(
                     'inputFile',
@@ -218,6 +246,16 @@ class ManageOperationsController extends Controller
                         'action' => 'Analyze Seasonality',
                         'description' => 'Successfully analyzed seasonality on ' . $file->filename . ' using Facebook Prophet.',
                     ]);
+
+                    session()->flash('operation_success', 'Data analyzed successfully!');
+                } else {
+                    Logs::create([
+                        'user_id' => Auth::id(),
+                        'action' => 'Analyze Seasonality',
+                        'description' => 'Failed to analyzed seasonality on ' . $file->filename . ' using Facebook Prophet.',
+                    ]);
+
+                    session()->flash('operation_failed', 'Failed to analyze data!');
                 }
 
             } catch (\Throwable $th) {
@@ -226,8 +264,10 @@ class ManageOperationsController extends Controller
                     'action' => 'Analyze Seasonality',
                     'description' => 'Failed to analyzed seasonality on ' . $file->filename . ' using Facebook Prophet.',
                 ]);
+
+                session()->flash('operation_failed', 'Failed to analyze data!');
+
             }
-            session()->flash('operation_success', 'Data analyzed successfully!');
             return redirect()->route('home');
         }
     }

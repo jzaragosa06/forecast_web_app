@@ -425,7 +425,8 @@
             function updateInfoCard(component, variable) {
                 // let explanation = data.explanations[component][variable].response1 + "<br>" + data.explanations[
                 //     component][variable].response2 || "No explanation available.";
-                let explanation = data.explanations[component][variable].response1 || "No explanation available.";
+                let explanation = data.explanations[component][variable].response1 + "<br>" + data.explanations[
+                    component][variable].response2 || "No explanation available.";
                 infoCard.innerHTML = `<p class="text-gray-700 text-sm">${explanation}</p>`;
             }
 

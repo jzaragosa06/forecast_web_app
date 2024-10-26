@@ -17,6 +17,11 @@
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
             {{ session('operation_success') }}
         </div>
+    @elseif (session('operation_failed'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('operation_failed') }}
+        </div>
     @endif
 
     <script>
@@ -653,69 +658,8 @@
         </div>
     </div>
 
+
     <!-- Forecast modal -->
-    {{-- <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="forecast-modal"
-        style="display:none;">
-        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
-            <div class="flex justify-between items-center border-b pb-2 mb-2">
-                <h5 class="text-lg font-semibold">Forecast Settings</h5>
-                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
-                    aria-label="Close">
-                    &times;
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="analyze-form2" action="{{ route('manage.operations') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="file_id" id="modal_file_id">
-                    <input type="hidden" name="operation" value="forecast">
-
-                    <div class="mb-4">
-                        <label for="horizon" class="block text-sm font-medium mb-1">Forecast Horizon</label>
-
-                        <input type="number" name="horizon" id="horizon"
-                            class="form-input block w-full border-2 border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="e.g., 12" required>
-                    </div>
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Run
-                        Forecast</button>
-                </form>
-
-                <div id="loadingModal2"
-                    class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 hidden">
-                    <div class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg flex items-center justify-center">
-                        <div
-                            class="loader border-t-transparent border-solid animate-spin rounded-full border-blue-500 border-4 h-12 w-12">
-                        </div>
-                        <span class="ml-4 text-white">Processing...</span>
-                    </div>
-                </div>
-
-                <script>
-                    $(document).ready(function() {
-                        $('#analyze-form2').on('submit', function(e) {
-                            // Hide the forecast modal
-                            $('#forecast-modal').hide()
-                            // Show the modal
-                            $('#loadingModal2').removeClass('hidden');
-
-                            // Allow the form to submit
-                            return true;
-                        });
-
-                        // Prevent modal from closing when clicking outside of the modal content
-                        $('#loadingModal2').on('click', function(e) {
-                            // Only allow clicks outside the modal content to trigger event blocking
-                            if (!$(e.target).closest('.modal-content').length) {
-                                e.stopPropagation(); // Prevent the modal from closing
-                            }
-                        });
-                    });
-                </script>
-            </div>
-        </div>
-    </div> --}}
-
     <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="forecast-modal"
         style="display:none;">
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
@@ -748,6 +692,7 @@
         </div>
     </div>
 
+    <!-- Loading indicator for forecast -->
     <div id="loadingModal2" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 hidden">
         <div class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg flex items-center justify-center">
             <div
@@ -1475,9 +1420,6 @@
         });
 
         $(document).ready(function() {
-
-            // Initialize Flatpickr with yy-mm-dd format
-
             $('#ts-add-via-api-stocks-btn').click(function() {
                 $('#ts-add-via-api-stocks-modal').removeClass('hidden').hide().fadeIn(200);
                 $('#ts-add-via-api-stocks-modal > div').removeClass('scale-95').addClass('scale-100');
@@ -1531,6 +1473,7 @@
                 const endDate = $('#end-date-stocks').val(); // Extracting end date
                 const interval = $('#interval').val(); // Fetch interval dropdown
 
+
                 // Validation logic: Check if any field is empty
                 if (!stockSymbol) {
                     alert("Stock symbol is required!");
@@ -1578,7 +1521,17 @@
 
                         let currentDate = new Date().toISOString().split('T')[0];
                         let type = "multivariate";
-                        let freq;;
+                        let freq;
+                        if interval == "1day" {
+                            freq = 'D';
+                        }
+                        if interval == "1week" {
+                            freq = 'W';
+
+                        }
+                        if interval == "1month" {
+                            freq = 'M';
+                        }
                         let description =
                             `Time sereis data involving the ${stockSymbol} stocks between ${startDate} and ${endDate}. `;
                         let filename = `Stock-${stockSymbol}-${currentDate}.csv`;
@@ -1610,12 +1563,6 @@
                                 console.error('Error saving data:', error);
                             }
                         });
-
-
-
-
-
-
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching data:', error);
