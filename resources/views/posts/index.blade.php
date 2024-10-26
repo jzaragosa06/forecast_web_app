@@ -14,7 +14,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <!-- Section for current user's posts (Left Column) -->
         <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
-            <h2 class="text-xl font-semibold mb-4">Your Posts</h2>
+            <h2 class="text-xl font-semibold mb-4 text-gray-600">Your Posts</h2>
 
             <!-- Search bar for user's posts -->
             <div class="mb-3">
@@ -28,12 +28,13 @@
                 <div id="my-posts-container" class="space-y-3">
                     @foreach ($myPosts as $post)
                         <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition">
-                            <h3 class="text-lg font-semibold mb-1">
+                            <h4 class="text-base font-semibold mb-2 text-gray-700">
                                 <a href="{{ route('posts.show', $post->id) }}"
                                     class="hover:text-blue-600">{{ $post->title }}</a>
-                            </h3>
+                            </h4>
                             <p class="text-xs text-gray-500 mb-2">Posted by: {{ $post->user->name }}</p>
-                            <p class="text-xs text-gray-500">{!! Str::limit($post->body, 100) !!}</p>
+                            <p class="text-sm text-gray-500 truncate">{{ strip_tags($post->body) }}</p>
+
                             <div class="flex flex-wrap mt-2">
                                 @foreach (explode(',', $post->topics) as $topic)
                                     <span
@@ -48,8 +49,7 @@
 
         <!-- Section for other users' posts (Right Column) -->
         <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
-            <h2 class="text-xl font-semibold mb-4">Other Users' Posts</h2>
-
+            <h2 class="text-xl font-semibold mb-4 text-gray-600">Other Users' Posts</h2>
             <!-- Search bar for other users' posts -->
             <div class="mb-3">
                 <input type="text" id="other-posts-search" placeholder="Search other users' posts..."
@@ -62,12 +62,12 @@
                 <div id="other-posts-container" class="space-y-3">
                     @foreach ($otherPosts as $post)
                         <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition">
-                            <h3 class="text-lg font-semibold mb-1">
+                            <h4 class="text-base font-semibold mb-2 text-gray-700">
                                 <a href="{{ route('posts.show', $post) }}"
                                     class="hover:text-blue-600">{{ $post->title }}</a>
-                            </h3>
+                            </h4>
                             <p class="text-xs text-gray-500 mb-2">Posted by: {{ $post->user->name }}</p>
-                            <p class="text-xs text-gray-500">{!! Str::limit($post->body, 100) !!}</p>
+                            <p class="text-sm text-gray-500 truncate">{{ strip_tags($post->body) }}</p>
                             <div class="flex flex-wrap mt-2">
                                 @foreach (explode(',', $post->topics) as $topic)
                                     <span

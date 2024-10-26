@@ -37,31 +37,70 @@
                     </div>
                 </form>
 
-                <div class="ml-4 mt-4">
-                    <h2 class="text-xl font-bold">{{ $user->name }}</h2>
-                    <p class="text-sm text-gray-600">{{ $user->headline ?? 'Tell us what you do' }}</p>
-                    <p class="text-sm text-gray-500">{{ $user->location ?? 'Add location' }}</p>
-                    <p class="text-sm text-gray-500">{{ $user->contact_num ?? 'Add contact number' }}</p>
+                <div class="mt-4">
+                    <h2 class="text-xl font-bold text-gray-600">{{ $user->name }}</h2>
+                    @if ($user->headline)
+                        <p class="text-sm text-gray-600">{{ $user->headline }}</p>
+                    @else
+                        <p class="text-xs text-gray-600">Tell us what you do</p>
+                    @endif
+
+                    @if ($user->location)
+                        <p class="text-sm text-gray-500">{{ $user->location }}</p>
+                    @else
+                        <p class="text-xs text-gray-600">Add location</p>
+                    @endif
+
+                    @if ($user->contact_num)
+                        <p class="text-sm text-gray-500">{{ $user->contact_num }}</p>
+                    @else
+                        <p class="text-xs text-gray-600">Add contact number</p>
+                    @endif
+
+
                 </div>
 
                 <!-- Social Links -->
                 <div class="mt-4">
-                    <p class="text-sm text-gray-600 mb-1">Social Links:</p>
-                    <div class="flex space-x-2">
-                        <a href="{{ $user->social_links_linkedin ?? '#' }}" class="text-blue-500" title="LinkedIn">
-                            <i class="fab fa-linkedin"></i>
-                        </a>
-                        <a href="{{ $user->social_links_github ?? '#' }}" class="text-gray-800" title="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="{{ $user->social_links_kaggle ?? '#' }}" class="text-blue-400" title="Kaggle">
-                            <i class="fab fa-kaggle"></i>
-                        </a>
-                        <a href="{{ $user->social_links_medium ?? '#' }}" class="text-gray-500" title="Medium">
-                            <i class="fab fa-medium"></i>
-                        </a>
-                    </div>
+
+                    <!-- Social Links -->
+                    @if (
+                        $user->social_links_linkedin ||
+                            $user->social_links_github ||
+                            $user->social_links_kaggle ||
+                            $user->social_links_medium)
+                        <p class="text-sm text-gray-600 mb-1">Social Links:</p>
+                        <div class="flex space-x-2">
+                            @isset($user->social_links_linkedin)
+                                <a href="{{ $user->social_links_linkedin }}" class="text-blue-500" title="LinkedIn">
+                                    <i class="fab fa-linkedin text-2xl"></i>
+                                </a>
+                            @endisset
+
+                            @isset($user->social_links_github)
+                                <a href="{{ $user->social_links_github }}" class="text-gray-800" title="GitHub">
+                                    <i class="fab fa-github text-2xl"></i>
+                                </a>
+                            @endisset
+
+                            @isset($user->social_links_kaggle)
+                                <a href="{{ $user->social_links_kaggle }}" class="text-blue-400" title="Kaggle">
+                                    <i class="fab fa-kaggle text-2xl"></i>
+                                </a>
+                            @endisset
+
+                            @isset($user->social_links_medium)
+                                <a href="{{ $user->social_links_medium }}" class="text-gray-500" title="Medium">
+                                    <i class="fab fa-medium text-2xl"></i>
+                                </a>
+                            @endisset
+                        </div>
+                    @else
+                        <p class="text-xs text-gray-600 mb-1">No social links added</p>
+                    @endif
+
                 </div>
+
 
                 <!-- About Section -->
                 <div class="mt-6">
@@ -73,10 +112,16 @@
                 <div class="mt-6">
                     <h3 class="font-semibold">Skills</h3>
                     <div class="flex flex-wrap mt-2">
-                        @foreach (explode(',', $user->skills) as $skill)
-                            <span
-                                class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded">{{ $skill }}</span>
-                        @endforeach
+
+                        @if ($user->skills)
+                            @foreach (explode(',', $user->skills) as $skill)
+                                <span
+                                    class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded">{{ $skill }}</span>
+                            @endforeach
+                        @else
+                            <p class="text-gray-500 text-xs">Add skills</p>
+                        @endif
+
                     </div>
                 </div>
 
@@ -87,9 +132,10 @@
                 </div>
             </div>
 
+
             <div class="w-2/3 flex space-x-6">
                 <!-- First Part -->
-                <div class="w-1/2 bg-gray-100 shadow-inner rounded-lg">
+                <div class="bg-gray-100 shadow-inner rounded-lg flex-grow">
                     <div class="p-6 text-left text-gray-500">
                         <!-- Title for the first part -->
                         <h2 class="text-xl font-semibold text-gray-400 mb-4">Posts</h2>
@@ -118,16 +164,8 @@
                         @endif
                     </div>
                 </div>
-
-                <!-- Second Part -->
-                <div class="w-1/2 bg-gray-100 shadow-inner rounded-lg">
-                    <div class="p-6 text-left text-gray-500">
-                        <!-- Title for the second part -->
-                        <h2 class="text-xl font-semibold text-gray-400 mb-4">Second Part Title</h2>
-                        Second part content here.
-                    </div>
-                </div>
             </div>
+
 
 
 
@@ -135,7 +173,6 @@
     </div>
 
     <!-- Modal for Editing Profile. omitted -->
-    <!-- Modal for Editing Profile -->
     <div id="editProfileModal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title"
         role="dialog" aria-modal="true">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

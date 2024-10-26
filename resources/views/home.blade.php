@@ -27,7 +27,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const notification = document.getElementById('notification');
-
             if (notification) {
                 // Hide after 3 seconds (3000 milliseconds)
                 setTimeout(() => {
@@ -67,8 +66,14 @@
                                         <div class="space-y-4"> <!-- Adjusted space-y for better spacing -->
                                             <!-- Upload Data Button -->
                                             <div class="flex items-center space-x-2">
-                                                <p class="text-gray-600 text-xs flex-grow">Lorem ipsum dolor sit amet,
-                                                    consectetur adipiscing elit.</p>
+                                                <p class="text-gray-600 text-xs flex-grow">Upload your time
+                                                    series
+                                                    data in <a href="#"
+                                                        class="text-gray-600  text-xshover:text-blue-500 underline hover:underline">
+                                                        csv format
+                                                    </a>.
+                                                </p>
+
                                                 <button type="button" id="ts-info"
                                                     class="flex items-center bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 w-28 sm:w-32 md:w-full">
                                                     <!-- Adjusted width on smaller screens -->
@@ -79,20 +84,22 @@
 
                                             <!-- Meteorological Data Button -->
                                             <div class="flex items-center space-x-2">
-                                                <p class="text-gray-600 text-xs flex-grow">Lorem ipsum dolor sit amet,
-                                                    consectetur adipiscing elit.</p>
+                                                <p class="text-gray-600 text-xs flex-grow ">Get daily time
+                                                    series weather data anywhere </p>
                                                 <button type="button" id="ts-add-via-api-open-meteo-btn"
                                                     class="flex items-center bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 w-28 sm:w-32 md:w-full">
                                                     <!-- Adjusted width on smaller screens -->
-                                                    <i class="fas fa-cloud-upload-alt text-white"></i>
+                                                    <i class="fas fa-cloud-sun text-white"></i>
+
                                                     <span class="ml-2 text-xs">Weather</span>
                                                 </button>
                                             </div>
 
                                             <!-- Stocks Data Button -->
                                             <div class="flex items-center space-x-2">
-                                                <p class="text-gray-600 text-xs flex-grow">Lorem ipsum dolor sit amet,
-                                                    consectetur adipiscing elit.</p>
+                                                <p class="text-gray-600 text-xs flex-grow ">Get latest basic
+                                                    time
+                                                    series stock market data</p>
                                                 <button type="button" id="ts-add-via-api-stocks-btn"
                                                     class="flex items-center bg-blue-600 text-white px-3 py-2 rounded-md hover:bg-blue-700 w-28 sm:w-32 md:w-full">
                                                     <!-- Adjusted width on smaller screens -->
@@ -128,7 +135,7 @@
                                                     </select>
                                                     <i id="file-info"
                                                         class="fas fa-info-circle text-gray-400 ml-2 cursor-pointer"
-                                                        data-tooltip="Information about selecting a file."></i>
+                                                        data-tooltip="Select the file you want to analyze."></i>
                                                 </div>
                                             </div>
 
@@ -140,13 +147,13 @@
                                                 <div class="flex items-center">
                                                     <select name="operation" id="operation"
                                                         class="form-select text-sm border-2 border-gray-300 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                        <option value="trend">Trend</option>
-                                                        <option value="seasonality">Seasonality</option>
-                                                        <option value="forecast">Forecast</option>
+                                                        <option value="trend">Analyze Trend</option>
+                                                        <option value="seasonality">Analyze Seasonality</option>
+                                                        <option value="forecast">Perform Forecast</option>
                                                     </select>
                                                     <i id="operation-info"
                                                         class="fas fa-info-circle text-gray-400 ml-2 cursor-pointer"
-                                                        data-tooltip="Information about selecting an operation."></i>
+                                                        data-tooltip="Select the operation you want to the selected file above."></i>
                                                 </div>
                                             </div>
 
@@ -252,8 +259,8 @@
                                                             </span>
 
                                                             <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"
-                                                                class="text-gray-700 text-xs hover:underline truncate w-40">
-                                                                {{ Str::limit($file_assoc->assoc_filename, 30) }}
+                                                                class="text-gray-700 text-xs hover:underline truncate">
+                                                                {{ $file_assoc->assoc_filename }}
                                                             </a>
                                                         </li>
                                                     @endforeach

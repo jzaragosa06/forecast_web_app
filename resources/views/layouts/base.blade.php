@@ -101,72 +101,55 @@
 <body class="bg-gray-100">
     <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="w-20 bg-white border-r flex flex-col items-center py-6">
+        <div class="w-50 bg-white border-r flex flex-col items-center py-6"> <!-- Increased width here -->
             <!-- Logo -->
             <div class="text-indigo-500 text-3xl font-bold mb-8">TS</div>
 
             <!-- Sidebar Icons -->
-            <nav class="flex flex-col space-y-8">
-                <div class="relative group">
+            <nav class="flex flex-col space-y-5">
+                <div class="p-2">
                     <a href="{{ route('home') }}"
-                        class="{{ request()->routeIs('home') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
-                        <i class="fas fa-tachometer-alt text-xl"></i>
+                        class="{{ request()->routeIs('home') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-2 rounded-lg">
+                        <!-- Increased padding -->
+                        <i class="fas fa-tachometer-alt text-2xl mr-3"></i> <!-- Increased icon size -->
+                        <span class="text-sm">Dashboard</span> <!-- Increased text size -->
                     </a>
-                    <span
-                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Dashboard
-                    </span>
                 </div>
-                <div class="relative group">
+                <div>
                     <a href="{{ route('crud.index') }}"
-                        class="{{ request()->routeIs('crud.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
-                        <i class="fas fa-tasks text-xl"></i>
+                        class="{{ request()->routeIs('crud.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-4 rounded-lg">
+                        <!-- Increased padding -->
+                        <i class="fas fa-tasks text-2xl mr-3"></i> <!-- Increased icon size -->
+                        <span class="text-sm">Manage Results</span> <!-- Increased text size -->
                     </a>
-                    <span
-                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Manage Results
-                    </span>
                 </div>
-
-                <div class="relative group">
+                <div>
                     <a href="{{ route('share.index') }}"
-                        class="{{ request()->routeIs('share.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
-                        <i class="fas fa-share-square text-xl"></i>
+                        class="{{ request()->routeIs('share.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-4 rounded-lg">
+                        <!-- Increased padding -->
+                        <i class="fas fa-share-square text-2xl mr-3"></i> <!-- Increased icon size -->
+                        <span class="text-sm">Shared Files</span> <!-- Increased text size -->
                     </a>
-                    <span
-                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Shared Files
-                    </span>
                 </div>
-
-                <div class="relative group">
+                <div>
                     <a href="{{ route('posts.index') }}"
-                        class="{{ request()->routeIs('posts.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} p-2 rounded-lg">
-                        <i class="fas fa-comments text-xl"></i>
+                        class="{{ request()->routeIs('posts.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-4 rounded-lg">
+                        <!-- Increased padding -->
+                        <i class="fas fa-comments text-2xl mr-3"></i> <!-- Increased icon size -->
+                        <span class="text-sm">Discussion</span> <!-- Increased text size -->
                     </a>
-                    <span
-                        class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Discussion
-                    </span>
                 </div>
-
             </nav>
-
-            <!-- Settings Icon (at bottom) -->
-            {{-- <div class="mt-auto">
-                <a href="#" class="text-gray-600 hover:text-indigo-500">
-                    <i class="fas fa-cog text-xl"></i>
-                </a>
-            </div> --}}
         </div>
 
+
+
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 flex flex-col m-3">
             <!-- Navbar -->
-            <div class="flex justify-between items-center bg-white shadow p-4 rounded-lg">
+            <div class="flex justify-between items-center bg-white shadow p-2 rounded-lg">
                 <!-- Title -->
                 <h1 class="text-lg font-semibold text-gray-700">@yield('page-title')</h1>
-                <!-- Search Bar -->
                 <!-- Search Bar -->
                 <div class="relative w-1/3 flex">
                     <!-- Search Input -->
@@ -362,8 +345,6 @@
                         </div>
                     </div>
 
-
-
                     <div class="relative">
                         <!-- Profile button -->
                         <button id="profileDropdownButton"
@@ -374,34 +355,38 @@
                         <!-- Dropdown menu -->
                         <div id="profileDropdown"
                             class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                            <!-- Profile Link -->
-                            <a href="{{ route('profile.index') }}"
-                                class="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200">
-                                <i class="fas fa-user mr-2"></i>
-                                <span>Profile</span>
-                            </a>
+                            <!-- Minimalistic Dropdown Styling -->
+                            <div class="flex flex-col">
+                                <!-- Profile Link -->
+                                <a href="{{ route('profile.index') }}"
+                                    class="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200">
+                                    <i class="fas fa-user mr-2"></i>
+                                    <span>Profile</span>
+                                </a>
 
-                            <!-- Logs Link -->
-                            <a href="{{ route('logs.index') }}"
-                                class="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200">
-                                <i class="fas fa-list mr-2"></i>
-                                <span>Logs</span>
-                            </a>
+                                <!-- Logs Link -->
+                                <a href="{{ route('logs.index') }}"
+                                    class="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200">
+                                    <i class="fas fa-list mr-2"></i>
+                                    <span>Logs</span>
+                                </a>
 
-                            <!-- Logout Link -->
-                            <a href="{{ route('logout') }}"
-                                class="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="fas fa-sign-out-alt mr-2"></i>
-                                <span>Logout</span>
-                            </a>
+                                <!-- Logout Link -->
+                                <a href="{{ route('logout') }}"
+                                    class="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>
+                                    <span>Logout</span>
+                                </a>
 
-                            <!-- Hidden Logout Form -->
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                @csrf
-                            </form>
+                                <!-- Hidden Logout Form -->
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                    @csrf
+                                </form>
+                            </div>
                         </div>
                     </div>
+
 
                 </div>
             </div>

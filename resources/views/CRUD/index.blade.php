@@ -10,7 +10,7 @@
 
 
             <div class="bg-gray-100 rounded-lg shadow p-6 lg:col-span-1">
-                <h5 class="text-lg font-semibold mb-4">Files and Results Tree</h5>
+                <h5 class="text-lg font-semibold mb-4 text-gray-600">Files and Results Tree</h5>
                 @if ($files->isEmpty())
                     <div class="flex items-center justify-center py-4">
 
@@ -30,21 +30,26 @@
                 @endif
 
                 <li class="p-4 bg-white rounded shadow mb-4">
-                    <p class="font-medium">{{ $file->filename }}</p>
+                    @php
+                        $currentFileId = $file->file_id;
+                    @endphp
+                    <a class="hover:text-blue-600" href="{{ route('input.file.graph.view.get', $currentFileId) }}">
+                        <p class="font-medium text-gray-600 hover:text-blue-600">{{ $file->filename }}</p>
+                    </a>
                     <span class="text-sm text-gray-500">Associated Results:</span>
                     <ul class="ml-6 space-y-3">
-                        @php
-                            $currentFileId = $file->file_id;
-                        @endphp
                         @endif
 
                         @if ($file->assoc_filename)
-                            <li class="flex items-center justify-between"> <!-- Flex container for alignment -->
-                                <p class="w-3/4">{{ $file->assoc_filename }}</p>
+                            <li class="flex items-center justify-between text-sm"> <!-- Flex container for alignment -->
+                                <a class="hover:text-blue-600"
+                                    href="{{ route('manage.results.get', $file->file_assoc_id) }}">
+                                    <p class="w-3/4">{{ $file->assoc_filename }}</p>
+                                </a>
                             </li>
                             <hr>
                         @else
-                            <li class="text-gray-500">No associated results found.</li>
+                            <li class="text-gray-500 text-xs">No associated results found.</li>
                         @endif
                         @endforeach
 

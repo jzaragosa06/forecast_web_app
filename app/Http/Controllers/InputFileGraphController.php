@@ -19,6 +19,7 @@ class InputFileGraphController extends Controller
         $rows = array_map('str_getcsv', explode("\n", $fileContent)); // Convert CSV to array
         $header = array_shift($rows); // Get header row
 
+        
         // Prepare time series array
         $series = [];
         foreach ($rows as $row) {
@@ -34,6 +35,7 @@ class InputFileGraphController extends Controller
         $timeSeriesData = [
             'file_id' => $file_id,
             'filename' => $file->filename,
+            'description' => $file->description, 
             'header' => $header,
             'data' => $series,
         ];

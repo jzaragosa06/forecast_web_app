@@ -5,22 +5,18 @@
 @section('page-title', 'Manage File')
 
 @section('content')
-    <div class="container mx-auto my-10">
-       
-
-        <div class="mb-6">
+    <div class="container mx-auto">
+        <div class="mb-2">
             <!-- Filename -->
-            <p class="text-3xl font-bold text-gray-900 mb-2">{{ $timeSeriesData['filename'] }}</p>
-
+            <h4 class="text-lg font-semibold mb-2 text-gray-700">{{ $timeSeriesData['filename'] }}</h4>
             <!-- Description -->
-            <p class="text-gray-700 text-lg leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. ...
+            <p class="text-gray-700 text-sm leading-relaxed">
+                {{ $timeSeriesData['description'] }}
             </p>
         </div>
         <div id="chart"></div> <!-- Chart Container -->
 
- 
+
         <table id="timeSeriesTable" class="min-w-full mt-8 table-auto text-left">
             <thead>
                 <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
@@ -62,7 +58,7 @@
                     type: 'line',
                     height: 300,
                     toolbar: {
-                        show: false,
+                        show: true,
                     }
                 },
                 series: [
