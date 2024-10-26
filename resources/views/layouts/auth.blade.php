@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name', 'DataForesight') }}</title>
+    <link rel="icon" href="assets/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .content-section {
@@ -46,6 +47,7 @@
                     href="{{ url('/') }}">
                     <!-- <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-10 w-10"> -->
                     <!-- Adjust the size as needed -->
+                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-12 w-auto">
                     <span>{{ config('app.name', 'DataForesight') }}</span>
                 </a>
                 <div class="flex md:order-2 space-x-3">

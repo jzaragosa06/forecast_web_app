@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>@yield('DataForesight')</title>
+    <link rel="icon" href="assets/favicon.ico">
 
     <!-- Include Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
@@ -104,7 +105,10 @@
         <!-- Sidebar -->
         <div class="w-20 bg-white border-r flex flex-col items-center py-6">
             <!-- Logo -->
-            <div class="text-indigo-500 text-3xl font-bold mb-8">TS</div>
+            <div class="text-indigo-500 text-3xl font-bold mb-8">
+                <!-- TS -->
+                <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-12 w-auto">
+            </div>
 
             <!-- Sidebar Icons -->
             <nav class="flex flex-col space-y-8">
