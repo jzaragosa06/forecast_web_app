@@ -103,41 +103,41 @@
     <div class="flex h-screen">
         <!-- Sidebar -->
         <div class="w-50 bg-white border-r flex flex-col items-center py-6"> <!-- Increased width here -->
-            <!-- Logo -->
-            <div class="text-indigo-500 text-3xl font-bold mb-8">
-                <!-- TS -->
-                <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-12 w-auto">
+            <div class="mb-3 relative group flex flex-col items-center">
+                <!-- Logo -->
+                <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-12 w-auto mb-2">
+                <div class="text-blue-600 text-1xl font-bold">DataForesight</div>
             </div>
 
             <!-- Sidebar Icons -->
             <nav class="flex flex-col space-y-5">
                 <div class="p-2">
                     <a href="{{ route('home') }}"
-                        class="{{ request()->routeIs('home') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-2 rounded-lg">
+                        class="{{ request()->routeIs('home') ? 'text-blue-500 bg-blue-100' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-2 rounded-lg">
                         <!-- Increased padding -->
                         <i class="fas fa-tachometer-alt text-2xl mr-3"></i> <!-- Increased icon size -->
                         <span class="text-sm">Dashboard</span> <!-- Increased text size -->
                     </a>
                 </div>
-                <div>
+                <div class="p-2">
                     <a href="{{ route('crud.index') }}"
-                        class="{{ request()->routeIs('crud.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-4 rounded-lg">
+                        class="{{ request()->routeIs('crud.index') ? 'text-blue-500 bg-blue-100' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-4 rounded-lg">
                         <!-- Increased padding -->
                         <i class="fas fa-tasks text-2xl mr-3"></i> <!-- Increased icon size -->
                         <span class="text-sm">Manage Results</span> <!-- Increased text size -->
                     </a>
                 </div>
-                <div>
+                <div class="p-2">
                     <a href="{{ route('share.index') }}"
-                        class="{{ request()->routeIs('share.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-4 rounded-lg">
+                        class="{{ request()->routeIs('share.index') ? 'text-blue-500 bg-blue-100' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-4 rounded-lg">
                         <!-- Increased padding -->
                         <i class="fas fa-share-square text-2xl mr-3"></i> <!-- Increased icon size -->
                         <span class="text-sm">Shared Files</span> <!-- Increased text size -->
                     </a>
                 </div>
-                <div>
+                <div class="p-2">
                     <a href="{{ route('posts.index') }}"
-                        class="{{ request()->routeIs('posts.index') ? 'text-indigo-500 bg-indigo-100' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-4 rounded-lg">
+                        class="{{ request()->routeIs('posts.index') ? 'text-blue-500 bg-blue-100' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-4 rounded-lg">
                         <!-- Increased padding -->
                         <i class="fas fa-comments text-2xl mr-3"></i> <!-- Increased icon size -->
                         <span class="text-sm">Discussion</span> <!-- Increased text size -->
@@ -153,12 +153,12 @@
             <!-- Navbar -->
             <div class="flex justify-between items-center bg-white shadow p-2 rounded-lg">
                 <!-- Title -->
-                <h1 class="text-lg font-semibold text-gray-700">@yield('page-title')</h1>
+                <h1 class="text-lg font-semibold text-gray-600">@yield('page-title')</h1>
                 <!-- Search Bar -->
                 <div class="relative w-1/3 flex">
                     <!-- Search Input -->
                     <input id="search-input" type="text" placeholder="Search"
-                        class="w-full bg-gray-100 border border-gray-300 rounded-l-lg py-2 px-4 focus:outline-none focus:ring focus:ring-indigo-200">
+                        class="w-full bg-gray-100 border border-gray-300 rounded-l-lg py-2 px-4 focus:outline-none focus:ring focus:ring-blue-200">
 
                     <!-- Search Icon -->
                     <button class="bg-blue-600 p-2 rounded-r-lg">
@@ -167,12 +167,11 @@
 
                     <!-- Search Results Container -->
                     <div id="search-results"
-                        class="absolute left-0 top-full w-full bg-white border border-gray-300 rounded-lg p-4 hidden z-50 max-h-60 overflow-y-auto">
+                        class="absolute left-0 top-full w-full bg-white border border-gray-300 rounded-lg p-4 hidden z-50 max-h-80 overflow-y-auto">
                         <h3 class="text-lg font-bold">Search Results</h3>
                         <div id="results-container"></div>
                     </div>
                 </div>
-
                 <script>
                     let searchData = {
                         users: @json($users),
@@ -299,8 +298,7 @@
                     <div class="flex items-center space-x-4">
                         <!-- Notification Bell -->
                         <div class="relative">
-                            <button id="notificationBell"
-                                class="text-gray-600 hover:text-indigo-500 focus:outline-none">
+                            <button id="notificationBell" class="text-gray-600 hover:text-blue-500 focus:outline-none">
                                 <i class="fas fa-bell text-xl"></i>
                             </button>
 
@@ -330,7 +328,7 @@
                                                 <a
                                                     href="{{ route('share.view_file', ['file_assoc_id' => $notification->file_assoc_id, 'user_id' => $notification->user_id]) }}">
                                                     <button
-                                                        class="ml-2 bg-indigo-500 text-white text-xs px-3 py-1 rounded-full hover:bg-indigo-600 focus:outline-none">
+                                                        class="ml-2 bg-blue-500 text-white text-xs px-3 py-1 rounded-full hover:bg-blue-600 focus:outline-none">
                                                         View
                                                     </button>
                                                 </a>
@@ -352,7 +350,7 @@
                     <div class="relative">
                         <!-- Profile button -->
                         <button id="profileDropdownButton"
-                            class="flex items-center text-gray-600 hover:text-indigo-500 focus:outline-none focus:ring focus:ring-indigo-300 rounded-md">
+                            class="flex items-center text-gray-600 hover:text-blue-500 focus:outline-none focus:ring focus:ring-blue-300 rounded-md">
                             <i class="fas fa-user-circle text-xl mr-2"></i>
                         </button>
 

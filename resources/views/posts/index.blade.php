@@ -15,8 +15,8 @@
         <!-- Section for current user's posts (Left Column) -->
         <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
             <h2 class="text-xl font-semibold mb-4 text-gray-600">Your Posts</h2>
-
             <!-- Search bar for user's posts -->
+
             <div class="mb-3">
                 <input type="text" id="my-posts-search" placeholder="Search your posts..."
                     class="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300">
@@ -27,23 +27,47 @@
             @else
                 <div id="my-posts-container" class="space-y-3">
                     @foreach ($myPosts as $post)
-                        <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition">
-                            <h4 class="text-base font-semibold mb-2 text-gray-700">
-                                <a href="{{ route('posts.show', $post->id) }}"
-                                    class="hover:text-blue-600">{{ $post->title }}</a>
-                            </h4>
-                            <p class="text-xs text-gray-500 mb-2">Posted by: {{ $post->user->name }}</p>
-                            <p class="text-sm text-gray-500 truncate">{{ strip_tags($post->body) }}</p>
+                        <div
+                            class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative max-w-full overflow-hidden">
+                            <!-- Add a blue arrow icon at the top-right -->
+                            <a href="{{ route('posts.show', $post->id) }}" class="absolute top-3 right-3 text-blue-600">
+                                <!-- Arrow icon or content goes here -->
+                            </a>
 
+                            <div>
+                                <!-- Post title and other details -->
+                                <h4 class="text-base font-semibold mb-2 text-gray-600">
+                                    <a href="{{ route('posts.show', $post) }}"
+                                        class="hover:text-blue-600 truncate">{{ $post->title }}</a>
+                                </h4>
+
+                                <!-- Flex container for profile image and posted by text -->
+                                <div class="flex items-center mb-2">
+                                    <img id="profileImage"
+                                        src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                        class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
+                                    <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
+                                </div>
+
+                                <!-- Post body with overflow control -->
+                                <p class="text-sm text-gray-500 break-words overflow-hidden">
+                                    {{ Str::limit(strip_tags($post->body), 100, '...') }}
+                                </p>
+                            </div>
+
+                            <!-- Topics section -->
                             <div class="flex flex-wrap mt-2">
                                 @foreach (explode(',', $post->topics) as $topic)
-                                    <span
-                                        class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">{{ $topic }}</span>
+                                    <span class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">
+                                        {{ $topic }}
+                                    </span>
                                 @endforeach
                             </div>
                         </div>
                     @endforeach
                 </div>
+
+
             @endif
         </div>
 
@@ -61,17 +85,40 @@
             @else
                 <div id="other-posts-container" class="space-y-3">
                     @foreach ($otherPosts as $post)
-                        <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition">
-                            <h4 class="text-base font-semibold mb-2 text-gray-700">
-                                <a href="{{ route('posts.show', $post) }}"
-                                    class="hover:text-blue-600">{{ $post->title }}</a>
-                            </h4>
-                            <p class="text-xs text-gray-500 mb-2">Posted by: {{ $post->user->name }}</p>
-                            <p class="text-sm text-gray-500 truncate">{{ strip_tags($post->body) }}</p>
+                        <div
+                            class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative max-w-full overflow-hidden">
+                            <!-- Add a blue arrow icon at the top-right -->
+                            <a href="{{ route('posts.show', $post->id) }}" class="absolute top-3 right-3 text-blue-600">
+                                <!-- Arrow icon or content goes here -->
+                            </a>
+
+                            <div>
+                                <!-- Post title and other details -->
+                                <h4 class="text-base font-semibold mb-2 text-gray-600">
+                                    <a href="{{ route('posts.show', $post) }}"
+                                        class="hover:text-blue-600 truncate">{{ $post->title }}</a>
+                                </h4>
+
+                                <!-- Flex container for profile image and posted by text -->
+                                <div class="flex items-center mb-2">
+                                    <img id="profileImage"
+                                        src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                        class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
+                                    <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
+                                </div>
+
+                                <!-- Post body with overflow control -->
+                                <p class="text-sm text-gray-500 break-words overflow-hidden">
+                                    {{ Str::limit(strip_tags($post->body), 250, '...') }}
+                                </p>
+                            </div>
+
+                            <!-- Topics section -->
                             <div class="flex flex-wrap mt-2">
                                 @foreach (explode(',', $post->topics) as $topic)
-                                    <span
-                                        class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">{{ $topic }}</span>
+                                    <span class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">
+                                        {{ $topic }}
+                                    </span>
                                 @endforeach
                             </div>
                         </div>

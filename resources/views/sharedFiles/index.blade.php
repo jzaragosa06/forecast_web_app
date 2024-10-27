@@ -2,7 +2,7 @@
 
 @section('title', 'Share Results')
 
-@section('page-title', 'Share Results with Other')
+@section('page-title', 'Share Results')
 
 @section('content')
 

@@ -1,8 +1,8 @@
 @extends('layouts.base')
 
-@section('title', 'Univariate Seasonality')
+@section('title', 'Seasonality Result')
 
-@section('page-title', 'Univariate Seasonality')
+@section('page-title', 'Seasonality Result')
 
 @section('content')
     <div class="container mx-auto my-6 h-screen bg-gray-50"> <!-- Added light gray background -->
@@ -295,14 +295,14 @@
                             show: false
                         }
                     },
-                    title: {
-                        text: 'Seasonality Result',
-                        align: 'left',
-                        style: {
-                            fontSize: '18px', // Font size of the title
-                            color: '#263238' // Color of the title
-                        }
-                    },
+                    // title: {
+                    //     text: 'Seasonality Result',
+                    //     align: 'left',
+                    //     style: {
+                    //         fontSize: '18px', // Font size of the title
+                    //         color: '#263238' // Color of the title
+                    //     }
+                    // },
                     xaxis: {
                         type: isDatetime ? 'datetime' : 'category', // Use 'datetime' for yearly
                         categories: labels,

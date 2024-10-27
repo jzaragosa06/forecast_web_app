@@ -2,6 +2,8 @@
 
 @section('title', 'Post Details')
 
+@section('page-title', 'Public Discussion')
+
 @section('content')
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 px-6 py-4 h-screen">
         <!-- Left Column: Scrollable -->
@@ -9,15 +11,13 @@
             <!-- Scrollable content area -->
             <div class="flex-1">
                 <!-- Post Title and Meta Info -->
-                <h1 class="text-2xl font-semibold mb-2">{{ $post->title }}</h1>
+                <h1 class="text-2xl text-gray-600 font-semibold mb-2">{{ $post->title }}</h1>
                 <p class="text-sm text-gray-500">Posted by: {{ $post->user->name }} on
                     {{ $post->created_at->format('M d, Y') }}</p>
-
                 <!-- Post Body -->
-                <div class="mt-4 text-gray-700">
+                <div class="text-sm text-gray-800 break-words overflow-hidden">
                     <p>{!! $post->body !!}</p>
                 </div>
-
 
                 <!-- Comments Section -->
                 {{-- <div class="mt-6 bg-white p-4 rounded-lg shadow-md relative"> --}}
@@ -100,7 +100,7 @@
                         <div>
                             <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
                             <!-- Description of the time series data that was used to produce the result. -->
-                            <p class="text-gray-400 text-sm mt-2">{{ $timeSeriesData['description'] }}</p>
+                            <p class="text-gray-500 text-sm mt-2">{{ $timeSeriesData['description'] }}</p>
                         </div>
                     @else
                         <!-- Trend Charts for Multivariate Data -->

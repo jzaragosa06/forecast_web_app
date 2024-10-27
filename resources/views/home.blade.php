@@ -3,8 +3,6 @@
 @section('title', 'Dashboard')
 
 @section('page-title', 'Dashboard')
-
-
 @section('content')
     @if (session('success'))
         <!-- Notification Popup -->
@@ -49,8 +47,7 @@
 
     <!-- Main Content -->
     <div class="container mx-auto my-6">
-        <div class="container mx-auto mt-10">
-
+        <div class="container mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Left Side - Two horizontal blocks -->
                 <div class="bg-gray-50 col-span-3 space-y-4 h-full w-full">
@@ -625,7 +622,7 @@
 
                 <!-- Right side - one vertical block -->
                 <div class="border bg-gray-50 p-2 rounded-lg shadow-md h-full flex flex-col mt-4 md:mt-0">
-                    <h2 class="text-xl font-semibold text-gray-400 mb-4">Posts</h2>
+                    <h2 class="text-xl font-semibold text-gray-400 mb-4">Discussion</h2>
 
                     <!-- Added mt-4 for spacing on small screens -->
                     @if ($otherPosts->isEmpty())
@@ -633,26 +630,42 @@
                     @else
                         <div id="other-posts-container" class="space-y-3">
                             @foreach ($otherPosts as $post)
-                                <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative">
+                                <div
+                                    class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative max-w-full overflow-hidden">
                                     <!-- Add a blue arrow icon at the top-right -->
                                     <a href="{{ route('posts.show', $post) }}"
                                         class="absolute top-3 right-3 text-blue-600">
-                                        <i class="fas fa-sign-in-alt"></i>
+                                        <!-- Arrow icon or content goes here -->
                                     </a>
 
-                                    <!-- Post title and other details -->
-                                    <h4 class="text-base font-semibold mb-2 text-blue-600">
-                                        <a href="{{ route('posts.show', $post) }}"
-                                            class="hover:text-blue-600">{{ $post->title }}</a>
-                                    </h4>
-                                    <p class="text-xs text-gray-500 mb-2">Posted by: {{ $post->user->name }}</p>
-                                    <p class="text-xs text-gray-500 !important">{!! Str::limit($post->body, 100) !!}</p>
+                                    <div>
+                                        <!-- Post title and other details -->
+                                        <h4 class="text-base font-semibold mb-2 text-gray-600">
+                                            <a href="{{ route('posts.show', $post) }}"
+                                                class="hover:text-blue-600 truncate">{{ $post->title }}</a>
+                                        </h4>
+
+                                        <!-- Flex container for profile image and posted by text -->
+                                        <div class="flex items-center mb-2">
+                                            <img id="profileImage"
+                                                src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                                class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
+                                            <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
+                                        </div>
+
+                                        <!-- Post body with overflow control -->
+                                        <p class="text-sm text-gray-500 break-words overflow-hidden">
+                                            {{ Str::limit(strip_tags($post->body), 100, '...') }}
+                                        </p>
+                                    </div>
 
                                     <!-- Topics section -->
                                     <div class="flex flex-wrap mt-2">
                                         @foreach (explode(',', $post->topics) as $topic)
                                             <span
-                                                class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">{{ $topic }}</span>
+                                                class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">
+                                                {{ $topic }}
+                                            </span>
                                         @endforeach
                                     </div>
                                 </div>

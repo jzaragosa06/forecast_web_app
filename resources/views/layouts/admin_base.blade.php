@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/favicon.ico">
     <title>@yield('title')</title>
     <!-- Jquery CDN -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -25,28 +26,31 @@
     <div class="flex">
         <!-- Sidebar -->
         <nav class="w-64 bg-white text-gray-700 shadow-md p-4 fixed h-full">
-            <div class="mb-8 relative group">
-                <div class="text-indigo-500 text-3xl font-bold">DataForesight</div>
+            <div class="mb-3 relative group flex flex-col items-center">
+                <!-- Logo -->
+                <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-12 w-auto mb-2">
+                <div class="text-blue-500 text-2xl font-bold">DataForesight</div>
             </div>
+
 
             <ul>
                 <li class="mb-2">
                     <a href="{{ route('admin.dashboard') }}"
-                        class="{{ request()->routeIs('admin.dashboard') ? 'text-white bg-indigo-700' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-3 rounded-lg transition duration-200">
+                        class="{{ request()->routeIs('admin.dashboard') ? 'text-white bg-blue-700' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-3 rounded-lg transition duration-200">
                         <i class="fas fa-tachometer-alt mr-3"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="mb-2">
                     <a href="{{ route('admin.users') }}"
-                        class="{{ request()->routeIs('admin.users') ? 'text-white bg-indigo-700' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-3 rounded-lg transition duration-200">
+                        class="{{ request()->routeIs('admin.users') ? 'text-white bg-blue-700' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-3 rounded-lg transition duration-200">
                         <i class="fas fa-users mr-3"></i>
                         <span>Users</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('admin.data-source') }}"
-                        class="{{ request()->routeIs('admin.data-source') ? 'text-white bg-indigo-700' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-3 rounded-lg transition duration-200">
+                        class="{{ request()->routeIs('admin.data-source') ? 'text-white bg-blue-700' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-3 rounded-lg transition duration-200">
                         <i class="fas fa-database mr-3"></i>
                         <span>Data Source</span>
                     </a>
@@ -55,34 +59,14 @@
                 <li>
                     <a href="{{ route('admin.queries') }}"
                         class="{{ request()->routeIs('admin.queries') ? 'text-white bg-indigo-700' : 'text-gray-600 hover:text-indigo-500' }} flex items-center p-3 rounded-lg transition duration-200">
-                        <i class="fas fa-database mr-3"></i>
+                        <i class="fas fa-question-circle mr-3"></i> <!-- Changed icon here -->
                         <span>Queries</span>
                     </a>
                 </li>
+
             </ul>
         </nav>
 
-        <!-- Main content area -->
-        {{-- <div class="flex-grow p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-gray-800">@yield('page-title')</h2>
-                <div class="relative">
-                    <button
-                        class="bg-gray-600 text-white rounded-full p-3 focus:outline-none hover:bg-gray-700 transition duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zM12 14c-4.42 0-8 2.58-8 6v2h16v-2c0-3.42-3.58-6-8-6z" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Main Content -->
-            <div class="bg-white shadow-md rounded-lg p-6 flex-grow mb-6">
-                @yield('content')
-            </div>
-        </div> --}}
 
         <div class="flex-grow p-6 ml-64">
             <div class="flex justify-between items-center mb-6">

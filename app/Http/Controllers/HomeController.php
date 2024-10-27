@@ -73,7 +73,6 @@ class HomeController extends Controller
 
 
         $userId = Auth::id();
-
         // Join the tables
         $sharedFiles = DB::table('file_user_shares')
             ->join('file_associations', 'file_user_shares.file_assoc_id', '=', 'file_associations.file_assoc_id')
@@ -90,8 +89,10 @@ class HomeController extends Controller
 
         $currentUserId = Auth::id();
         // Separate posts made by the current user and others
-        $myPosts = Post::where('user_id', $currentUserId)->latest()->get();
         $otherPosts = Post::where('user_id', '!=', $currentUserId)->latest()->get();
+
+
+        
         // Pass the time series data to the view
         return view('home', compact('timeSeriesData', 'files', 'file_assocs', 'sharedFiles', 'otherPosts'));
     }

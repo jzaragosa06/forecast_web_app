@@ -1,8 +1,8 @@
 @extends('layouts.base')
 
-@section('title', 'Univariate Forecast')
+@section('title', 'Forecast Result')
 
-@section('page-title', 'Manage Results')
+@section('page-title', 'Forecast Result')
 
 
 @section('content')
@@ -425,14 +425,14 @@
                             show: false,
                         }
                     },
-                    title: {
-                        text: 'Forecast Result',
-                        align: 'left',
-                        style: {
-                            fontSize: '18px', // Font size of the title
-                            color: '#263238' // Color of the title
-                        }
-                    },
+                    // title: {
+                    //     text: 'Forecast Result',
+                    //     align: 'left',
+                    //     style: {
+                    //         fontSize: '18px', // Font size of the title
+                    //         color: '#263238' // Color of the title
+                    //     }
+                    // },
                     series: [{
                         name: 'orig data',
                         data: origDataValue,

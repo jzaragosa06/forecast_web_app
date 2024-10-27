@@ -1,9 +1,8 @@
 @extends('layouts.base')
 
-@section('title', 'Multivariate Forecast')
+@section('title', 'Forecast Result')
 
-@section('page-title', 'Manage Results')
-
+@section('page-title', 'Forecast Result')
 
 @section('content')
     <div class="container mx-auto my-6 h-screen">

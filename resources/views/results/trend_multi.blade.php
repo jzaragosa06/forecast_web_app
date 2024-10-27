@@ -1,8 +1,8 @@
 @extends('layouts.base')
 
-@section('title', 'Multivariate Trend Result')
+@section('title', 'Trend Result')
 
-@section('page-title', 'Multivariate Trend Result')
+@section('page-title', 'Trend Result')
 
 
 @section('content')
@@ -323,14 +323,14 @@
                         }
                     },
                 },
-                title: {
-                    text: 'Trend Result',
-                    align: 'left',
-                    style: {
-                        fontSize: '18px', // Font size of the title
-                        color: '#263238' // Color of the title
-                    }
-                },
+                // title: {
+                //     text: 'Trend Result',
+                //     align: 'left',
+                //     style: {
+                //         fontSize: '18px', // Font size of the title
+                //         color: '#263238' // Color of the title
+                //     }
+                // },
                 series: seriesData,
                 xaxis: {
                     categories: data.trend.index, // x-axis labels (dates/times)
