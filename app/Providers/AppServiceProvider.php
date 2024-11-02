@@ -2,14 +2,16 @@
 
 namespace App\Providers;
 
+use App\Models\CommentNotification;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\File;
 use App\Models\FileAssociation;
 use App\Models\Post;
 use App\Models\User;
+use Auth;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -61,8 +63,15 @@ class AppServiceProvider extends ServiceProvider
             $posts = Post::with('user')->get();
 
 
+            //for comment notification
+            //only get the notification for the current user
+            $comment_notifications = DB::table("comment_notifications")->join("users", "comment_notifications.commenter_user_id", "=", "users.id")
+                ->where("comment_notifications.post_owner_id", Auth::id())->
+                where("comment_notifications.read", false)->select("comment_notifications.post_id", "users.name", "comment_notifications.created_at")->orderBy("comment_notifications.created_at")->get();
+
+
             // Share the notifications with the base view
-            $view->with(['notifications' => $notifications, 'files' => $files, 'results' => $results, 'posts' => $posts, 'users' => $users]);
+            $view->with(['notifications' => $notifications, 'comment_notifications' => $comment_notifications, 'files' => $files, 'results' => $results, 'posts' => $posts, 'users' => $users]);
         });
     }
 }

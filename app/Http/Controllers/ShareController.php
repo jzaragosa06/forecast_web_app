@@ -102,8 +102,6 @@ class ShareController extends Controller
         $notif->save();
 
         // ==============================================================================
-
-
         // ===================================
         //I put it here to prevent redundancy
 

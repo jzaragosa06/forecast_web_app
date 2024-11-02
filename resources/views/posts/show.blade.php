@@ -278,7 +278,6 @@
             var chart = new ApexCharts(document.querySelector("#chart"), options);
             chart.render();
         }
-
         @if ($file_meta['operation'] == 'forecast')
             @if ($file_meta['inputFileType'] == 'univariate')
                 $(document).ready(function() {

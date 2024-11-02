@@ -14,7 +14,6 @@
     <!-- Include Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 
-
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({
@@ -303,7 +302,7 @@
                             </button>
 
                             <!-- Notification Count (if any) -->
-                            @if ($notifications->count() > 0)
+                            @if ($notifications->count() > 0 || $comment_notifications->count() > 0)
                                 <span class="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
                             @endif
 
@@ -311,7 +310,7 @@
                             <div id="notificationDropdown"
                                 class="hidden absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                                 <ul class="py-1">
-                                    @if ($notifications->isEmpty())
+                                    @if ($notifications->isEmpty() && $comment_notifications->isEmpty())
                                         <li class="px-4 py-3 text-sm text-gray-500">No new notifications</li>
                                     @else
                                         @foreach ($notifications as $notification)
@@ -327,6 +326,27 @@
 
                                                 <a
                                                     href="{{ route('share.view_file', ['file_assoc_id' => $notification->file_assoc_id, 'user_id' => $notification->user_id]) }}">
+                                                    <button
+                                                        class="ml-2 bg-blue-500 text-white text-xs px-3 py-1 rounded-full hover:bg-blue-600 focus:outline-none">
+                                                        View
+                                                    </button>
+                                                </a>
+
+                                            </li>
+                                        @endforeach
+
+                                        @foreach ($comment_notifications as $comment_notification)
+                                            <li
+                                                class="px-4 py-3 flex items-center justify-between text-sm text-gray-700 hover:bg-gray-100">
+                                                <div class="flex-1">
+                                                    <strong
+                                                        class="text-gray-900">{{ $comment_notification->name }}</strong>
+                                                    Added a comment
+                                                    <div class="text-xs text-gray-500">
+                                                        {{ $comment_notification->created_at }}</div>
+                                                </div>
+
+                                                <a href="{{ route('posts.show', $comment_notification->post_id) }}">
                                                     <button
                                                         class="ml-2 bg-blue-500 text-white text-xs px-3 py-1 rounded-full hover:bg-blue-600 focus:outline-none">
                                                         View
@@ -382,7 +402,8 @@
                                 </a>
 
                                 <!-- Hidden Logout Form -->
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                    class="hidden">
                                     @csrf
                                 </form>
                             </div>

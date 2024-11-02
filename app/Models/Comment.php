@@ -10,7 +10,6 @@ class Comment extends Model
     use HasFactory;
 
     protected $table = 'comments';
-
     protected $fillable = ['user_id', 'post_id', 'parent_id', 'body'];
 
     // A comment belongs to a user
