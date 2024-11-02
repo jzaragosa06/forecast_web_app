@@ -2,7 +2,7 @@
 
 @section('title', 'Admin-Data Source-Open Meteo')
 
-@section('page-title', 'Data Source - Open Meteo')
+@section('page-title', 'Data Source - Twelve Data')
 
 @section('content')
 

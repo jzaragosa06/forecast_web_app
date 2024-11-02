@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('title', 'Upload Inputs')
-
+@section('page-title', 'Data Preprocessing')
 @section('content')
     <div class="container mx-auto p-6">
         <!-- Chart Card -->

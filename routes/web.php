@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FillDataDbController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InputFileGraphController;
 use App\Http\Controllers\LLMController;
@@ -140,7 +141,13 @@ Route::prefix('queries')->group(function () {
     Route::post('/submit', [UserQueriesController::class, 'submit'])->name('queries.submit');
 });
 
+Route::prefix('fill')->group(function () {
+    Route::get('/user', [FillDataDbController::class, 'user'])->name('fill.user');
+});
+
 Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
+
+
 // ============================================================================================================================================================
 
 

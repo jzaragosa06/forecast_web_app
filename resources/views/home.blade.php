@@ -286,16 +286,16 @@
                                 <!-- Input Button -->
                                 <button id="input-via-uploads-Btn"
                                     class="bg-blue-600 text-white border border-blue-600 px-3 py-1 rounded-md text-sm">
-                                    Uploads
+                                    Uploaded Data
                                 </button>
                                 <!-- Results Button -->
                                 <button id="input-via-openmeteo-Btn"
                                     class="bg-white text-blue-600 border border-blue-600 px-3 py-1 rounded-md text-sm">
-                                    Open-Meteo
+                                    Weather Data
                                 </button>
                                 <button id="input-via-stocks-Btn"
                                     class="bg-white text-blue-600 border border-blue-600 px-3 py-1 rounded-md text-sm">
-                                    Stocks
+                                    Stocks Data
                                 </button>
                             </div>
 

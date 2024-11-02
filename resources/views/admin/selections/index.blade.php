@@ -15,8 +15,8 @@
             <h2 class="text-center text-xl font-bold mb-2">OPEN-METEO</h2>
             <p class="text-center text-sm text-gray-500 mb-6">For meteorological data</p>
             <p class="text-gray-700 text-sm mb-6">
-                Ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                lorem ipsum lorem ipsum lorem ipsum
+                Option for modifying the configuration file containing the selection visible to the users. This needs that
+                the source also updated their selection.
             </p>
             <div class="flex justify-center">
                 <a href="{{ route('admin.open_meteo') }}"><button
@@ -29,11 +29,11 @@
             <div class="flex justify-center">
                 <img src="https://via.placeholder.com/100" alt="Logo" class="rounded-full mb-4">
             </div>
-            <h2 class="text-center text-xl font-bold mb-2">Yahoo-Fin</h2>
-            <p class="text-center text-sm text-gray-500 mb-6">For finance data</p>
+            <h2 class="text-center text-xl font-bold mb-2">TWELVE-DATA</h2>
+            <p class="text-center text-sm text-gray-500 mb-6">For stock data</p>
             <p class="text-gray-700 text-sm mb-6">
-                Ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                lorem ipsum lorem ipsum lorem ipsum
+                Option for modifying the configuration file containing the selection visible to the users. This can add or
+                delete default selection from configuration file.
             </p>
 
             <div class="flex justify-center">
@@ -44,7 +44,7 @@
             </div>
         </div>
 
-        <!-- Card 3 -->
+        {{-- <!-- Card 3 -->
         <div class="bg-white w-64 p-6 rounded-lg shadow-lg">
             <div class="flex justify-center">
                 <img src="https://via.placeholder.com/100" alt="Logo" class="rounded-full mb-4">
@@ -58,7 +58,7 @@
             <div class="flex justify-center">
                 <button class="bg-blue-500 text-white py-2 px-4 rounded">Edit</button>
             </div>
-        </div>
+        </div> --}}
     </div>
 
 @endsection
