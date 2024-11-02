@@ -107,7 +107,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <!--Analyze data-->
                                 <div class="w-full md:w-1/3">
                                     <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
@@ -131,8 +130,9 @@
                                                         </option>
                                                     </select>
                                                     <i id="file-info"
-                                                        class="fas fa-info-circle text-gray-400 ml-2 cursor-pointer"
+                                                        class="fas fa-sm fa-info-circle text-gray-400 ml-2 cursor-pointer"
                                                         data-tooltip="Select the file you want to analyze."></i>
+
                                                 </div>
                                             </div>
 
@@ -149,7 +149,7 @@
                                                         <option value="forecast">Perform Forecast</option>
                                                     </select>
                                                     <i id="operation-info"
-                                                        class="fas fa-info-circle text-gray-400 ml-2 cursor-pointer"
+                                                        class="fas fa-sm fa-info-circle text-gray-400 ml-2 cursor-pointer"
                                                         data-tooltip="Select the operation you want to the selected file above."></i>
                                                 </div>
                                             </div>
@@ -161,7 +161,6 @@
                                                     <!-- Changed icon for analysis -->
                                                     <span class="ml-2 text-xs">Analyze</span> <!-- Reduced font size -->
                                                 </button>
-
                                             </div>
 
                                             <div id="loadingModal1"
@@ -196,48 +195,7 @@
                                             </script>
                                         </form>
                                     </div>
-                                    <!-- Tooltip Implementation -->
-                                    <style>
-                                        .tooltip {
-                                            position: absolute;
-                                            background: rgba(0, 0, 0, 0.75);
-                                            color: white;
-                                            border-radius: 4px;
-                                            padding: 5px;
-                                            font-size: 0.75rem;
-                                            z-index: 10;
-                                            white-space: nowrap;
-                                            display: none;
-                                        }
-                                    </style>
-                                    <div class="tooltip" id="tooltip"></div>
-
-                                    <script>
-                                        $(document).ready(function() {
-                                            const tooltip = $('#tooltip');
-
-                                            // Function to show the tooltip
-                                            function showTooltip(event) {
-                                                tooltip.text($(this).data('tooltip'));
-                                                tooltip.css({
-                                                    top: event.pageY + 10 + 'px',
-                                                    left: event.pageX + 10 + 'px',
-                                                });
-                                                tooltip.show();
-                                            }
-
-                                            // Function to hide the tooltip
-                                            function hideTooltip() {
-                                                tooltip.hide();
-                                            }
-
-                                            // Attach events to the info icons
-                                            $('#file-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
-                                            $('#operation-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
-                                        });
-                                    </script>
                                 </div>
-
                                 <!-- Recent Results -->
                                 <div class="w-full md:w-1/3">
                                     <div class="border bg-white p-4 rounded-lg shadow-md h-full flex flex-col">
@@ -282,22 +240,28 @@
                     <div>
                         <div>
                             <!-- Buttons for switching inputs -->
-                            <div class="flex space-x-2 p-4"> <!-- Reduced space between buttons and padding -->
-                                <!-- Input Button -->
+
+                            <div class="flex items-center space-x-2 p-4"> <!-- Center items and reduce space -->
+                                <!-- Uploaded Data Button -->
                                 <button id="input-via-uploads-Btn"
                                     class="bg-blue-600 text-white border border-blue-600 px-3 py-1 rounded-md text-sm">
                                     Uploaded Data
                                 </button>
-                                <!-- Results Button -->
+                                <!-- Weather Data Button -->
                                 <button id="input-via-openmeteo-Btn"
                                     class="bg-white text-blue-600 border border-blue-600 px-3 py-1 rounded-md text-sm">
                                     Weather Data
                                 </button>
+                                <!-- Stocks Data Button -->
                                 <button id="input-via-stocks-Btn"
                                     class="bg-white text-blue-600 border border-blue-600 px-3 py-1 rounded-md text-sm">
                                     Stocks Data
                                 </button>
+                                <!-- Info Icon -->
+                                <i id="data-info" class="fas fa-sm fa-info-circle text-gray-400 cursor-pointer ml-2"
+                                    data-tooltip="These are buttons for displaying specific type of data"></i>
                             </div>
+
 
                             <!-- Graphs and description for uploads -->
                             <div id="input-via-uploads-Container" class="">
@@ -618,11 +582,13 @@
                         </div>
                     </div>
                 </div>
-
-
                 <!-- Right side - one vertical block -->
                 <div class="border bg-gray-50 p-2 rounded-lg shadow-md h-full flex flex-col mt-4 md:mt-0">
-                    <h2 class="text-xl font-semibold text-gray-400 mb-4">Discussion</h2>
+                    <div class="flex items-center mb-2">
+                        <h2 class="text-base font-semibold text-gray-700">Public Discussion</h2>
+                        <i id="public-discussion-info" class="fas fa-sm fa-info-circle text-gray-400 ml-2 cursor-pointer"
+                            data-tooltip="This shows the recently posted discussions"></i>
+                    </div>
 
                     <!-- Added mt-4 for spacing on small screens -->
                     @if ($otherPosts->isEmpty())
@@ -642,7 +608,7 @@
                                         <!-- Post title and other details -->
                                         <h4 class="text-base font-semibold mb-2 text-gray-600">
                                             <a href="{{ route('posts.show', $post) }}"
-                                                class="hover:text-blue-600 truncate">{{ $post->title }}</a>
+                                                class="hover:text-blue-600 break-words overflow-hidden">{{ $post->title }}</a>
                                         </h4>
 
                                         <!-- Flex container for profile image and posted by text -->
@@ -706,8 +672,6 @@
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Run
                         Forecast</button>
                 </form>
-
-
             </div>
         </div>
     </div>
@@ -950,7 +914,48 @@
 @endsection
 
 @section('scripts')
+    <!-- Tooltip Implementation -->
+    <style>
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            border-radius: 4px;
+            padding: 5px;
+            font-size: 0.75rem;
+            z-index: 10;
+            white-space: nowrap;
+            display: none;
+        }
+    </style>
+    <div class="tooltip" id="tooltip"></div>
 
+    <script>
+        $(document).ready(function() {
+            const tooltip = $('#tooltip');
+
+            // Function to show the tooltip
+            function showTooltip(event) {
+                tooltip.text($(this).data('tooltip'));
+                tooltip.css({
+                    top: event.pageY + 10 + 'px',
+                    left: event.pageX + 10 + 'px',
+                });
+                tooltip.show();
+            }
+
+            // Function to hide the tooltip
+            function hideTooltip() {
+                tooltip.hide();
+            }
+
+            // Attach events to the info icons
+            $('#file-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
+            $('#operation-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
+            $('#public-discussion-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
+            $('#data-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
+        });
+    </script>
     <script>
         // Toggle dropdown visibility
         document.querySelectorAll('[id^=dropdownButton-]').forEach(button => {
