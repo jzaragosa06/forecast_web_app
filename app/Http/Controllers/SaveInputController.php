@@ -12,7 +12,6 @@ class SaveInputController extends Controller
 
     public function save(Request $request)
     {
-
         if ($request->hasFile('csv_file')) {
             $csvFile = $request->file('csv_file');
             $filename = $request->get('filename');

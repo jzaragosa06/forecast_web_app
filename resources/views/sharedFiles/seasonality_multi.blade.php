@@ -41,7 +41,7 @@
                                 <div class="flex mt-4">
                                     <input type="text" id="chatInput"
                                         class="w-full p-2 border border-gray-300 rounded-l focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                        placeholder="Type a message..." disabled/>
+                                        placeholder="Type a message..." disabled />
                                     <button id="sendMessage"
                                         class="bg-blue-500 text-white font-bold py-2 px-4 rounded-r hover:bg-blue-600"
                                         disabled>
@@ -110,7 +110,7 @@
                 // Get the Quill content in Delta format (optional, if needed)
                 var delta = quill.getContents();
 
-                console.log(delta);
+
 
                 // Get the Quill content in HTML format to store in the backend
                 var htmlContent = quill.root.innerHTML;

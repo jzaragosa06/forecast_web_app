@@ -41,7 +41,6 @@ class ShareController extends Controller
                     'shared_by_user_id' => $sharedByUserId,
                 ]);
 
-                // Optionally, create a notification for each shared user
                 Notification::create([
                     'user_id' => $sharedToUserId,  // The user who is receiving the shared file
                     'file_assoc_id' => $fileAssocId,
@@ -63,10 +62,8 @@ class ShareController extends Controller
             // ============================================
 
         }
-
-
-
-
+        $message = $file_association->assoc_filename . " shared successfully";
+        session()->flash('share_success', $message);
         // Redirect back or return success response
         return redirect()->route('crud.index');
     }

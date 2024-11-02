@@ -31,6 +31,8 @@ class NotesController extends Controller
                 'description' => 'Updated notes from result file ' . $file_assoc->assoc_filename,
             ]);
 
+            // session()->flash('note_success', 'Note updated successfully!');
+
             return response()->json(['message' => 'Note updated successfully!']);
 
         } else {
@@ -46,7 +48,7 @@ class NotesController extends Controller
             ]);
 
 
-
+            // session()->flash('note_success', 'Note saved successfully!');
             return response()->json(['message' => 'Note saved successfully!']);
 
         }

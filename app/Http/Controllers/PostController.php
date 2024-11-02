@@ -18,12 +18,6 @@ use App\Models\Logs;
 class PostController extends Controller
 {
 
-    // Display the post creation form
-    public function create()
-    {
-        return view('posts.create');
-    }
-
     // Store a new post
     public function store(Request $request)
     {
@@ -33,15 +27,16 @@ class PostController extends Controller
             'topics' => 'required|string',
         ]);
 
-        Post::create([
+        $post = Post::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
             'file_assoc_id' => $request->file_assoc_id,
             'body' => $request->body,
             'topics' => $request->topics,
         ]);
+        session()->flash('post_success', 'Posted successfully!');
+        return redirect()->route('posts.show', $post->id);
 
-        return redirect()->route('posts.index');
     }
 
     // Show a specific post and its comments
@@ -73,7 +68,6 @@ class PostController extends Controller
             "operation" => $operation,
             "inputFileType" => $inputFileType,
             "file_assoc_id" => $file_assoc_id,
-
         ];
 
         // ====================================================================
@@ -95,12 +89,11 @@ class PostController extends Controller
                 ];
             }
         }
-
         $timeSeriesData = [
             'file_id' => $file_id,
             'filename' => $file->filename,
             'header' => $header,
-            'description' => $fileDescription, 
+            'description' => $fileDescription,
             'data' => $series,
         ];
         // ====================================================================

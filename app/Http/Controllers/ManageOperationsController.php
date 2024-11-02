@@ -53,7 +53,7 @@ class ManageOperationsController extends Controller
 
                         $assoc_filename = 'forecast-on-' . $file->filename . 'created-' . now()->timestamp;
 
-                        FileAssociation::create([
+                        $file_assoc = FileAssociation::create([
                             'file_id' => $file_id,
                             'user_id' => Auth::id(),
                             'assoc_filename' => $assoc_filename,
@@ -68,7 +68,7 @@ class ManageOperationsController extends Controller
                             'description' => 'Successfully performed a forecast on file ' . $file->filename,
                         ]);
                         session()->flash('operation_success', 'Data analyzed successfully!');
-
+                        return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
                     } else {
                         Logs::create([
                             'user_id' => Auth::id(),
@@ -76,7 +76,7 @@ class ManageOperationsController extends Controller
                             'description' => 'Failed to performed a forecast on file ' . $file->filename,
                         ]);
                         session()->flash('operation_failed', 'Failed to analyze data!');
-
+                        return redirect()->route('home');
                     }
                 } catch (\Throwable $th) {
                     Logs::create([
@@ -85,9 +85,8 @@ class ManageOperationsController extends Controller
                         'description' => 'Failed to performed a forecast on file ' . $file->filename,
                     ]);
                     session()->flash('operation_failed', 'Failed to analyze data!');
-
+                    return redirect()->route('home');
                 }
-
             } else {
                 try {
                     $response = Http::timeout(300)
@@ -112,7 +111,7 @@ class ManageOperationsController extends Controller
                         $assoc_filename = 'forecast-on-' . $file->filename . 'created-' . now()->timestamp;
 
 
-                        FileAssociation::create([
+                        $file_assoc = FileAssociation::create([
                             'file_id' => $file_id,
                             'user_id' => Auth::id(),
                             'assoc_filename' => $assoc_filename,
@@ -127,6 +126,7 @@ class ManageOperationsController extends Controller
                         ]);
 
                         session()->flash('operation_success', 'Data analyzed successfully!');
+                        return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
 
                     } else {
                         Logs::create([
@@ -135,7 +135,7 @@ class ManageOperationsController extends Controller
                             'description' => 'Failed to performed a forecast on file ' . $file->filename,
                         ]);
                         session()->flash('operation_failed', 'Failed to analyze data!');
-
+                        return redirect()->route('home');
                     }
                 } catch (\Throwable $th) {
                     Logs::create([
@@ -144,14 +144,10 @@ class ManageOperationsController extends Controller
                         'description' => 'Failed to performed a forecast on file ' . $file->filename,
                     ]);
                     session()->flash('operation_failed', 'Failed to analyze data!');
-
+                    return redirect()->route('home');
                 }
 
             }
-
-
-            return redirect()->route('home');
-
         } elseif ($operation == "trend") {
             try {
                 $response = Http::timeout(300)->attach(
@@ -171,7 +167,7 @@ class ManageOperationsController extends Controller
                     $assoc_filename = 'trend-on-' . $file->filename . 'created-' . now()->timestamp;
 
 
-                    FileAssociation::create([
+                    $file_assoc = FileAssociation::create([
                         'file_id' => $file_id,
                         'user_id' => Auth::id(),
                         'assoc_filename' => $assoc_filename,
@@ -186,7 +182,9 @@ class ManageOperationsController extends Controller
                         'description' => 'Successfully analyzed trend on ' . $file->filename . ' using Facebook Prophet.',
                     ]);
 
+
                     session()->flash('operation_success', 'Data analyzed successfully!');
+                    return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
                 } else {
                     Logs::create([
                         'user_id' => Auth::id(),
@@ -195,7 +193,7 @@ class ManageOperationsController extends Controller
                     ]);
 
                     session()->flash('operation_failed', 'Failed to analyze data!');
-
+                    return redirect()->route('home');
                 }
 
             } catch (\Throwable $th) {
@@ -206,10 +204,10 @@ class ManageOperationsController extends Controller
                 ]);
 
                 session()->flash('operation_failed', 'Failed to analyze data!');
-
+                return redirect()->route('home');
             }
 
-            return redirect()->route('home');
+
         } else {
             // Handle seasonality
             try {
@@ -223,6 +221,7 @@ class ManageOperationsController extends Controller
                             'description' => $description
                         ]);
 
+
                 if ($response->successful()) {
                     $jsonFilename = pathinfo(basename($file->filepath), PATHINFO_FILENAME) . '-initial-' . now()->timestamp . '.json';
                     $jsonPath = 'resultJSON/' . $jsonFilename;
@@ -231,7 +230,7 @@ class ManageOperationsController extends Controller
 
                     $assoc_filename = 'seasonality-on-' . $file->filename . 'created-' . now()->timestamp;
 
-                    FileAssociation::create([
+                    $file_assoc = FileAssociation::create([
                         'file_id' => $file_id,
                         'user_id' => Auth::id(),
                         'assoc_filename' => $assoc_filename,
@@ -248,6 +247,7 @@ class ManageOperationsController extends Controller
                     ]);
 
                     session()->flash('operation_success', 'Data analyzed successfully!');
+                    return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
                 } else {
                     Logs::create([
                         'user_id' => Auth::id(),
@@ -256,6 +256,7 @@ class ManageOperationsController extends Controller
                     ]);
 
                     session()->flash('operation_failed', 'Failed to analyze data!');
+                    return redirect()->route('home');
                 }
 
             } catch (\Throwable $th) {
@@ -266,9 +267,10 @@ class ManageOperationsController extends Controller
                 ]);
 
                 session()->flash('operation_failed', 'Failed to analyze data!');
+                return redirect()->route('home');
 
             }
-            return redirect()->route('home');
+
         }
     }
 }

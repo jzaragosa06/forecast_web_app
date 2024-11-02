@@ -5,6 +5,61 @@
 @section('page-title', 'Manage Files')
 
 @section('content')
+    @if (session('success'))
+        <!-- Notification Popup -->
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('success') }}
+        </div>
+    @elseif (session('operation_success'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('operation_success') }}
+        </div>
+    @elseif (session('operation_failed'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('operation_failed') }}
+        </div>
+    @elseif (session('delete_success'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('delete_success') }}
+        </div>
+    @elseif (session('delete_failed'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('delete_failed') }}
+        </div>
+    @elseif (session('share_success'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('share_success') }}
+        </div>
+    @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const notification = document.getElementById('notification');
+            if (notification) {
+                // Hide after 3 seconds (3000 milliseconds)
+                setTimeout(() => {
+                    notification.classList.add('opacity-0');
+                }, 3000);
+
+                // Remove the element completely after the fade-out
+                setTimeout(() => {
+                    notification.remove();
+                }, 3500);
+            }
+        });
+    </script>
+
+    <style>
+        .transition-opacity {
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
     <div class="container mx-auto px-4 py-6">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
@@ -84,7 +139,8 @@
                             @foreach ($files_input as $file)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $file->file_id }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $file->filename }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $file->filename }}
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $file->type }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex space-x-2">
 

@@ -154,7 +154,7 @@
                 // Get the Quill content in Delta format (optional, if needed)
                 var delta = quill.getContents();
 
-                console.log(delta);
+
 
                 // Get the Quill content in HTML format to store in the backend
                 var htmlContent = quill.root.innerHTML;

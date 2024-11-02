@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use App\Models\FileUserShare;
+use Exception;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\FileAssociation;
@@ -44,54 +45,65 @@ class ManageResultsUsingCRUDController extends Controller
             ->where('shared_by_user_id', Auth::id())
             ->get();
 
+
         return view('CRUD.index', compact('files_assoc', 'files', 'files_input', 'users', 'shared_users'));
     }
 
     public function delete_file_assoc($file_assoc_id)
     {
         // Find the FileAssociation entry by its ID
-        // $fileAssociation = FileAssociation::findOrFail($file_assoc_id);
+
         $fileAssociation = FileAssociation::where('file_assoc_id', $file_assoc_id)->first();
+        $file_assoc_filename = $fileAssociation->assoc_filename;
 
-
-        // Delete the file from the storage
-        if (Storage::exists($fileAssociation->associated_file_path)) {
-            Storage::delete($fileAssociation->associated_file_path);
+        try {
+            // Delete the file from the storage
+            if (Storage::exists($fileAssociation->associated_file_path)) {
+                Storage::delete($fileAssociation->associated_file_path);
+            }
+            DB::table('file_associations')->where('file_assoc_id', $file_assoc_id)->delete();
+            DB::table('file_associations')->where('file_assoc_id', $file_assoc_id)->delete();
+            $message = $file_assoc_filename . " deleted successfully!";
+            session()->flash('delete_success', $message);
+        } catch (\Throwable $th) {
+            $message = $file_assoc_filename . " failed to delete!";
+            session()->flash('delete_failed', $message);
         }
-
-
-
-        // Delete the entry from the database
-        // $fileAssociation->delete();
-        DB::table('file_associations')->where('file_assoc_id', $file_assoc_id)->delete();
-
-
         return redirect()->route('crud.index');
     }
 
     public function delete_file($file_id)
     {
         // Find the FileAssociation entry by its ID
-        // $fileAssociation = FileAssociation::findOrFail($file_assoc_id);
-        // $fileAssociation = FileAssociation::where('file_assoc_id', $file_assoc_id)->firstOrFail();
-        $file = File::where('file_id', $file_id)->firstOrFail();
+        $file = File::where('file_id', $file_id)->first();
+        $filename = $file->filename;
 
+        try {
 
-        // Delete the file from the storage
-        if (Storage::exists($file->filepath)) {
-            Storage::delete($file->filepath);
+            // Delete the file from the storage
+            if (Storage::exists($file->filepath)) {
+                Storage::delete($file->filepath);
+            }
+            // Delete the entry from the database
+            DB::table('files')->where('file_id', $file_id)->delete();
+
+            Logs::create([
+                'user_id' => Auth::id(),
+                'action' => 'Delete Input File',
+                'description' => 'Successfully deleted ' . $filename,
+            ]);
+            $message = $filename . " deleted successfully!";
+            session()->flash('delete_success', $message);
+        } catch (\Throwable $th) {
+            Logs::create([
+                'user_id' => Auth::id(),
+                'action' => 'Delete Input File',
+                'description' => 'Failed to delete ' . $filename,
+            ]);
+
+            $message = $filename . " failed to delete!";
+            session()->flash('delete_failed', $message);
         }
-
-        Logs::create([
-            'user_id' => Auth::id(),
-            'action' => 'Delete Input File',
-            'description' => 'Successfully deleted ' . $file->filename,
-        ]);
-
-
-        // Delete the entry from the database
-        // $fileAssociation->delete();
-        DB::table('files')->where('file_id', $file_id)->delete();
 
         return redirect()->route('crud.index');
     }

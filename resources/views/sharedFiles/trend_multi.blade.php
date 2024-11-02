@@ -137,7 +137,7 @@
                         <!-- Save button aligned with the input field -->
                         <div class="flex mt-4">
                             <button id="saveNotes" disabled
-                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600" disabled >
+                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600" disabled>
                                 Save Notes
                             </button>
                         </div>
@@ -185,7 +185,7 @@
                 // Get the Quill content in Delta format (optional, if needed)
                 var delta = quill.getContents();
 
-                console.log(delta);
+
 
                 // Get the Quill content in HTML format to store in the backend
                 var htmlContent = quill.root.innerHTML;

@@ -5,6 +5,48 @@
 @section('page-title', 'Discussion')
 
 @section('content')
+    @if (session('success'))
+        <!-- Notification Popup -->
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('success') }}
+        </div>
+    @elseif (session('operation_success'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('operation_success') }}
+        </div>
+    @elseif (session('operation_failed'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('operation_failed') }}
+        </div>
+    @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const notification = document.getElementById('notification');
+            if (notification) {
+                // Hide after 3 seconds (3000 milliseconds)
+                setTimeout(() => {
+                    notification.classList.add('opacity-0');
+                }, 3000);
+
+                // Remove the element completely after the fade-out
+                setTimeout(() => {
+                    notification.remove();
+                }, 3500);
+            }
+        });
+    </script>
+
+    <style>
+        .transition-opacity {
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+
+
     <!-- Button to Create New Post -->
     <div class="flex justify-end mb-4">
         <button id="create-post-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Create New

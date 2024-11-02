@@ -6,6 +6,52 @@
 
 
 @section('content')
+
+    @if (session('success'))
+        <!-- Notification Popup -->
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('success') }}
+        </div>
+    @elseif (session('operation_success'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('operation_success') }}
+        </div>
+    @elseif (session('operation_failed'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('operation_failed') }}
+        </div>
+    @elseif (session('note_success'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('note_success') }}
+        </div>
+    @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const notification = document.getElementById('notification');
+            if (notification) {
+                // Hide after 3 seconds (3000 milliseconds)
+                setTimeout(() => {
+                    notification.classList.add('opacity-0');
+                }, 3000);
+
+                // Remove the element completely after the fade-out
+                setTimeout(() => {
+                    notification.remove();
+                }, 3500);
+            }
+        });
+    </script>
+
+    <style>
+        .transition-opacity {
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
     <div class="container mx-auto my-6 h-screen">
         <!-- Layout container with grid -->
         <div class="grid grid-cols-3 gap-4 h-full">
@@ -261,7 +307,7 @@
                 // Get the Quill content in Delta format (optional, if needed)
                 var delta = quill.getContents();
 
-                console.log(delta);
+
 
                 // Get the Quill content in HTML format to store in the backend
                 var htmlContent = quill.root.innerHTML;
@@ -282,8 +328,35 @@
                         file_assoc_id: '{{ $file_assoc_id }}',
                     },
                     success: function(response) {
+                        // Check if notification element already exists, if not, create it
+                        let notification = document.getElementById('notification');
+                        if (!notification) {
+                            notification = document.createElement('div');
+                            notification.id = 'notification';
+                            notification.classList.add(
+                                'fixed', 'top-4', 'left-1/2', 'transform',
+                                '-translate-x-1/2', 'text-white',
+                                'px-4', 'py-2', 'rounded-lg', 'shadow-lg',
+                                'transition-opacity', 'opacity-100'
+                            );
+                            document.body.appendChild(notification);
+                        }
 
-                        alert(`${response.message}`);
+                        // Set the message and apply success styles
+                        notification.classList.remove('bg-red-500');
+                        notification.classList.add('bg-green-500');
+                        notification.textContent = response.message;
+
+                        // Display the notification
+                        notification.classList.remove('opacity-0');
+
+                        // Automatically hide the notification after a few seconds
+                        setTimeout(() => {
+                            notification.classList.add('opacity-0');
+                        }, 3000);
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 3500);
                     },
                     error: function(error) {
                         alert('An error occurred. Please try again.');
