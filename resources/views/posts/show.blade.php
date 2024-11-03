@@ -76,7 +76,7 @@
                 {{-- <div class="mt-6 bg-white p-4 rounded-lg shadow-md relative"> --}}
                 <div class="mt-6 bg-white p-4 rounded-lg relative">
 
-                    <h2 class="text-xl font-semibold mb-4 flex items-center justify-between">
+                    <h2 class="text-base font-semibold mb-4 flex items-center justify-between">
                         Comments
                         <!-- Font Awesome Comment Icon -->
                         <i class="fas fa-plus text-blue-500 cursor-pointer"
@@ -98,7 +98,7 @@
 
             <!-- Fixed Comment Form at the bottom -->
             <div id="comment-form-section" class="mt-4">
-                <h3 id="comment-header" class="text-lg font-semibold">Post a comment</h3>
+                <h3 id="comment-header" class="text-base font-semibold">Post a comment</h3>
                 <form id="comment-form" action="{{ route('comments.store') }}" method="POST" class="mt-2">
                     @csrf
                     <input type="hidden" id="parent_id" name="parent_id" value="">
@@ -125,45 +125,57 @@
                 @if ($file_meta['operation'] == 'forecast')
                     @if ($file_meta['inputFileType'] == 'univariate')
                         <!-- Forecast Charts for Univariate Data -->
+                        <p class="text-gray-400 text-sm mt-2">The graph below shows the forecast result, which is
+                            the subject of this post. The graph at the bottom describe the data used to make the forecast.
+                        </p>
                         <div class="mb-4">
                             <div id="chart1" class="h-64 bg-white shadow-md rounded-md"></div>
                         </div>
                         <div>
-                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
                             <!-- Description of the time series data that was used to produce the result. -->
                             <p class="text-gray-400 text-sm mt-2">{{ $timeSeriesData['description'] }}</p>
+                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
+
                         </div>
                     @else
                         <!-- Forecast Charts for Multivariate Data -->
+                        <p class="text-gray-400 text-sm mt-2">The graph below shows the forecast result, which is
+                            the subject of this post. The graph at the bottom describe the data used to make the forecast.
+                        </p>
                         <div class="mb-4">
                             <div id="chart1" class="h-64 bg-white shadow-md rounded-md"></div>
                         </div>
                         <div>
-                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
                             <!-- Description of the time series data that was used to produce the result. -->
                             <p class="text-gray-400 text-sm mt-2">{{ $timeSeriesData['description'] }}</p>
+                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
                         </div>
                     @endif
                 @elseif ($file_meta['operation'] == 'trend')
                     @if ($file_meta['inputFileType'] == 'univariate')
                         <!-- Trend Charts for Univariate Data -->
+                        <p class="text-gray-400 text-sm mt-2">The graph below shows the trend analysis result, which is
+                            the subject of this post. The graph at the bottom describe the data used for analysis.</p>
                         <div class="mb-4">
                             <div id="chart1" class="h-64 bg-white shadow-md rounded-md"></div>
                         </div>
                         <div>
-                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
                             <!-- Description of the time series data that was used to produce the result. -->
                             <p class="text-gray-500 text-sm mt-2">{{ $timeSeriesData['description'] }}</p>
+                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
+
                         </div>
                     @else
                         <!-- Trend Charts for Multivariate Data -->
                         <div class="mb-4">
+                            <p class="text-gray-400 text-sm mt-2">The graph below shows the trend analysis result, which is
+                                the subject of this post. The graph at the bottom describe the data used for analysis.</p>
                             <div id="chart-container" class="h-64 bg-white shadow-md rounded-md"></div>
                         </div>
-                        <div>
-                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
-                            <!-- Description of the time series data that was used to produce the result. -->
+                        <div><!-- Description of the time series data that was used to produce the result. -->
                             <p class="text-gray-400 text-sm mt-2">{{ $timeSeriesData['description'] }}</p>
+                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
+
                         </div>
                     @endif
                 @else
@@ -172,26 +184,36 @@
                         <div id="button-container" class="flex gap-2 mb-4">
                             <!-- Dynamic buttons will be inserted here -->
                         </div>
+                        <p class="text-gray-400 text-sm mt-2">The graph below shows the seasonality analysis result, which
+                            is
+                            the subject of this post. The graph at the bottom describe the data used to make the forecast.
+                        </p>
                         <div id="chart-container" class="flex flex-col gap-6">
                             <!-- Dynamic charts will be inserted here -->
                         </div>
                         <div>
-                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
                             <!-- Description of the time series data that was used to produce the result. -->
                             <p class="text-gray-400 text-sm mt-2">{{ $timeSeriesData['description'] }}</p>
+                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
+
                         </div>
                     @else
                         <!-- Seasonality for Multivariate Data -->
                         <div id="button-container" class="flex overflow-x-auto gap-2 mb-4">
                             <!-- Dynamic buttons for components will be inserted here -->
                         </div>
+                        <p class="text-gray-400 text-sm mt-2">The graph below shows the seasonality analysis result, which
+                            is
+                            the subject of this post. The graph at the bottom describe the data used to make the forecast.
+                        </p>
                         <div id="chart-container" class="flex flex-col gap-6">
                             <!-- Dynamic charts will be inserted here -->
                         </div>
                         <div>
-                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
                             <!-- Description of the time series data that was used to produce the result. -->
                             <p class="text-gray-400 text-sm mt-2">{{ $timeSeriesData['description'] }}</p>
+                            <div id="chart" class="h-64 bg-white shadow-md rounded-md"></div>
+
                         </div>
                     @endif
                 @endif
@@ -216,8 +238,8 @@
                     text: 'Raw Data',
                     align: 'left',
                     style: {
-                        fontSize: '18px', // Font size of the title
-                        color: '#263238' // Color of the title
+                        fontSize: '13px', // Font size of the title
+                        color: '#706e69' // Color of the title
                     }
                 },
                 series: [
@@ -322,8 +344,8 @@
                                 text: 'Forecast Result',
                                 align: 'left',
                                 style: {
-                                    fontSize: '18px', // Font size of the title
-                                    color: '#263238' // Color of the title
+                                    fontSize: '13px', // Font size of the title
+                                    color: '#706e69' // Color of the title
                                 }
                             },
                             series: [{
@@ -413,8 +435,8 @@
                                 text: 'Forecast Result',
                                 align: 'left',
                                 style: {
-                                    fontSize: '18px', // Font size of the title
-                                    color: '#263238' // Color of the title
+                                    fontSize: '13px', // Font size of the title
+                                    color: '#706e69' // Color of the title
                                 }
                             },
                             series: [{
@@ -494,8 +516,8 @@
                             text: 'Trend Result',
                             align: 'left',
                             style: {
-                                fontSize: '18px', // Font size of the title
-                                color: '#263238' // Color of the title
+                                fontSize: '13px', // Font size of the title
+                                color: '#706e69' // Color of the title
                             }
                         },
                         series: [{
@@ -610,8 +632,8 @@
                             text: 'Trend Result',
                             align: 'left',
                             style: {
-                                fontSize: '18px', // Font size of the title
-                                color: '#263238' // Color of the title
+                                fontSize: '13px', // Font size of the title
+                                color: '#706e69' // Color of the title
                             }
                         },
                         series: seriesData,
@@ -699,8 +721,8 @@
                                 text: 'Seasonality Result',
                                 align: 'left',
                                 style: {
-                                    fontSize: '18px', // Font size of the title
-                                    color: '#263238' // Color of the title
+                                    fontSize: '13px', // Font size of the title
+                                    color: '#706e69' // Color of the title
                                 }
                             },
                             xaxis: {
@@ -873,8 +895,8 @@
                                 text: 'Seasonality Result',
                                 align: 'left',
                                 style: {
-                                    fontSize: '18px', // Font size of the title
-                                    color: '#263238' // Color of the title
+                                    fontSize: '13px', // Font size of the title
+                                    color: '#706e69' // Color of the title
                                 }
                             },
                             xaxis: {

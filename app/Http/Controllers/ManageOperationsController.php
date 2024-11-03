@@ -51,7 +51,8 @@ class ManageOperationsController extends Controller
                         $jsonPath = 'resultJSON/' . $jsonFilename;
                         Storage::put($jsonPath, json_encode($response->body()));
 
-                        $assoc_filename = 'forecast-on-' . $file->filename . 'created-' . now()->timestamp;
+                        $filename_ext_remove = str_replace(".csv", "", $file->filename);
+                        $assoc_filename = 'forecast-on-' . $filename_ext_remove . '-' . now()->timestamp;
 
                         $file_assoc = FileAssociation::create([
                             'file_id' => $file_id,
@@ -108,8 +109,8 @@ class ManageOperationsController extends Controller
                         $jsonPath = 'resultJSON/' . $jsonFilename;
                         Storage::put($jsonPath, json_encode($response->body()));
 
-                        $assoc_filename = 'forecast-on-' . $file->filename . 'created-' . now()->timestamp;
-
+                        $filename_ext_remove = str_replace(".csv", "", $file->filename);
+                        $assoc_filename = 'forecast-on-' . $filename_ext_remove . '-' . now()->timestamp;
 
                         $file_assoc = FileAssociation::create([
                             'file_id' => $file_id,
@@ -164,8 +165,9 @@ class ManageOperationsController extends Controller
                     $jsonFilename = pathinfo(basename($file->filepath), PATHINFO_FILENAME) . '-initial-' . now()->timestamp . '.json';
                     $jsonPath = 'resultJSON/' . $jsonFilename;
                     Storage::put($jsonPath, json_encode($response->body()));
-                    $assoc_filename = 'trend-on-' . $file->filename . 'created-' . now()->timestamp;
 
+                    $filename_ext_remove = str_replace(".csv", "", $file->filename);
+                    $assoc_filename = 'trend-on-' . $filename_ext_remove . '-' . now()->timestamp;
 
                     $file_assoc = FileAssociation::create([
                         'file_id' => $file_id,
@@ -181,8 +183,6 @@ class ManageOperationsController extends Controller
                         'action' => 'Analyze Trend',
                         'description' => 'Successfully analyzed trend on ' . $file->filename . ' using Facebook Prophet.',
                     ]);
-
-
                     session()->flash('operation_success', 'Data analyzed successfully!');
                     return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
                 } else {
@@ -221,20 +221,18 @@ class ManageOperationsController extends Controller
                             'description' => $description
                         ]);
 
-
                 if ($response->successful()) {
                     $jsonFilename = pathinfo(basename($file->filepath), PATHINFO_FILENAME) . '-initial-' . now()->timestamp . '.json';
                     $jsonPath = 'resultJSON/' . $jsonFilename;
                     Storage::put($jsonPath, json_encode($response->body()));
 
-
-                    $assoc_filename = 'seasonality-on-' . $file->filename . 'created-' . now()->timestamp;
+                    $filename_ext_remove = str_replace(".csv", "", strval($file->filename));
+                    $assoc_filename = 'seasonality-on-' . $filename_ext_remove . '-' . now()->timestamp;
 
                     $file_assoc = FileAssociation::create([
                         'file_id' => $file_id,
                         'user_id' => Auth::id(),
                         'assoc_filename' => $assoc_filename,
-
                         'associated_file_path' => $jsonPath,
                         'operation' => $operation,
                     ]);

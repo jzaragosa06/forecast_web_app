@@ -3,6 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('page-title', 'Dashboard')
+
 @section('content')
     @if (session('success'))
         <!-- Notification Popup -->
@@ -19,6 +20,11 @@
         <div id="notification"
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
             {{ session('operation_failed') }}
+        </div>
+    @elseif (session('upload_failed'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('upload_failed') }}
         </div>
     @endif
 
@@ -44,6 +50,116 @@
             transition: opacity 0.5s ease-in-out;
         }
     </style>
+
+    <!-- Multi-Step Guide Modal -->
+    <div id="guideModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+        <!-- Added hidden class here -->
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full z-50">
+            <h2 class="text-2xl font-semibold text-gray-600 mb-6">Getting Started Guide</h2>
+            <!-- Guide Step Content -->
+            <div id="guideSteps" class="text-gray-600 flex flex-col items-center">
+                <!-- Image for Each Step -->
+                <img id="guideImage" src="" alt="Guide Step Image" class="w-2/3 mb-6 rounded-lg shadow-md">
+                <!-- Step Text -->
+                <div id="guideText" class="text-base text-center">
+                    <!-- Placeholder for Step Content -->
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-end mt-6 space-x-4">
+                <button id="backButton" onclick="prevStep()"
+                    class="hidden bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-6 rounded">
+                    Back
+                </button>
+                <button id="nextButton" onclick="nextStep()"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--Script Multi-Step Guide Modal -->
+    <script>
+        // JavaScript for Step-by-Step Guide with Images
+        const steps = [{
+                text: "Welcome! Are you ready to know more about your data? This guide will help you get started.",
+                img: "{{ asset('storage/idiot-guid-imgs/welcome1.png') }}"
+            },
+            {
+                text: "Step 1: This panel allows you to upload your time series data or get from third party source.",
+                img: "{{ asset('storage/idiot-guid-imgs/data-source.png') }}"
+            },
+            {
+                text: "Step 2: Once you uploaded the time series data or fetched from a third-party source, you will be prompted to fill missing values. In this part, it is crucial to describe what the data is about, as it will be used by AI to explain the result.",
+                img: "{{ asset('storage/idiot-guid-imgs/cleaning.png') }}"
+            },
+            {
+                text: "Step 3: This panel allows you to select the file containing the time series data and define the operation you want to perform, i.e. trend analysis, seasonality analysis, or perform forecast.",
+                img: "{{ asset('storage/idiot-guid-imgs/analyze.png') }}"
+            },
+            {
+                text: "Step 4: The result page includes the graph of the results. It also includes the AI-generated explanation of the result, a chat with AI feature, and integrated notes.",
+                img: "{{ asset('storage/idiot-guid-imgs/forecast.png') }}"
+            },
+        ];
+        let currentStep = 0;
+
+        // Function to display the guide modal after registration
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            // Check if the registered parameter is true
+            if (urlParams.get('registered') === 'true') {
+                document.getElementById('guideModal').classList.remove('hidden'); // Show the modal
+                showStep(currentStep); // Show the first step
+            } else {
+                closeModal(); // Hide the modal if not registered
+            }
+        });
+
+        // Function to show the current step
+        function showStep(step) {
+            const guideText = document.getElementById('guideText');
+            const guideImage = document.getElementById('guideImage');
+            const nextButton = document.getElementById('nextButton');
+            const backButton = document.getElementById('backButton');
+
+            // Update the text and image based on the current step
+            guideText.textContent = steps[step].text;
+            guideImage.src = steps[step].img;
+            // Show or hide the Back button based on the step
+            backButton.classList.toggle('hidden', step === 0);
+
+            // Adjust button text for "Start" on welcome step and "Got it!" on the last step
+            nextButton.textContent = step === 0 ? 'Start' : (step === steps.length - 1 ? 'Got it!' : 'Next');
+        }
+
+        // Function to move to the next step
+        function nextStep() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                showStep(currentStep);
+            } else {
+                closeModal(); // Close modal on the last step
+            }
+        }
+
+        // Function to move to the previous step
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('guideModal').classList.add('hidden');
+        }
+    </script>
+
+
+
 
     <!-- Main Content -->
     <div class="container mx-auto my-6">
@@ -676,7 +792,7 @@
         </div>
     </div>
 
-    <!-- Loading indicator for forecast -->
+    <!--Forecast -- Loading indicator for forecast -->
     <div id="loadingModal2" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 hidden">
         <div class="modal-content bg-gray-800 p-6 rounded-lg shadow-lg flex items-center justify-center">
             <div
@@ -727,7 +843,8 @@
                     <div class="mb-4">
                         <label for="file" class="block text-sm font-medium mb-1">Upload from Device</label>
                         <input type="file" name="file" id="file"
-                            class="form-input block w-full border-gray-300 rounded-md shadow-sm">
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm"
+                            accept=".csv, .xls, .xlsx">
                     </div>
 
                     <div class="mb-4">
@@ -746,6 +863,8 @@
             </div>
         </div>
     </div>
+
+
     <!-- Fetch data from open-meteo modal -->
     <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden"
         id="ts-add-via-api-open-meteo-modal" style="display:none;">
@@ -796,7 +915,7 @@
                     </div>
 
 
-                    <div class="mb-4">
+                    {{-- <div class="mb-4">
                         <!-- Date Pickers -->
                         <label for="start-date" class="block text-sm font-medium mb-1">Start Date</label>
                         <input type="date" id="start-date"
@@ -806,7 +925,21 @@
                         <label for="end-date" class="block text-sm font-medium mb-1">End Date</label>
                         <input type="date" id="end-date"
                             class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
+                    </div> --}}
+
+                    <div class="mb-4">
+                        <!-- Date Pickers -->
+                        <label for="start-date" class="block text-sm font-medium mb-1">Start Date</label>
+                        <input type="date" id="start-date"
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm" max="" required>
                     </div>
+                    <div class="mb-4">
+                        <label for="end-date" class="block text-sm font-medium mb-1">End Date</label>
+                        <input type="date" id="end-date"
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm" max="" required>
+                    </div>
+
+
 
                     <div class="mb-4">
                         <!-- Map Display -->
@@ -873,13 +1006,13 @@
                             <!-- Start Date -->
                             <div class="w-1/2">
                                 <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
-                                <input type="date" id="start-date-stocks"
+                                <input type="date" id="start-date-stocks" max=""
                                     class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             </div>
                             <!-- End Date -->
                             <div class="w-1/2">
                                 <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
-                                <input type="date" id="end-date-stocks"
+                                <input type="date" id="end-date-stocks" max=""
                                     class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             </div>
                         </div>
@@ -914,6 +1047,17 @@
 @endsection
 
 @section('scripts')
+    <script>
+        // JavaScript to set the max attribute to today's date
+        document.addEventListener("DOMContentLoaded", function() {
+            const today = new Date().toISOString().split("T")[0];
+            document.getElementById("start-date").setAttribute("max", today);
+            document.getElementById("end-date").setAttribute("max", today);
+            document.getElementById("start-date-stocks").setAttribute("max", today);
+            document.getElementById("end-date-stocks").setAttribute("max", today);
+        });
+    </script>
+
     <!-- Tooltip Implementation -->
     <style>
         .tooltip {
@@ -1346,8 +1490,8 @@
                         const formData = new FormData();
                         formData.append('csv_file', blob, 'data.csv');
 
-                        let currentDate = new Date().toISOString().split('T')[0];
-                        console.log(currentDate);
+
+                        let currentDate = Math.floor(Date.now() / 1000);
 
 
                         let type;
@@ -1543,7 +1687,8 @@
                         const formData = new FormData();
                         formData.append('csv_file', blob, 'data.csv');
 
-                        let currentDate = new Date().toISOString().split('T')[0];
+                        let currentDate = Math.floor(Date.now() / 1000);
+
                         let type = "multivariate";
                         let freq;
                         if (interval === "1day") {

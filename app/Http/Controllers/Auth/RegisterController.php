@@ -88,8 +88,6 @@ class RegisterController extends Controller
             'name' => $data['first_name'] . " " . $data['last_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-
-
         ]);
     }
 
@@ -100,6 +98,10 @@ class RegisterController extends Controller
             'action' => 'Register',
             'description' => 'Registered a new user account',
         ]);
+        return redirect()->route('home', ['registered' => 'true']);
+
+
+
     }
 
     public function showRegistrationForm()
