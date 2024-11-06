@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\ChatHistory;
 use App\Models\Note;
 use App\Models\User;
+use App\Models\File;
 use Illuminate\Http\Request;
 use Auth;
 use Storage;
@@ -29,6 +30,7 @@ class ManageShowResultsController extends Controller
             abort(404, 'File Association not found');
         }
 
+
         $operation = $file_assoc->operation;
         $inputFileType = $file_assoc->file_type;
 
@@ -43,6 +45,7 @@ class ManageShowResultsController extends Controller
         // ===========================
 
 
+
         // ===================================
         //I put it here to prevent redundancy
         Logs::create([
@@ -52,24 +55,31 @@ class ManageShowResultsController extends Controller
         ]);
         // ===================================
 
+        $file = File::where("file_id", $file_assoc->file_id)->first();
+        $description = $file->description;
+
+
+        $additional[] = [
+            'description' => $description,
+        ];
         // Handle different operations and file types
         if ($operation == "forecast") {
             if ($inputFileType == "univariate") {
-                return view('results.forecast_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('results.forecast_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
             } else {
-                return view('results.forecast_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('results.forecast_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
             }
         } elseif ($operation == "trend") {
             if ($inputFileType == "univariate") {
-                return view('results.trend_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users]);
+                return view('results.trend_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'additional' => $additional, 'description' => $description]);
             } else {
-                return view('results.trend_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users]);
+                return view('results.trend_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'additional' => $additional, 'description' => $description]);
             }
         } else {
             if ($inputFileType == "univariate") {
-                return view('results.seasonality_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('results.seasonality_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
             } else {
-                return view('results.seasonality_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('results.seasonality_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
             }
         }
     }
