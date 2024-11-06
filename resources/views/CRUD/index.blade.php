@@ -144,12 +144,11 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $file->type }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex space-x-2">
 
-                                        <form action="{{ route('input.file.graph.view.post', $file->file_id) }}"
-                                            method="post" class="inline-block">
-                                            @csrf
-                                            <button type="submit"
-                                                class="bg-blue-500 text-white px-3 py-1 rounded">View</button>
-                                        </form>
+                                        <a href="{{ route('input.file.graph.view.get', $file->file_id) }}"> <button
+                                                type="submit"
+                                                class="bg-blue-500 text-white px-3 py-1 rounded">View</button></a>
+
+
                                         <form action="{{ route('crud.delete.file', $file->file_id) }}" method="POST"
                                             class="inline-block">
                                             @csrf
@@ -195,12 +194,12 @@
                                             id="shareButton" data-file-assoc-id="{{ $file_assoc->file_assoc_id }}">
                                             Share
                                         </button>
-                                        <form action="{{ route('manage.results.post', $file_assoc->file_assoc_id) }}"
-                                            method="post" class="inline-block">
-                                            @csrf
-                                            <button type="submit"
+
+                                        <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"> <button
+                                                type="submit"
                                                 class="bg-blue-500 text-white px-3 py-1 rounded">View</button>
-                                        </form>
+                                        </a>
+
                                         <form action="{{ route('crud.delete.file_assoc', $file_assoc->file_assoc_id) }}"
                                             method="POST" class="inline-block">
                                             @csrf
