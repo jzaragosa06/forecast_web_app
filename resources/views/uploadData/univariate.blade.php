@@ -21,7 +21,6 @@
             <div class="bg-white shadow-md rounded-lg p-6">
                 <div class="mb-4">
                     <label for="type" class="block text-sm font-medium text-gray-700">
-
                         Time Series Type
                     </label>
                     <input type="text" id="type" name="type" value="{{ $type }}" readonly
@@ -109,128 +108,67 @@
         $(document).ready(function() {
             const data = @json($data);
             const headers = @json($headers);
-            // const dates = originalData.map(row => row[0]);
-            console.log(data);
-            console.log(headers);
-
-            let freq = "";
-
-
-
 
             let originalData = JSON.parse(JSON.stringify(data)); // Deep copy of original data
             let tempData = JSON.parse(JSON.stringify(originalData));
-            console.log('tempdata', tempData);
-
-
-
+            let chartInstance = null; // Variable to store the current chart instance
 
             freq = inferFrequency(tempData.map(row => convertDate(row[0])));
             $('#freq').val(freq);
 
 
-
-            let chartInstance = null; // Variable to store the current chart instance
-
             function convertDate(inputDate) {
-                // Parse the input date string into a Date object
                 const parsedDate = new Date(inputDate);
-
-                // Format the date as MM/dd/yyyy (full year format)
-                const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
-                return formattedDate;
+                return dateFns.format(parsedDate, 'MM/dd/yyyy');
             }
-
-            const chart = document.getElementById('chart');
 
             // Ensure that data is valid
             if (data && data.length > 0 && headers.length > 1) {
-                const values = originalData.map(row => parseFloat(row[1]) || null); // Handle NaN as null
-
+                const originalValues = originalData.map(row => parseFloat(row[1]) || null);
                 const dates = originalData.map(row => convertDate(row[0]));
-                console.log(dates);
 
                 const label = headers[1];
 
-
-                showChart(label, dates, values);
+                // Initial chart with both original and filled data (initially filled is same as original)
+                showChart(label, dates, originalValues, originalValues);
             } else {
                 console.error('Invalid data or headers');
             }
 
-            function inferFrequency(dates) {
-                // Sort dates in ascending order if they are not already sorted
-                dates.sort((a, b) => new Date(a) - new Date(b));
-
-                // Calculate the difference in days between consecutive dates
-                let diffs = [];
-                for (let i = 1; i < dates.length; i++) {
-                    const diff = Math.abs(new Date(dates[i]) - new Date(dates[i - 1])) / (1000 * 60 * 60 * 24);
-                    diffs.push(diff);
-                }
-
-                // Find the mode of the differences
-                let modeDiff = findMode(diffs);
-
-                // Determine the frequency based on the difference
-                if (modeDiff >= 28 && modeDiff <= 31) {
-                    return "M"; // Monthly
-                } else if (modeDiff >= 89 && modeDiff <= 92) {
-                    return "Q"; // Quarterly
-                } else if (modeDiff >= 364 && modeDiff <= 366) {
-                    return "Y"; // Yearly
-                } else if (modeDiff === 7) {
-                    return "W"; // Weekly
-                } else if (modeDiff === 1) {
-                    return "D"; // Daily
-                } else {
-                    return "Unknown frequency";
-                }
-            }
-
-            function findMode(arr) {
-                const frequency = {};
-                let maxFreq = 0;
-                let mode = null;
-
-                arr.forEach(value => {
-                    frequency[value] = (frequency[value] || 0) + 1;
-                    if (frequency[value] > maxFreq) {
-                        maxFreq = frequency[value];
-                        mode = value;
-                    }
-                });
-
-                return mode;
-            }
-
-            function showChart(label, dates, values) {
-                // Destroy existing chart if it exists
+            function showChart(label, dates, originalValues, filledValues) {
                 if (chartInstance) {
                     chartInstance.destroy();
                 }
 
-                // Create formatted data
-                const formattedData = dates.map((date, index) => ({
+                // Create formatted data for original and filled series
+                const originalSeriesData = dates.map((date, index) => ({
                     x: date,
-                    y: values[index]
+                    y: originalValues[index]
+                }));
+                const filledSeriesData = dates.map((date, index) => ({
+                    x: date,
+                    y: filledValues[index]
                 }));
 
-                console.log(formattedData);
-
-                // Initialize ApexCharts
                 const options = {
                     chart: {
                         type: 'line',
                         height: 350,
                         toolbar: {
-                            show: false,
+                            show: false
                         }
                     },
                     series: [{
-                        name: label,
-                        data: formattedData
-                    }],
+                            name: label + ' (Original)',
+                            data: originalSeriesData,
+                            color: '#1E90FF' // Blue for original data
+                        },
+                        {
+                            name: label + ' (Filled)',
+                            data: filledSeriesData,
+                            color: '#FF6347' // Red for filled data
+                        }
+                    ],
                     xaxis: {
                         type: 'datetime',
                         title: {
@@ -243,24 +181,20 @@
                         },
                         labels: {
                             formatter: function(value) {
-                                // Check if the value is a valid number before applying toFixed
-                                return isNaN(value) ? value : value.toFixed(
-                                    2); // Safely format only valid numeric values
+                                return isNaN(value) ? value : value.toFixed(2);
                             }
-                        },
+                        }
                     },
                     tooltip: {
                         y: {
                             formatter: function(value) {
-                                // Check if the value is a valid number before applying toFixed
-                                return isNaN(value) ? value : value.toFixed(
-                                    2); // Safely format only valid numeric values
+                                return isNaN(value) ? value : value.toFixed(2);
                             }
                         }
                     },
                     stroke: {
                         curve: 'smooth',
-                        width: 2 // Thin line
+                        width: 2
                     },
                 };
 
@@ -269,7 +203,7 @@
             }
 
             function fillMissingValues(method) {
-                tempData = JSON.parse(JSON.stringify(originalData)); // Reset tempData to original each time
+                tempData = JSON.parse(JSON.stringify(originalData)); // Reset tempData
 
                 switch (method) {
                     case 'forward':
@@ -311,18 +245,10 @@
                         break;
                 }
 
-                const values = tempData.map(row => parseFloat(row[1]));
-                const dates = tempData.map(row => row[0]); // Use original date strings
-                showChart(headers[1], dates, values);
-            }
-
-
-            function generateCSV(data) {
-                let csvContent = "Date,Value\n"; // Header
-                data.forEach(row => {
-                    csvContent += `${convertDate(row[0])},${row[1]}\n`; // Correct interpolation
-                });
-                return csvContent;
+                const filledValues = tempData.map(row => parseFloat(row[1]));
+                const dates = tempData.map(row => row[0]);
+                const originalValues = originalData.map(row => parseFloat(row[1]) || null);
+                showChart(headers[1], dates, originalValues, filledValues);
             }
 
             document.querySelectorAll('input[name="fill-method"]').forEach(input => {
@@ -333,6 +259,15 @@
                 });
             });
 
+            function generateCSV(data) {
+                // let csvContent = `Date,${headers}\n`; // Header
+                let csvContent = `Date,${headers[1]}\n`; // Header
+
+                data.forEach(row => {
+                    csvContent += `${convertDate(row[0])},${row[1]}\n`; // Correct interpolation
+                });
+                return csvContent;
+            }
 
             document.getElementById('submit-button').addEventListener('click', () => {
                 alert(tempData);
@@ -393,5 +328,53 @@
             });
 
         });
+
+
+
+        function inferFrequency(dates) {
+            // Sort dates in ascending order if they are not already sorted
+            dates.sort((a, b) => new Date(a) - new Date(b));
+
+            // Calculate the difference in days between consecutive dates
+            let diffs = [];
+            for (let i = 1; i < dates.length; i++) {
+                const diff = Math.abs(new Date(dates[i]) - new Date(dates[i - 1])) / (1000 * 60 * 60 * 24);
+                diffs.push(diff);
+            }
+
+            // Find the mode of the differences
+            let modeDiff = findMode(diffs);
+
+            // Determine the frequency based on the difference
+            if (modeDiff >= 28 && modeDiff <= 31) {
+                return "M"; // Monthly
+            } else if (modeDiff >= 89 && modeDiff <= 92) {
+                return "Q"; // Quarterly
+            } else if (modeDiff >= 364 && modeDiff <= 366) {
+                return "Y"; // Yearly
+            } else if (modeDiff === 7) {
+                return "W"; // Weekly
+            } else if (modeDiff === 1) {
+                return "D"; // Daily
+            } else {
+                return "Unknown frequency";
+            }
+        }
+
+        function findMode(arr) {
+            const frequency = {};
+            let maxFreq = 0;
+            let mode = null;
+
+            arr.forEach(value => {
+                frequency[value] = (frequency[value] || 0) + 1;
+                if (frequency[value] > maxFreq) {
+                    maxFreq = frequency[value];
+                    mode = value;
+                }
+            });
+
+            return mode;
+        }
     </script>
 @endsection
