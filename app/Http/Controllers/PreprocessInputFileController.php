@@ -70,7 +70,11 @@ class PreprocessInputFileController extends Controller
             $source = "uploads";
             $description = $request->get('description');
 
-            // Attempt to load the file using PhpSpreadsheet
+            // Attempt to load the file using PhpSpreadsheet. 
+            /*
+             * we only allow .csv, .xls, .xlsx file. 
+             * We parse this into an array that is structued like a csv 
+             */
             $spreadsheet = IOFactory::load($file->getRealPath());
             $data = $spreadsheet->getActiveSheet()->toArray();
             $headers = array_shift($data); // Get headers and remove from data
@@ -87,8 +91,7 @@ class PreprocessInputFileController extends Controller
 
         } catch (Exception $e) {
             // Handle any exceptions that occur during file processing
-            // return redirect()->route('home')->withErrors(['file' => 'Failed to process the file. Please ensure it is in the correct format.']);
-            session()->flash('upload_failed', 'Failed to upload data. Failed to parse the file. Please ensure it is a valid CSV or Excel file.');
+            session()->flash('upload_failed', 'Failed to upload data. Failed to parse the file. Please ensure it is a valid CSV or Excel file.' . $e);
             return redirect()->route("home");
         }
     }

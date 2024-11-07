@@ -51,7 +51,7 @@ class ManageOperationsController extends Controller
                         $jsonPath = 'resultJSON/' . $jsonFilename;
                         Storage::put($jsonPath, json_encode($response->body()));
 
-                        $filename_ext_remove = str_replace(".csv", "", $file->filename);
+                        $filename_ext_remove = preg_replace('/\.(csv|xls|xlsx)$/i', '', $file->filename);
                         $assoc_filename = 'forecast-on-' . $filename_ext_remove . '-' . now()->timestamp;
 
                         $file_assoc = FileAssociation::create([
@@ -109,7 +109,7 @@ class ManageOperationsController extends Controller
                         $jsonPath = 'resultJSON/' . $jsonFilename;
                         Storage::put($jsonPath, json_encode($response->body()));
 
-                        $filename_ext_remove = str_replace(".csv", "", $file->filename);
+                        $filename_ext_remove = preg_replace('/\.(csv|xls|xlsx)$/i', '', $file->filename);
                         $assoc_filename = 'forecast-on-' . $filename_ext_remove . '-' . now()->timestamp;
 
                         $file_assoc = FileAssociation::create([
@@ -166,7 +166,7 @@ class ManageOperationsController extends Controller
                     $jsonPath = 'resultJSON/' . $jsonFilename;
                     Storage::put($jsonPath, json_encode($response->body()));
 
-                    $filename_ext_remove = str_replace(".csv", "", $file->filename);
+                    $filename_ext_remove = preg_replace('/\.(csv|xls|xlsx)$/i', '', $file->filename);
                     $assoc_filename = 'trend-on-' . $filename_ext_remove . '-' . now()->timestamp;
 
                     $file_assoc = FileAssociation::create([

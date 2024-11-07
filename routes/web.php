@@ -54,7 +54,6 @@ Route::prefix('analyze')->group(function () {
 
 
 Route::prefix('results')->group(function () {
-    Route::post('/view/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results.post');
     Route::get('/view/results/{file_assoc_id}', [ManageShowResultsController::class, 'manage'])->name('manage.results.get');
 
 });
@@ -201,3 +200,12 @@ Route::get('/terms', function () {
     $termsHtml = file_get_contents(resource_path('views/auth/terms.html'));
     return view('terms', compact('termsHtml'));
 })->name('terms');
+
+
+Route::get("/pdfdoc", function () {
+    return view("pdfdoc");
+});
+
+Route::get("/htmlpdf", function () {
+    return view("htmlpdf");
+});

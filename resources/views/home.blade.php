@@ -4,6 +4,7 @@
 
 @section('page-title', 'Dashboard')
 
+
 @section('content')
     @if (session('success'))
         <!-- Notification Popup -->
@@ -778,13 +779,30 @@
                     <input type="hidden" name="file_id" id="modal_file_id">
                     <input type="hidden" name="operation" value="forecast">
 
+
+
                     <div class="mb-4">
-                        <label for="horizon" class="block text-sm font-medium mb-1">Forecast Horizon</label>
+                        <!-- Label and Icon Wrapper -->
+                        <div class="flex items-center">
+                            <label for="horizon" class="text-sm font-medium">Forecast Horizon</label>
+
+                            <!-- Icon and Tooltip Wrapper -->
+                            <div class="relative inline-block ml-2 group">
+                                <i id="horizon-info" class="fas fa-sm fa-info-circle text-gray-400 cursor-pointer"></i>
+                                <div
+                                    class="absolute left-full top-0 ml-2 hidden z-50 bg-black py-1.5 px-3 font-sans text-sm font-normal text-white group-hover:block whitespace-normal break-words w-48">
+                                    Forecast horizon is the number of steps you want to forecast. Given a daily interval of
+                                    data (D), 12 forecasts the next 12 days.
+                                </div>
+
+                            </div>
+                        </div>
 
                         <input type="number" name="horizon" id="horizon"
-                            class="form-input block w-full border-2 border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            class="form-input block w-full border-2 border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-2"
                             placeholder="e.g., 12" required>
                     </div>
+
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Run
                         Forecast</button>
                 </form>
@@ -848,11 +866,30 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="description" class="block text-sm font-medium mb-1">Description:</label>
+                        <!-- Label and Icon Wrapper -->
+                        <div class="flex items-center">
+                            <label for="description" class="text-sm font-medium">Description:</label>
+
+                            <!-- Icon and Tooltip Wrapper -->
+                            <div class="relative inline-block ml-2 group">
+                                <i id="description-info"
+                                    class="fas fa-sm fa-info-circle text-gray-400 cursor-pointer"></i>
+
+                                <!-- Tooltip -->
+                                <div
+                                    class="absolute left-full top-0 ml-2 hidden z-50 bg-black py-1.5 px-3 font-sans text-sm font-normal text-white group-hover:block whitespace-normal break-words w-48">
+                                    Describe what this data is about. Describe its background, and especially, describe the
+                                    variables.
+                                </div>
+                            </div>
+                        </div>
 
                         <textarea name="description" id="description" cols="10" rows="5"
-                            class="form-input block w-full border-gray-300 rounded-md shadow-sm" required></textarea>
+                            class="form-input block w-full border-gray-300 rounded-md shadow-sm mt-2" required
+                            placeholder="E.g., The given time series is about the monthly gasoline prices (in $) in United States."></textarea>
                     </div>
+
+
                     <div class="flex justify-between">
                         <button type="button" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700"
                             data-dismiss="modal">Close</button>
@@ -1098,6 +1135,7 @@
             $('#operation-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
             $('#public-discussion-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
             $('#data-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
+            $('#description-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
         });
     </script>
     <script>
@@ -1169,7 +1207,6 @@
         });
 
         $(document).ready(function() {
-
             // Iterate over each file data to create corresponding graphs
             @foreach ($timeSeriesData as $index => $fileData)
                 var options = {

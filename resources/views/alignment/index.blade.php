@@ -7,9 +7,11 @@
 @section('content')
     <div class="container mx-auto p-2">
         <!-- Card Container -->
-        <div class="bg-gray-50 rounded-lg shadow-md p-4 w-full">
+        {{-- <div class="bg-gray-50 rounded-lg shadow-md p-4 w-full">
             <div class="flex justify-end items-center mb-4">
                 <div class="relative">
+                    <p>Time series alignment allows you to add more time series data on an existing time series. This is
+                        useful when you want to include another variable that is useful in your analysis</p>
                     <!-- Dropdown Button -->
                     <button id="dropdown-button" class="bg-gray-200 text-gray-700 p-2 rounded-md focus:outline-none">
                         Add
@@ -23,14 +25,9 @@
                                     class="cursor-pointer text-gray-700 px-2 py-2 hover:bg-gray-200 w-full text-left">
                                     Add via Upload
                                 </label>
-                                <input type="file" id="file-upload" class="hidden" />
+                                <input type="file" id="file-upload" class="hidden" accept=".csv" />
                             </li>
-                            <li>
-                                <button id="ts-add-via-api-open-meteo-btn"
-                                    class="dropdown-item text-left w-full px-4 py-2 hover:bg-gray-200" data-toggle="modal"
-                                    data-target="#ts-add-via-api-open-meteo-modal">Add via Third
-                                    Party Source</button>
-                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -43,98 +40,53 @@
 
         <div id="data-container" class="mt-4 w-full">
             <!-- Your content and visualization can go here -->
-        </div>
+        </div> --}}
 
+        <!-- Card Container -->
+        <div class="bg-gray-50 rounded-lg shadow-md p-4 w-full">
+            <!-- Flex container for alignment of text and buttons -->
+            <div class="flex justify-between items-center mb-4">
+                <!-- Description Text -->
+                <p class="text-sm text-gray-700 max-w-xl">
+                    Time series alignment allows you to add more time series data to an existing time series.
+                    This is useful when you want to include another variable that is helpful in your analysis.
+                </p>
 
-        <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden"
-            id="ts-add-via-api-open-meteo-modal" style="display:none;">
-            <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-2/3">
-                <div class="flex justify-between items-center border-b pb-2 mb-2">
-                    <h5 class="text-lg font-semibold">Open Meteo</h5>
-                    <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
-                        aria-label="Close">
-                        &times;
+                <!-- Button Group -->
+                <div class="flex items-center space-x-4">
+                    <!-- Dropdown Container -->
+                    <div class="relative">
+                        <!-- Dropdown Button -->
+                        <button id="dropdown-button" class="bg-gray-200 text-gray-700 p-2 rounded-md focus:outline-none">
+                            Add
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                            <ul class="py-1">
+                                <li class="flex items-center">
+                                    <!-- Styled File Input -->
+                                    <label for="file-upload"
+                                        class="cursor-pointer text-gray-700 px-2 py-2 hover:bg-gray-200 w-full text-left">
+                                        Add via Upload
+                                    </label>
+                                    <input type="file" id="file-upload" class="hidden" accept=".csv" />
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Save Button -->
+                    <button id="save-btn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                        Save
                     </button>
-                </div>
-                <div class="modal-body">
-
-                    <form action="" method="POST">
-                        @csrf
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            @php
-                                // Get all weather options from the config
-                                $weatherOptions = config('weather_options.daily');
-
-                                // Split the options into two groups
-                                $halfCount = ceil(count($weatherOptions) / 2);
-                                $firstHalf = array_slice($weatherOptions, 0, $halfCount, true);
-                                $secondHalf = array_slice($weatherOptions, $halfCount, null, true);
-                            @endphp
-
-                            {{-- First Column --}}
-                            <div>
-                                @foreach ($firstHalf as $key => $label)
-                                    <div class="flex items-center mb-2">
-                                        <input class="form-checkbox" type="checkbox" id="{{ $key }}" name="daily"
-                                            value="{{ $key }}">
-                                        <label class="ml-2" for="{{ $key }}">{{ $label }}</label>
-                                    </div>
-                                @endforeach
-                            </div>
-
-                            {{-- Second Column --}}
-                            <div>
-                                @foreach ($secondHalf as $key => $label)
-                                    <div class="flex items-center mb-2">
-                                        <input class="form-checkbox" type="checkbox" id="{{ $key }}" name="daily"
-                                            value="{{ $key }}">
-                                        <label class="ml-2" for="{{ $key }}">{{ $label }}</label>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-
-
-                        <div class="mb-4">
-                            <!-- Date Pickers -->
-                            <label for="start-date" class="block text-sm font-medium mb-1">Start Date</label>
-                            <input type="date" id="start-date"
-                                class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="end-date" class="block text-sm font-medium mb-1">End Date</label>
-                            <input type="date" id="end-date"
-                                class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
-                        </div>
-
-                        <div class="mb-4">
-                            <!-- Map Display -->
-                            <button type="button" id="use-current-loc-btn"
-                                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Use Current
-                                Location</button>
-                            <button type="button" id="get-from-maps-btn"
-                                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Open Map</button>
-
-                            <div id="map" class="mt-4 h-96 hidden"></div>
-                            <p id="selected-location" class="mt-2 text-sm">Latitude: <span id="lat"></span>,
-                                Longitude:
-                                <span id="long"></span>
-                            </p>
-                        </div>
-
-
-
-
-                        <!-- Date Pickers and other elements -->
-                        <button id="fetch-data-open-meteo-btn" type="submit"
-                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch</button>
-                    </form>
-
                 </div>
             </div>
         </div>
+
+        <div id="data-container" class="mt-4 w-full">
+            <!-- Your content and visualization can go here -->
+        </div>
+
     </div>
 
     <script>
@@ -550,7 +502,7 @@
                 formData.append('freq', timeSeriesData['freq']);
                 formData.append('description', timeSeriesData['description']);
 
-                
+
                 $.ajax({
                     url: '{{ route('seqal.tempsave') }}', // Replace with your actual route
                     method: 'POST',

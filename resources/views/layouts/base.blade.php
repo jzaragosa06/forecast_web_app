@@ -96,6 +96,13 @@
     <!-- Font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+
+    <!-- jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <!-- Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF-AutoTable plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 
 <body class="bg-gray-100">
@@ -131,7 +138,7 @@
                         class="{{ request()->routeIs('share.index') ? 'text-blue-500 bg-blue-100' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-4 rounded-lg">
                         <!-- Increased padding -->
                         <i class="fas fa-share-square text-2xl mr-3"></i> <!-- Increased icon size -->
-                        <span class="text-sm">Shared Files</span> <!-- Increased text size -->
+                        <span class="text-sm">Shared Results </span> <!-- Increased text size -->
                     </a>
                 </div>
                 <div class="p-2">

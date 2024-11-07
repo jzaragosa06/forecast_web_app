@@ -98,17 +98,35 @@
         </div>
 
 
-        <!-- This is for Chat with AI-->
+        <!-- Download Button -->
+        <button id="downloadButton"
+            class="fixed bottom-20 right-6 mb-4 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-500 focus:outline-none">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m-4 4l4 4 4-4" />
+            </svg>
+        </button>
+        <!-- The line graph for pdf. render->capture->include -->
+        <canvas id="lineChart" width="600" height="400" style="display:none;"></canvas>
+
+        <!-- Chat with AI Button -->
         <button id="chatButton"
             class="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-500 focus:outline-none">
-            <!-- AI Chat Icon -->
-            AI Chat 💬
+            <i class="fa-solid fa-robot fa-bounce" style="color: #ffffff;"></i>
         </button>
 
+
         <div id="chatBox" class="hidden fixed bottom-6 right-6 w-96 h-96 bg-white rounded-lg shadow-xl overflow-hidden">
-            <!-- Chat Header -->
             <div class="bg-gray-200 border-b p-3 flex justify-between items-center">
-                <h3 class="text-lg font-semibold text-gray-700">Chat with AI</h3>
+                <div class="flex items-center space-x-2">
+                    <!-- Google Gemini Icon -->
+                    <img src="https://lh3.googleusercontent.com/Xtt-WZqHiV8OjACMMMr6wMdoMGE7bABi-HYujupzevufo1kiHUFQZukI1JILhjItrPNrDWLq6pfd=s600-w600"
+                        alt="Google Gemini Icon" class="w-5 h-5">
+                    <h3 class="text-lg font-semibold text-gray-700">Chat with AI</h3>
+                    <span class="text-sm text-gray-500 ml-2">Powered with Google Gemini</span>
+                </div>
                 <button id="closeChat" class="text-gray-400 hover:text-gray-600 focus:outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -116,8 +134,6 @@
                     </svg>
                 </button>
             </div>
-
-            <!-- Chat Body -->
             <div id="chatMessages" class="p-4 h-64 overflow-y-auto bg-gray-50">
                 @if ($history)
                     {!! $history->history !!}
@@ -125,8 +141,6 @@
                     <div id="initial-message" class="text-sm text-gray-600">Welcome! How can I assist you today?</div>
                 @endif
             </div>
-
-            <!-- Chat Input -->
             <div class="bg-white p-3 border-t flex items-center space-x-2">
                 <input type="text" id="chatInput"
                     class="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -144,6 +158,178 @@
 @endsection
 
 @section('scripts')
+
+    <script>
+        function stripHTMLTags(input) {
+            return input.replace(/<[^>]*>/g, '');
+        }
+
+        $("#downloadButton").click(function(e) {
+            e.preventDefault();
+
+            console.log("download event");
+
+            const jsonData = @json($data);
+            const data = JSON.parse(jsonData);
+            const colname = data.metadata.colname;
+            const description = @json(strip_tags($description));
+            const value = data.trend[`${data.metadata.colname}`];
+            const index = data.trend.index;
+
+            const response1 = stripHTMLTags(data.explanations.response1);
+            const response2 = stripHTMLTags(data.explanations.response2);
+            const response3 = stripHTMLTags(data.explanations.response3);
+            const keyDetails = response1 + response2 + response3;
+
+            @if ($note)
+                const note = @json(strip_tags($note->content));
+            @else
+                const note = "";
+            @endif
+
+            const {
+                jsPDF
+            } = window.jspdf;
+            const pdf = new jsPDF();
+
+            // Header background and title
+            pdf.setFillColor(230, 230, 230);
+            pdf.rect(0, 0, pdf.internal.pageSize.width, 30, 'F');
+            const logoImage = new Image();
+            logoImage.src = "{{ asset('storage/idiot-guid-imgs/logo.png') }}";
+            logoImage.onload = async () => {
+                const logoWidth = 20;
+                const logoHeight = 20;
+                pdf.addImage(logoImage, 'PNG', 10, 5, logoWidth, logoHeight);
+                pdf.setFontSize(22);
+                pdf.setFont("helvetica", "bold");
+                pdf.text("DataForesight", 40, 20);
+                pdf.setFontSize(12);
+                pdf.setFont("helvetica", "normal");
+                pdf.text("The following describes the result of analysis.", 40, 25);
+
+                // Background for Data section
+                pdf.setFillColor(240, 240, 240);
+                pdf.rect(10, 35, pdf.internal.pageSize.width - 20, 20, 'F');
+                pdf.setFontSize(10);
+                pdf.text("Background of the data used for analysis: " + description, 12, 42, {
+                    maxWidth: pdf.internal.pageSize.width - 24
+                });
+
+                // Add chart (adjust this part for your image dimensions)
+                const canvas = document.getElementById("lineChart");
+                const ctx = canvas.getContext("2d");
+                const originalWidth = canvas.width;
+                const originalHeight = canvas.height;
+                canvas.width = originalWidth * 2;
+                canvas.height = originalHeight * 2;
+                ctx.scale(2, 2);
+
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: index,
+                        datasets: [{
+                            label: `${colname}`,
+                            data: value,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            fill: false,
+                            yAxisID: 'y-axis-1',
+                            pointRadius: 0
+                        }],
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true, // Enable the title
+                                text: `Trend Analysis for ${colname}`, // Set the title text
+                                font: {
+                                    size: 16 // Optionally, set the font size for the title
+                                },
+                                padding: {
+                                    top: 10,
+                                    bottom: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Dates'
+                                }
+                            },
+                            'y-axis-1': {
+                                type: 'linear',
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: `${colname}`
+                                }
+                            }
+                        }
+                    }
+                });
+
+                await new Promise(resolve => setTimeout(resolve, 100));
+                const imageData = canvas.toDataURL("image/png");
+                pdf.addImage(imageData, 'PNG', 10, 60, 180, 80);
+
+                // Notes section
+                pdf.setFillColor(240, 240, 240);
+                pdf.rect(10, 145, pdf.internal.pageSize.width - 20, 15, 'F');
+                pdf.setFont("helvetica", "bold");
+                pdf.setFontSize(14);
+                pdf.text("Notes", 10, 155);
+
+                if (note != "") {
+                    pdf.setFont("helvetica", "normal");
+                    pdf.setFontSize(10);
+                    pdf.text(note, 10, 165, {
+                        maxWidth: pdf.internal.pageSize.width - 20
+                    });
+                } else {
+                    pdf.setFont("helvetica", "normal");
+                    pdf.setFontSize(10);
+                    pdf.text("No notes added", 10, 165, {
+                        maxWidth: pdf.internal.pageSize.width - 20
+                    });
+                }
+
+                // Add a new page for Key Details
+                pdf.addPage();
+                pdf.setFillColor(240, 240, 240);
+                pdf.rect(10, 20, pdf.internal.pageSize.width - 20, 15, 'F');
+                pdf.setFont("helvetica", "bold");
+                pdf.setFontSize(14);
+                pdf.text("Key Details (AI Generated)", 10, 30);
+
+                // Key details content with pagination
+                pdf.setFont("helvetica", "normal");
+                pdf.setFontSize(10);
+
+                // Split text and paginate
+                const lines = pdf.splitTextToSize(keyDetails, pdf.internal.pageSize.width - 20);
+                let yPosition = 40; // Start position for the first line
+
+                lines.forEach(line => {
+                    if (yPosition > pdf.internal.pageSize.height -
+                        10) { // Check if we are near the bottom of the page
+                        pdf.addPage(); // Add a new page
+                        yPosition = 20; // Reset y position for the new page
+                    }
+                    pdf.text(line, 10, yPosition);
+                    yPosition += 10; // Move y position down for each line
+                });
+
+
+                // Save the PDF
+                pdf.save("report.pdf");
+            };
+        });
+    </script>
     <script>
         $(document).ready(function() {
             // Select elements
