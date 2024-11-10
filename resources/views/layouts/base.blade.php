@@ -107,50 +107,94 @@
 
 <body class="bg-gray-100">
     <div class="flex h-screen">
-        <!-- Sidebar -->
-        <div class="w-50 bg-white border-r flex flex-col items-center py-6"> <!-- Increased width here -->
-            <div class="mb-3 relative group flex flex-col items-center">
-                <!-- Logo -->
-                <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-12 w-auto mb-2">
-                <div class="text-blue-600 text-1xl font-bold">DataForesight</div>
+
+
+        <!-- Collapsible Sidebar -->
+        <div id="sidebar"
+            class="bg-blue-600 text-white w-56 transition-width duration-300 ease-in-out flex flex-col items-center py-6 relative">
+
+            <!-- Centered Collapse Button on the Edge -->
+            <button id="collapseButton"
+                class="absolute -right-5 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white p-2 rounded-full shadow-lg focus:outline-none">
+                <i class="fas fa-angle-double-left" id="collapseIcon"></i>
+                <!-- Icon reflects initial state as expanded -->
+            </button>
+
+            <!-- Logo and Title -->
+            <div class="mb-6 flex flex-col items-center">
+                <a href="{{ route('home') }}"><img src="{{ asset('assets/img/logo-white.png') }}" alt="Logo"
+                        class="h-12 w-auto mb-2"></a>
+
+                <div id="sidebarTitle" class="text-lg font-bold transition-opacity duration-300">DataForesight</div>
             </div>
 
-            <!-- Sidebar Icons -->
-            <nav class="flex flex-col space-y-5">
-                <div class="p-2">
-                    <a href="{{ route('home') }}"
-                        class="{{ request()->routeIs('home') ? 'text-blue-500 bg-blue-100' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-2 rounded-lg">
-                        <!-- Increased padding -->
-                        <i class="fas fa-tachometer-alt text-2xl mr-3"></i> <!-- Increased icon size -->
-                        <span class="text-sm">Dashboard</span> <!-- Increased text size -->
-                    </a>
-                </div>
-                <div class="p-2">
-                    <a href="{{ route('crud.index') }}"
-                        class="{{ request()->routeIs('crud.index') ? 'text-blue-500 bg-blue-100' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-4 rounded-lg">
-                        <!-- Increased padding -->
-                        <i class="fas fa-tasks text-2xl mr-3"></i> <!-- Increased icon size -->
-                        <span class="text-sm">Manage Results</span> <!-- Increased text size -->
-                    </a>
-                </div>
-                <div class="p-2">
-                    <a href="{{ route('share.index') }}"
-                        class="{{ request()->routeIs('share.index') ? 'text-blue-500 bg-blue-100' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-4 rounded-lg">
-                        <!-- Increased padding -->
-                        <i class="fas fa-share-square text-2xl mr-3"></i> <!-- Increased icon size -->
-                        <span class="text-sm">Shared Results </span> <!-- Increased text size -->
-                    </a>
-                </div>
-                <div class="p-2">
-                    <a href="{{ route('posts.index') }}"
-                        class="{{ request()->routeIs('posts.index') ? 'text-blue-500 bg-blue-100' : 'text-gray-600 hover:text-blue-500' }} flex items-center p-4 rounded-lg">
-                        <!-- Increased padding -->
-                        <i class="fas fa-comments text-2xl mr-3"></i> <!-- Increased icon size -->
-                        <span class="text-sm">Discussion</span> <!-- Increased text size -->
-                    </a>
-                </div>
+            <!-- Sidebar Navigation Links -->
+            <nav class="w-full flex flex-col space-y-4">
+                <a href="{{ route('home') }}"
+                    class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('home') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
+                    <i class="fas fa-tachometer-alt text-xl mr-3"></i>
+                    <span class="text-sm sidebar-text transition-opacity duration-300">Dashboard</span>
+                </a>
+                <a href="{{ route('crud.index') }}"
+                    class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('crud.index') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
+                    <i class="fas fa-tasks text-xl mr-3"></i>
+                    <span class="text-sm sidebar-text transition-opacity duration-300">Manage Results</span>
+                </a>
+                <a href="{{ route('share.index') }}"
+                    class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('share.index') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
+                    <i class="fas fa-share-square text-xl mr-3"></i>
+                    <span class="text-sm sidebar-text transition-opacity duration-300">Shared Results</span>
+                </a>
+                <a href="{{ route('posts.index') }}"
+                    class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('posts.index') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
+                    <i class="fas fa-comments text-xl mr-3"></i>
+                    <span class="text-sm sidebar-text transition-opacity duration-300">Discussion</span>
+                </a>
             </nav>
         </div>
+
+
+
+        <!-- JavaScript for Collapse Functionality with Persistence -->
+        <script>
+            const sidebar = document.getElementById('sidebar');
+            const collapseButton = document.getElementById('collapseButton');
+            const collapseIcon = document.getElementById('collapseIcon');
+            const sidebarTitle = document.getElementById('sidebarTitle');
+            const sidebarTextElements = document.querySelectorAll('.sidebar-text');
+
+            // Load sidebar state from localStorage
+            function loadSidebarState() {
+                const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                if (isCollapsed) {
+                    sidebar.classList.remove('w-56');
+                    sidebar.classList.add('w-20');
+                    collapseIcon.classList.remove('fa-angle-double-left');
+                    collapseIcon.classList.add('fa-angle-double-right');
+                    sidebarTitle.classList.add('hidden');
+                    sidebarTextElements.forEach(element => element.classList.add('opacity-0'));
+                }
+            }
+
+            // Toggle sidebar and save state to localStorage
+            collapseButton.addEventListener('click', () => {
+                sidebar.classList.toggle('w-56');
+                sidebar.classList.toggle('w-20');
+                collapseIcon.classList.toggle('fa-angle-double-left');
+                collapseIcon.classList.toggle('fa-angle-double-right');
+                sidebarTitle.classList.toggle('hidden');
+                sidebarTextElements.forEach(element => element.classList.toggle('opacity-0'));
+
+                // Save the collapsed state
+                const isCollapsed = sidebar.classList.contains('w-20');
+                localStorage.setItem('sidebarCollapsed', isCollapsed);
+            });
+
+            // Load the sidebar state when the page loads
+            document.addEventListener('DOMContentLoaded', loadSidebarState);
+        </script>
+
+
 
 
 

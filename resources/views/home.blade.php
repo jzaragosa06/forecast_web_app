@@ -182,7 +182,7 @@
                                             <div class="flex items-center space-x-2">
                                                 <p class="text-gray-600 text-xs flex-grow">Upload your time
                                                     series
-                                                    data in <a href="#"
+                                                    data in <a href="{{ route('documentation') }}"
                                                         class="text-gray-600  text-xshover:text-blue-500 underline hover:underline">
                                                         csv format
                                                     </a>.
@@ -378,7 +378,6 @@
                                 <i id="data-info" class="fas fa-sm fa-info-circle text-gray-400 cursor-pointer ml-2"
                                     data-tooltip="These are buttons for displaying specific type of data"></i>
                             </div>
-
 
                             <!-- Graphs and description for uploads -->
                             <div id="input-via-uploads-Container" class="">
