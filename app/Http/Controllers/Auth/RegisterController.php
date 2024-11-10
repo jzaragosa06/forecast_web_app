@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Logs;
+use App\Models\File as FileModel;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -80,6 +81,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
+
     protected function create(array $data)
     {
 
@@ -88,11 +90,35 @@ class RegisterController extends Controller
             'name' => $data['first_name'] . " " . $data['last_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+
         ]);
     }
 
     protected function registered(Request $request, $user)
     {
+
+        //add the database entry of sample data for new account. 
+        FileModel::create([
+            'user_id' => Auth::id(),
+            'filename' => 'sample_gas_price.csv',
+            'filepath' => 'uploads/sample_gas_price.csv',
+            'type' => 'univariate',
+            'freq' => 'M',
+            'source' => 'uploads',
+            'description' => 'The time series describes the monthly price  (in $) of gasoline in United States.',
+        ]);
+
+
+        FileModel::create([
+            'user_id' => Auth::id(),
+            'filename' => 'sample_gas_and_transpo_price.csv',
+            'filepath' => 'uploads/sample_gas_and_transpo_price.csv',
+            'type' => 'multivariate',
+            'freq' => 'M',
+            'source' => 'uploads',
+            'description' => "The time series describes the monthly price  (in $) of gasoline (MonthlyGasolinePriceInDollar) in United States. Additionally, 'TransporationCostInDollar' describes the cost (in $) of transporting gasoline (per barrel) across Atlantic",
+        ]);
+
         Logs::create([
             'user_id' => Auth::id(),
             'action' => 'Register',
