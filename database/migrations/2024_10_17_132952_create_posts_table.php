@@ -8,7 +8,7 @@ return new class extends Migration {
     /**
      * Run the migrations.
      *
-     * @return void
+     * @returphp artisan migrate:rollback --path=/database/migrations/n void
      */
     public function up()
     {
@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('title');
             $table->text('body');
             $table->string('topics');
+            $table->string("post_image")->nullable();
             $table->timestamps();
 
             // Foreign key constraint

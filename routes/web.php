@@ -37,7 +37,16 @@ use App\Http\Controllers\CommentController;
 
 Route::get('/', function () {
     return view('welcome');
+
+
 })->name('welcome');
+
+Route::get('/documentation', function () {
+    return view("documentation");
+})->name('documentation');
+
+
+
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -208,4 +217,8 @@ Route::get("/pdfdoc", function () {
 
 Route::get("/htmlpdf", function () {
     return view("htmlpdf");
+});
+
+Route::get("/side", function () {
+    return view("side");
 });

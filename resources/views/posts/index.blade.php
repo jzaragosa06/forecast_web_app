@@ -180,8 +180,8 @@
                 <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal">&times;</button>
             </div>
 
-            <div class="modal-body">
-                <form action="{{ route('posts.store') }}" method="POST">
+            <div class="modal-body px-6 py-4 max-h-[80vh] overflow-y-auto">
+                <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-4">
                         <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
@@ -191,7 +191,7 @@
 
                     <div class="mb-4">
                         <label for="body" class="block text-sm font-medium text-gray-700">Body</label>
-                        <div id="editor" class="bg-white border border-gray-300 rounded" style="height: 300px;"></div>
+                        <div id="editor" class="bg-white border border-gray-300 rounded" style="height: 150px;"></div>
                         <input type="hidden" id="body" name="body">
                     </div>
 
@@ -215,6 +215,23 @@
                             placeholder="e.g., Forecast,Inflation">
                     </div>
 
+                    <!-- Improved File Upload Styling -->
+                    <div class="mb-4">
+                        <label for="post_image" class="block text-sm font-medium text-gray-700">Add Thumbnail
+                            Image</label>
+                        <p class="text-xs text-gray-500">Optional. Default thumbnail will be used</p>
+                        <div
+                            class="upload-thumbnail border border-dashed border-gray-300 rounded p-4 text-center hover:bg-gray-50">
+                            <input type="file" id="post_image" name="post_image" accept=".jpeg,.png,.jpg,.svg"
+                                class="hidden" onchange="previewImage(event)">
+                            <label for="post_image" class="cursor-pointer text-blue-600 hover:underline">Upload
+                                Image</label>
+                            <div id="image-preview" class="mt-4 hidden">
+                                <img src="" alt="Image Preview" class="max-h-32 mx-auto rounded-md">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="flex justify-end space-x-4">
                         <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
                             data-dismiss="modal">Close</button>
@@ -223,6 +240,22 @@
                     </div>
                 </form>
             </div>
+            <script>
+                function previewImage(event) {
+                    const preview = document.getElementById('image-preview');
+                    const img = preview.querySelector('img');
+                    const file = event.target.files[0];
+
+                    if (file) {
+                        img.src = URL.createObjectURL(file);
+                        preview.classList.remove('hidden');
+                    } else {
+                        img.src = '';
+                        preview.classList.add('hidden');
+                    }
+                }
+            </script>
+
         </div>
     </div>
 @endsection

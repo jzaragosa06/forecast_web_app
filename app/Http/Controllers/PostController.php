@@ -18,26 +18,67 @@ use App\Models\Logs;
 
 class PostController extends Controller
 {
-
     // Store a new post
+    // public function store(Request $request)
+    // {
+
+
+    //     $request->validate([
+    //         'title' => 'required|string|max:255',
+    //         'body' => 'required|string',
+    //         'topics' => 'required|string',
+    //         'post_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //     ]);
+
+    //     // If an image is uploaded, handle it
+    //     if ($request->hasFile('post_image')) {
+    //         $path = $request->file('post_image')->store('images');
+    //     }
+
+    //     $post = Post::create([
+    //         'user_id' => Auth::id(),
+    //         'title' => $request->title,
+    //         'file_assoc_id' => $request->file_assoc_id,
+    //         'body' => $request->body,
+    //         'topics' => $request->topics,
+    //         'post_image' => $path,
+    //     ]);
+    //     session()->flash('post_success', 'Posted successfully!');
+    //     return redirect()->route('posts.show', $post->id);
+
+    // }
+
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'body' => 'required|string',
             'topics' => 'required|string',
+            'post_image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
         ]);
 
+        // Initialize $path to null in case no image is uploaded
+        $path = null;
+
+        // If an image is uploaded, handle it
+        if ($request->hasFile('post_image')) {
+            $path = $request->file('post_image')->store('thumbnails', 'public');
+        }
+
+        
+        // Create the post with the appropriate image path (or null if no image)
         $post = Post::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
             'file_assoc_id' => $request->file_assoc_id,
             'body' => $request->body,
             'topics' => $request->topics,
+            'post_image' => $path,  // Will be null if no image was uploaded
         ]);
+
+        // Flash a success message and redirect to the post show page
         session()->flash('post_success', 'Posted successfully!');
         return redirect()->route('posts.show', $post->id);
-
     }
 
     // Show a specific post and its comments

@@ -721,11 +721,16 @@
                                     </a>
 
                                     <div>
+                                        <div>
+                                            <img id="profileImage"
+                                                src="{{ $post->post_image ? asset('storage/' . $post->post_image) : 'https://dotdata.com/wp-content/uploads/2020/07/time-series.jpg' }}"
+                                                class="w-75 h-25 object-cover mr-2" alt="Profile Photo">
+                                        </div>
                                         <!-- Post title and other details -->
-                                        <h4 class="text-base font-semibold mb-2 text-gray-600">
+                                        <h5 class="text-base font-semibold mb-2 text-gray-600">
                                             <a href="{{ route('posts.show', $post) }}"
                                                 class="hover:text-blue-600 break-words overflow-hidden">{{ $post->title }}</a>
-                                        </h4>
+                                        </h5>
 
                                         <!-- Flex container for profile image and posted by text -->
                                         <div class="flex items-center mb-2">

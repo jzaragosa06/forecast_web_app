@@ -92,13 +92,8 @@ class HomeController extends Controller
         $otherPosts = Post::where('user_id', '!=', $currentUserId)->latest()->get();
 
 
-        
+
         // Pass the time series data to the view
         return view('home', compact('timeSeriesData', 'files', 'file_assocs', 'sharedFiles', 'otherPosts'));
     }
-
-
-
-
-
 }

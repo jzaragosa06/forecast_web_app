@@ -10,6 +10,9 @@
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Apexchart CDN-->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
     <style>
         @keyframes fade-in {
             0% {
@@ -42,13 +45,10 @@
             <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <a class="flex items-center space-x-3 self-center text-2xl font-semibold whitespace-nowrap text-sky-600"
                     href="{{ url('/') }}">
-                    <!-- <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-10 w-10"> -->
-                    <!-- Adjust the size as needed -->
                     <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" class="h-12 w-auto">
                     <span class="text-blue-600 text-1xl font-bold">{{ config('app.name', 'DataForesight') }}</span>
                 </a>
                 <div class="flex md:order-2 space-x-3">
-                    {{-- Show "Get Started" only on the landing page --}}
                     @if (Route::is('welcome') || Route::is('/'))
                         <a href="{{ route('register') }}">
                             <button type="button"
@@ -58,7 +58,6 @@
                         </a>
                     @endif
 
-                    {{-- Show "Register" button if the user is on the login page --}}
                     @if (Route::is('login'))
                         <a href="{{ route('register') }}">
                             <button type="button"
@@ -67,7 +66,6 @@
                             </button>
                         </a>
                     @elseif (!auth()->check())
-                        {{-- Show login button only if the user is not authenticated and not on the login page --}}
                         <a href="{{ route('login') }}">
                             <button type="button"
                                 class="text-white bg-cyan-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">
@@ -88,14 +86,13 @@
                     </button>
                 </div>
 
-                {{-- Menu Items (Home, About, Services, Contact) --}}
+                <!-- Menu Items (Home, About, Services, Contact) -->
                 <div class="items-center justify-between hidden w-full md:flex md:w-auto" id="navbar-sticky">
                     <ul
                         class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 md:flex-row md:mt-0 md:border-0 md:bg-white">
-
                         <li>
                             <a href="#home"
-                                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 bg-blue-500 text-white">Home</a>
+                                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700">Home</a>
                         </li>
                         <li>
                             <a href="#about"
@@ -115,9 +112,8 @@
         </nav>
     </header>
 
-
     <!-- Main Content -->
-    <main class="">
+    <main class="content-section">
         @yield('content')
     </main>
 
@@ -173,7 +169,6 @@
         </div>
     </footer>
 
-
     <script>
         window.addEventListener('load', function() {
             window.history.scrollRestoration = 'manual';
@@ -183,52 +178,26 @@
         document.addEventListener('DOMContentLoaded', function() {
             const navLinks = document.querySelectorAll('nav a[href^="#"]');
             const sections = document.querySelectorAll('section');
-
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault(); // Prevent default jump
-
-                    const targetId = this.getAttribute('href'); // Get the #id
-                    const targetElement = document.querySelector(targetId);
-
-                    if (targetElement) { // Check if the target element exists
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-
-                        // Remove active class from all links
-                        navLinks.forEach(link => link.classList.remove('bg-blue-500',
-                            'text-white'));
-
-                        // Add active class to the clicked link
-                        this.classList.add('bg-blue-500', 'text-white');
-                    }
-
-                });
-            });
+            const activeLinkClass = "text-blue-700 font-bold";
 
             window.addEventListener('scroll', () => {
                 let current = '';
-
                 sections.forEach(section => {
                     const sectionTop = section.offsetTop;
-                    const sectionHeight = section.clientHeight;
-
-                    if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                    if (scrollY >= sectionTop - 60) {
                         current = section.getAttribute('id');
                     }
                 });
 
                 navLinks.forEach(link => {
-                    link.classList.remove('bg-blue-500', 'text-white');
-                    if (link.href.includes(`#${current}`)) {
-                        link.classList.add('bg-blue-500', 'text-white');
+                    link.classList.remove(...activeLinkClass.split(" "));
+                    if (link.getAttribute('href').slice(1) === current) {
+                        link.classList.add(...activeLinkClass.split(" "));
                     }
                 });
             });
         });
     </script>
-
 </body>
 
 </html>
