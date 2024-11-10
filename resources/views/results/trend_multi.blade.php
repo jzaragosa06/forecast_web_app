@@ -160,6 +160,7 @@
 
 
 @section('scripts')
+
     <script>
         function stripHTMLTags(input) {
             return input.replace(/<[^>]*>/g, '');
@@ -173,18 +174,7 @@
             const jsonData = @json($data);
             const data = JSON.parse(jsonData);
             const colnames = data.metadata.colname;
-
-
-
-            const colname = data.metadata.colname;
             const description = @json(strip_tags($description));
-            const value = data.trend[`${data.metadata.colname}`];
-            const index = data.trend.index;
-
-            const response1 = stripHTMLTags(data.explanations.response1);
-            const response2 = stripHTMLTags(data.explanations.response2);
-            const response3 = stripHTMLTags(data.explanations.response3);
-            const keyDetails = response1 + response2 + response3;
 
 
 
@@ -232,51 +222,51 @@
                 canvas.height = originalHeight * 2;
                 ctx.scale(2, 2);
 
+
+
+                // Prepare datasets and y-axis configuration
+                const datasets = [];
+                const yAxisConfig = {};
+
+
+                colnames.forEach((col, index) => {
+                    datasets.push({
+                        label: `${col}`,
+                        data: data.trend[`${col}`],
+                        borderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`,
+                        fill: false,
+                        yAxisID: `y-axis-${index + 1}`,
+                        pointRadius: 0,
+                    });
+
+                    yAxisConfig[`y-axis-${index + 1}`] = {
+                        type: 'linear',
+                        position: 'left', // Alternating y-axis sides
+                        title: {
+                            display: true,
+                            text: col
+                        },
+                    };
+                });
+
                 const chart = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: index,
-                        datasets: [{
-                            label: `${colname}`,
-                            data: value,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            fill: false,
-                            yAxisID: 'y-axis-1',
-                            pointRadius: 0
-                        }],
+                        labels: data.trend.index, // x-axis labels (dates/times)
+                        datasets: datasets
                     },
                     options: {
                         responsive: false,
                         maintainAspectRatio: false,
-                        plugins: {
-                            title: {
-                                display: true, // Enable the title
-                                text: `Trend Analysis for ${colname}`, // Set the title text
-                                font: {
-                                    size: 16 // Optionally, set the font size for the title
-                                },
-                                padding: {
-                                    top: 10,
-                                    bottom: 20
-                                }
-                            }
-                        },
                         scales: {
                             x: {
                                 title: {
                                     display: true,
-                                    text: 'Dates'
+                                    text: 'Date/Time'
                                 }
                             },
-                            'y-axis-1': {
-                                type: 'linear',
-                                position: 'left',
-                                title: {
-                                    display: true,
-                                    text: `${colname}`
-                                }
-                            }
-                        }
+                            ...yAxisConfig
+                        },
                     }
                 });
 
@@ -305,38 +295,45 @@
                     });
                 }
 
-                // Add a new page for Key Details
-                pdf.addPage();
-                pdf.setFillColor(240, 240, 240);
-                pdf.rect(10, 20, pdf.internal.pageSize.width - 20, 15, 'F');
-                pdf.setFont("helvetica", "bold");
-                pdf.setFontSize(14);
-                pdf.text("Key Details (AI Generated)", 10, 30);
+                colnames.forEach((col, index) => {
+                    pdf.addPage();
+                    pdf.setFillColor(240, 240, 240);
+                    pdf.rect(10, 20, pdf.internal.pageSize.width - 20, 15, 'F');
+                    pdf.setFont("helvetica", "bold");
+                    pdf.setFontSize(14);
+                    pdf.text(`Key Details on ${col} (AI Generated)`, 10, 30);
 
-                // Key details content with pagination
-                pdf.setFont("helvetica", "normal");
-                pdf.setFontSize(10);
+                    // Key details content with pagination
+                    pdf.setFont("helvetica", "normal");
+                    pdf.setFontSize(10);
 
-                // Split text and paginate
-                const lines = pdf.splitTextToSize(keyDetails, pdf.internal.pageSize.width - 20);
-                let yPosition = 40; // Start position for the first line
+                    let response1 = stripHTMLTags(data.explanations[`${col}`]['response1']);
+                    let response2 = stripHTMLTags(data.explanations[`${col}`]['response2']);
+                    let keyDetails = response1 + response2;
 
-                lines.forEach(line => {
-                    if (yPosition > pdf.internal.pageSize.height -
-                        10) { // Check if we are near the bottom of the page
-                        pdf.addPage(); // Add a new page
-                        yPosition = 20; // Reset y position for the new page
-                    }
-                    pdf.text(line, 10, yPosition);
-                    yPosition += 10; // Move y position down for each line
+
+                    // Split text and paginate
+                    const lines = pdf.splitTextToSize(keyDetails, pdf.internal.pageSize.width - 20);
+                    let yPosition = 40; // Start position for the first line
+
+                    lines.forEach(line => {
+                        if (yPosition > pdf.internal.pageSize.height -
+                            10) { // Check if we are near the bottom of the page
+                            pdf.addPage(); // Add a new page
+                            yPosition = 20; // Reset y position for the new page
+                        }
+                        pdf.text(line, 10, yPosition);
+                        yPosition += 10; // Move y position down for each line
+                    });
                 });
-
 
                 // Save the PDF
                 pdf.save("report.pdf");
             };
         });
     </script>
+
+
 
     <script>
         $(document).ready(function() {

@@ -67,7 +67,6 @@
                     <div id="chart1"></div> <!-- Placeholder for the graph -->
                 </div>
 
-
                 <!-- Notes Section (Bottom) -->
                 <div class="bg-white shadow-md rounded-lg p-3 flex-1 flex flex-col"> <!-- Reduced padding to p-3 -->
                     <h2 class="font-semibold text-gray-700 text-sm">Notes</h2> <!-- Reduced font size -->
