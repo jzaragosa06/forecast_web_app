@@ -247,8 +247,6 @@
             onclick="togglePanel()">
             <i class="fa-solid fa-pen-to-square fa-lg" style="color: #ffffff;"></i>
         </button>
-
-
     </div>
 @endsection
 
