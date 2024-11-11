@@ -132,28 +132,26 @@
             <nav class="w-full flex flex-col space-y-4">
                 <a href="{{ route('home') }}"
                     class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('home') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
-                    <i class="fas fa-tachometer-alt text-xl mr-3"></i>
+                    <i class="fas fa-tachometer-alt text-xl mr-2 ml-4"></i>
                     <span class="text-sm sidebar-text transition-opacity duration-300">Dashboard</span>
                 </a>
                 <a href="{{ route('crud.index') }}"
                     class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('crud.index') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
-                    <i class="fas fa-tasks text-xl mr-3"></i>
+                    <i class="fas fa-tasks text-xl mr-2 ml-4"></i>
                     <span class="text-sm sidebar-text transition-opacity duration-300">Manage Results</span>
                 </a>
                 <a href="{{ route('share.index') }}"
                     class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('share.index') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
-                    <i class="fas fa-share-square text-xl mr-3"></i>
+                    <i class="fas fa-share-square text-xl mr-2 ml-4"></i>
                     <span class="text-sm sidebar-text transition-opacity duration-300">Shared Results</span>
                 </a>
                 <a href="{{ route('posts.index') }}"
                     class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('posts.index') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
-                    <i class="fas fa-comments text-xl mr-3"></i>
+                    <i class="fas fa-comments text-xl mr-2 ml-4"></i>
                     <span class="text-sm sidebar-text transition-opacity duration-300">Discussion</span>
                 </a>
             </nav>
         </div>
-
-
 
         <!-- JavaScript for Collapse Functionality with Persistence -->
         <script>
@@ -193,8 +191,6 @@
             // Load the sidebar state when the page loads
             document.addEventListener('DOMContentLoaded', loadSidebarState);
         </script>
-
-
 
 
 
