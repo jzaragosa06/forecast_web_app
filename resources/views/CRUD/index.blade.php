@@ -2,7 +2,7 @@
 
 @section('title', 'Manage Files')
 
-@section('page-title', 'Manage Files')
+@section('page-title', 'Manage Files & Results')
 
 @section('content')
     @if (session('success'))
@@ -114,103 +114,89 @@
                 @endif
             </div>
 
-
-            <!-- Datatables on the right -->
-            <div class="lg:col-span-2 space-y-6">
-                <!-- Input File Datatable -->
-                <div class="bg-white rounded-lg shadow p-4">
-                    <h5 class="text-base font-semibold mb-2 text-gray-700">Files</h5>
-                    <table id="filesTable" class="min-w-full divide-y divide-gray-200 text-left">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
-                                    ID</th>
-                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
-                                    File Name</th>
-                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
-                                    Type</th>
-                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
-                                    Description</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach ($files_input as $file)
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $file->file_id }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $file->filename }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $file->type }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex space-x-2">
-
-                                        <a href="{{ route('input.file.graph.view.get', $file->file_id) }}"> <button
-                                                type="submit"
-                                                class="bg-blue-500 text-white px-3 py-1 rounded">View</button></a>
-
-
-                                        <form action="{{ route('crud.delete.file', $file->file_id) }}" method="POST"
-                                            class="inline-block">
-                                            @csrf
-                                            <button type="submit"
-                                                class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                                        </form>
-
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <div x-data="{ selectedTab: 'results' }" class="lg:col-span-2 space-y-6">
+                <!-- Toggle Buttons for Files and Results -->
+                <div class="flex space-x-4 mb-4">
+                    <button @click="selectedTab = 'files'"
+                        :class="selectedTab === 'files' ? 'bg-blue-500 text-white' :
+                            'bg-white text-blue-500 border border-blue-500'"
+                        class="px-4 py-2 rounded font-semibold focus:outline-none">
+                        Input Files
+                    </button>
+                    <button @click="selectedTab = 'results'"
+                        :class="selectedTab === 'results' ? 'bg-blue-500 text-white' :
+                            'bg-white text-blue-500 border border-blue-500'"
+                        class="px-4 py-2 rounded font-semibold focus:outline-none">
+                        Results
+                    </button>
                 </div>
 
-                <!-- Result Files Datatable -->
-                <div class="bg-white rounded-lg shadow p-4">
+                <!-- Files Section -->
+                <div x-show="selectedTab === 'files'" class="space-y-4">
+                    <h5 class="text-base font-semibold mb-2 text-gray-700">Files</h5>
+                    @foreach ($files_input as $file)
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h6 class="font-semibold text-gray-700">{{ $file->filename }}</h6>
+                                    <p class="text-sm text-gray-500">Type: {{ $file->type }}</p>
+                                    <p class="text-sm text-gray-500">Created on: {{ $file->created_at->format('Y-m-d') }}
+                                    </p>
+                                    <p class="text-sm text-gray-500">Description: {{ $file->description }}</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <a href="{{ route('input.file.graph.view.get', $file->file_id) }}">
+                                        <button type="button"
+                                            class="bg-blue-500 text-white px-3 py-1 rounded">View</button>
+                                    </a>
+                                    <form action="{{ route('crud.delete.file', $file->file_id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Results Section -->
+                <div x-show="selectedTab === 'results'" class="space-y-4">
                     <h5 class="text-base font-semibold mb-2 text-gray-700">Result Files (Forecast, Trend, Seasonality
                         Analysis)</h5>
-                    <table id="resultsTable" class="min-w-full divide-y divide-gray-200 text-left">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
-                                    File ID</th>
-                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
-                                    Result File Name</th>
-                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
-                                    Operation</th>
-                                <th class="px-6 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider">
-                                    Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach ($files_assoc as $file_assoc)
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $file_assoc->file_assoc_id }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $file_assoc->assoc_filename }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $file_assoc->operation }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex space-x-2">
-                                        <button type="button" class="bg-blue-500 text-white px-3 py-1 rounded"
-                                            id="shareButton" data-file-assoc-id="{{ $file_assoc->file_assoc_id }}">
-                                            Share
-                                        </button>
-
-                                        <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}"> <button
-                                                type="submit"
-                                                class="bg-blue-500 text-white px-3 py-1 rounded">View</button>
-                                        </a>
-
-                                        <form action="{{ route('crud.delete.file_assoc', $file_assoc->file_assoc_id) }}"
-                                            method="POST" class="inline-block">
-                                            @csrf
-                                            <button type="submit"
-                                                class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    @foreach ($files_assoc as $file_assoc)
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h6 class="font-semibold text-gray-700">{{ $file_assoc->assoc_filename }}</h6>
+                                    <p class="text-sm text-gray-500">Operation: {{ $file_assoc->operation }}</p>
+                                    <p class="text-sm text-gray-500">Created on:
+                                        {{ $file_assoc->created_at->format('Y-m-d') }}</p>
+                                    <p class="text-sm text-gray-500">Description: {{ $file_assoc->description }}</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button type="button" class="bg-blue-500 text-white px-3 py-1 rounded" id="shareButton"
+                                        data-file-assoc-id="{{ $file_assoc->file_assoc_id }}">
+                                        Share
+                                    </button>
+                                    <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}">
+                                        <button type="button"
+                                            class="bg-blue-500 text-white px-3 py-1 rounded">View</button>
+                                    </a>
+                                    <form action="{{ route('crud.delete.file_assoc', $file_assoc->file_assoc_id) }}"
+                                        method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
+
+
         </div>
 
 

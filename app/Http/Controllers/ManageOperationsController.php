@@ -54,12 +54,22 @@ class ManageOperationsController extends Controller
                         $filename_ext_remove = preg_replace('/\.(csv|xls|xlsx)$/i', '', $file->filename);
                         $assoc_filename = 'forecast-on-' . $filename_ext_remove . '-' . now()->timestamp;
 
+                        $result_description = "";
+
+                        if ($type == "univariate") {
+                            $result_description = "Perform forecast on time series data on " . $filename_ext_remove . " for " . $steps . " steps into the future";
+                        } else {
+                            $result_description = "Perform forecast on  target time series variable (last) on " . $filename_ext_remove . " for " . $steps . " steps into the future. The other time series variables were also used to make a forecast.";
+                        }
+
                         $file_assoc = FileAssociation::create([
                             'file_id' => $file_id,
                             'user_id' => Auth::id(),
                             'assoc_filename' => $assoc_filename,
                             'associated_file_path' => $jsonPath,
                             'operation' => $operation,
+                            'description' => $result_description,
+
                         ]);
 
 
@@ -112,12 +122,24 @@ class ManageOperationsController extends Controller
                         $filename_ext_remove = preg_replace('/\.(csv|xls|xlsx)$/i', '', $file->filename);
                         $assoc_filename = 'forecast-on-' . $filename_ext_remove . '-' . now()->timestamp;
 
+
+                        $result_description = "";
+
+                        if ($type == "univariate") {
+                            $result_description = "Perform forecast on time series data on " . $filename_ext_remove . " for " . $steps . " steps into the future";
+                        } else {
+                            $result_description = "Perform forecast on  target time series variable (last) on " . $filename_ext_remove . " for " . $steps . " steps into the future. The other time series variables were also used to make a forecast.";
+
+                        }
+
+
                         $file_assoc = FileAssociation::create([
                             'file_id' => $file_id,
                             'user_id' => Auth::id(),
                             'assoc_filename' => $assoc_filename,
                             'associated_file_path' => $jsonPath,
                             'operation' => $operation,
+                            'description' => $result_description,
                         ]);
 
                         Logs::create([
@@ -169,12 +191,22 @@ class ManageOperationsController extends Controller
                     $filename_ext_remove = preg_replace('/\.(csv|xls|xlsx)$/i', '', $file->filename);
                     $assoc_filename = 'trend-on-' . $filename_ext_remove . '-' . now()->timestamp;
 
+
+                    $result_description = "";
+
+                    if ($type == "univariate") {
+                        $result_description = "Perform trend analysis on time series data on " . $filename_ext_remove;
+                    } else {
+                        $result_description = "Perform trend analysis on each time series variable on  " . $filename_ext_remove;
+
+                    }
                     $file_assoc = FileAssociation::create([
                         'file_id' => $file_id,
                         'user_id' => Auth::id(),
                         'assoc_filename' => $assoc_filename,
                         'associated_file_path' => $jsonPath,
                         'operation' => $operation,
+                        'description' => $result_description,
                     ]);
 
 
@@ -228,15 +260,22 @@ class ManageOperationsController extends Controller
 
                     $filename_ext_remove = str_replace(".csv", "", strval($file->filename));
                     $assoc_filename = 'seasonality-on-' . $filename_ext_remove . '-' . now()->timestamp;
+                    $result_description = "";
 
+                    if ($type == "univariate") {
+                        $result_description = "Perform seasonality analysis on time series data on " . $filename_ext_remove;
+                    } else {
+                        $result_description = "Perform seasonality analysis on each time series variable on  " . $filename_ext_remove;
+
+                    }
                     $file_assoc = FileAssociation::create([
                         'file_id' => $file_id,
                         'user_id' => Auth::id(),
                         'assoc_filename' => $assoc_filename,
                         'associated_file_path' => $jsonPath,
                         'operation' => $operation,
+                        'description' => $result_description,
                     ]);
-
 
                     Logs::create([
                         'user_id' => Auth::id(),
