@@ -150,6 +150,7 @@ class ShareController extends Controller
                 'file_associations.associated_file_path',
                 'users.id as user_id',
                 'users.name as shared_by',
+                'users.profile_photo as profile_photo',
                 'file_user_shares.created_at as shared_at'
             )->orderBy('file_user_shares.created_at', 'desc')
 
@@ -164,6 +165,7 @@ class ShareController extends Controller
                 'file_associations.assoc_filename',
                 'file_associations.associated_file_path',
                 'users.name as shared_to',
+                'users.profile_photo as profile_photo',
                 'file_user_shares.created_at as shared_at'
             )->orderBy('file_user_shares.created_at', 'desc')
 
