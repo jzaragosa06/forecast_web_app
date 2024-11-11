@@ -71,6 +71,13 @@
                 <div class="text-sm text-gray-800 break-words overflow-hidden">
                     <p>{!! $post->body !!}</p>
                 </div>
+                <div class="flex flex-wrap mt-2">
+                    @foreach (explode(',', $post->topics) as $topic)
+                        <span class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
+                            {{ $topic }}
+                        </span>
+                    @endforeach
+                </div>
 
                 <!-- Comments Section -->
                 {{-- <div class="mt-6 bg-white p-4 rounded-lg shadow-md relative"> --}}

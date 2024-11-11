@@ -47,128 +47,165 @@
     </style>
 
 
-    <!-- Button to Create New Post -->
-    <div class="flex justify-end mb-4">
-        <button id="create-post-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Create New
-            Post</button>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- Section for current user's posts (Left Column) -->
-        <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
-            <h2 class="text-xl font-semibold mb-4 text-gray-600">Your Posts</h2>
-            <!-- Search bar for user's posts -->
-
-            <div class="mb-3">
-                <input type="text" id="my-posts-search" placeholder="Search your posts..."
-                    class="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300">
-            </div>
-
-            @if ($myPosts->isEmpty())
-                <p class="text-sm text-gray-500">You haven't created any posts yet.</p>
-            @else
-                <div id="my-posts-container" class="space-y-3">
-                    @foreach ($myPosts as $post)
-                        <div
-                            class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative max-w-full overflow-hidden">
-                            <!-- Add a blue arrow icon at the top-right -->
-                            <a href="{{ route('posts.show', $post->id) }}" class="absolute top-3 right-3 text-blue-600">
-                                <!-- Arrow icon or content goes here -->
-                            </a>
-
-                            <div>
-                                <!-- Post title and other details -->
-                                <h4 class="text-base font-semibold mb-2 text-gray-600">
-                                    <a href="{{ route('posts.show', $post) }}"
-                                        class="hover:text-blue-600 truncate">{{ $post->title }}</a>
-                                </h4>
-
-                                <!-- Flex container for profile image and posted by text -->
-                                <div class="flex items-center mb-2">
-                                    <img id="profileImage"
-                                        src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
-                                        class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
-                                    <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
-                                </div>
-
-                                <!-- Post body with overflow control -->
-                                <p class="text-sm text-gray-500 break-words overflow-hidden">
-                                    {{ Str::limit(strip_tags($post->body), 100, '...') }}
-                                </p>
-                            </div>
-
-                            <!-- Topics section -->
-                            <div class="flex flex-wrap mt-2">
-                                @foreach (explode(',', $post->topics) as $topic)
-                                    <span class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">
-                                        {{ $topic }}
-                                    </span>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-
-            @endif
+    <!-- Container for Toggle Buttons and Create Post Button -->
+    <div class="flex justify-between items-center mb-4">
+        <!-- Toggle Buttons for "My Post" and "Others Post" -->
+        <div class="flex space-x-2">
+            <button id="my-post-btn" class="toggle-btn px-4 py-2 rounded-l text-gray-600 bg-white border border-gray-300"
+                onclick="showSection('my-post')">
+                My Post
+            </button>
+            <button id="others-post-btn"
+                class="toggle-btn px-4 py-2 rounded-r text-white bg-blue-600 border border-gray-300"
+                onclick="showSection('others-post')">
+                Others Post
+            </button>
         </div>
 
-        <!-- Section for other users' posts (Right Column) -->
-        <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
-            <h2 class="text-xl font-semibold mb-4 text-gray-600">Other Users' Posts</h2>
-            <!-- Search bar for other users' posts -->
-            <div class="mb-3">
-                <input type="text" id="other-posts-search" placeholder="Search other users' posts..."
-                    class="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300">
-            </div>
-
-            @if ($otherPosts->isEmpty())
-                <p class="text-sm text-gray-500">No posts available from other users.</p>
-            @else
-                <div id="other-posts-container" class="space-y-3">
-                    @foreach ($otherPosts as $post)
-                        <div
-                            class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative max-w-full overflow-hidden">
-                            <!-- Add a blue arrow icon at the top-right -->
-                            <a href="{{ route('posts.show', $post->id) }}" class="absolute top-3 right-3 text-blue-600">
-                                <!-- Arrow icon or content goes here -->
-                            </a>
-
-                            <div>
-                                <!-- Post title and other details -->
-                                <h4 class="text-base font-semibold mb-2 text-gray-600">
-                                    <a href="{{ route('posts.show', $post) }}"
-                                        class="hover:text-blue-600 truncate">{{ $post->title }}</a>
-                                </h4>
-
-                                <!-- Flex container for profile image and posted by text -->
-                                <div class="flex items-center mb-2">
-                                    <img id="profileImage"
-                                        src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
-                                        class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
-                                    <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
-                                </div>
-
-                                <!-- Post body with overflow control -->
-                                <p class="text-sm text-gray-500 break-words overflow-hidden">
-                                    {{ Str::limit(strip_tags($post->body), 250, '...') }}
-                                </p>
-                            </div>
-
-                            <!-- Topics section -->
-                            <div class="flex flex-wrap mt-2">
-                                @foreach (explode(',', $post->topics) as $topic)
-                                    <span class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">
-                                        {{ $topic }}
-                                    </span>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-        </div>
+        <!-- Button to Create New Post -->
+        <button id="create-post-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+            Create Post
+            <i class="fa-solid fa-plus fa-beat fa-sm" style="color: #ffffff;"></i>
+        </button>
     </div>
+
+
+    <!-- Section for current user's posts (Left Column) -->
+    <div id="my-post-section" class="hidden bg-gray-50 px-20 py-4 rounded-lg shadow-sm">
+        <div class="mb-3">
+            <input type="text" id="my-posts-search" placeholder="Search your posts..."
+                class="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300">
+        </div>
+        @if ($myPosts->isEmpty())
+            <p class="text-sm text-gray-500">You haven't created any posts yet.</p>
+        @else
+            <!-- Grid for displaying posts -->
+            <div id="my-posts-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach ($myPosts as $post)
+                    <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative">
+                        <!-- Image Section -->
+                        <div class="w-full h-32 overflow-hidden mb-3 rounded-lg">
+                            <img id="profileImage"
+                                src="{{ $post->post_image ? asset('storage/' . $post->post_image) : 'https://dotdata.com/wp-content/uploads/2020/07/time-series.jpg' }}"
+                                class="w-full h-full object-cover" alt="Post Image">
+                        </div>
+                        <!-- Post Title -->
+                        <h4 class="text-base font-semibold mb-2 text-gray-600">
+                            <a href="{{ route('posts.show', $post) }}"
+                                class="hover:text-blue-600 truncate">{{ $post->title }}</a>
+                        </h4>
+                        <!-- Posted By Section -->
+                        <div class="flex items-center mb-2">
+                            <img id="profileImage"
+                                src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
+                            <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
+                        </div>
+                        <!-- Post Body -->
+                        <p class="text-sm text-gray-500 break-words overflow-hidden mb-2">
+                            {{ Str::limit(strip_tags($post->body), 100, '...') }}
+                        </p>
+                        <!-- Topics Section -->
+                        <div class="flex flex-wrap mt-2">
+                            @foreach (explode(',', $post->topics) as $topic)
+                                <span class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
+                                    {{ $topic }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
+
+
+    <!-- Section for other users' posts (Right Column) -->
+    <div id="others-post-section" class="bg-gray-50 px-20 py-4 rounded-lg shadow-sm">
+        <div class="mb-3">
+            <input type="text" id="other-posts-search" placeholder="Search other users' posts..."
+                class="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300">
+        </div>
+        @if ($otherPosts->isEmpty())
+            <p class="text-sm text-gray-500">No posts available from other users.</p>
+        @else
+            <!-- Grid for displaying posts -->
+            <div id="other-posts-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach ($otherPosts as $post)
+                    <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative">
+                        <!-- Image Section -->
+                        <div class="w-full h-32 overflow-hidden mb-3 rounded-lg">
+                            <img id="profileImage"
+                                src="{{ $post->post_image ? asset('storage/' . $post->post_image) : 'https://dotdata.com/wp-content/uploads/2020/07/time-series.jpg' }}"
+                                class="w-full h-full object-cover" alt="Post Image">
+                        </div>
+                        <!-- Post Title -->
+                        <h4 class="text-base font-semibold mb-2 text-gray-600">
+                            <a href="{{ route('posts.show', $post) }}"
+                                class="hover:text-blue-600 truncate">{{ $post->title }}</a>
+                        </h4>
+                        <!-- Posted By Section -->
+                        <div class="flex items-center mb-2">
+                            <img id="profileImage"
+                                src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
+                            <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
+                        </div>
+                        <!-- Post Body -->
+                        <p class="text-sm text-gray-500 break-words overflow-hidden mb-2">
+                            {{ Str::limit(strip_tags($post->body), 100, '...') }}
+                        </p>
+                        <!-- Topics Section -->
+                        <div class="flex flex-wrap mt-2">
+                            @foreach (explode(',', $post->topics) as $topic)
+                                <span class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
+                                    {{ $topic }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
+
+
+    <!-- JavaScript for Toggle Functionality -->
+    <script>
+        function showSection(section) {
+            // Buttons
+            const myPostBtn = document.getElementById('my-post-btn');
+            const othersPostBtn = document.getElementById('others-post-btn');
+
+            // Sections
+            const myPostSection = document.getElementById('my-post-section');
+            const othersPostSection = document.getElementById('others-post-section');
+
+            if (section === 'my-post') {
+                myPostBtn.classList.add('bg-blue-600', 'text-white');
+                myPostBtn.classList.remove('bg-white', 'text-gray-600');
+                othersPostBtn.classList.add('bg-white', 'text-gray-600');
+                othersPostBtn.classList.remove('bg-blue-600', 'text-white');
+
+                myPostSection.classList.remove('hidden');
+                othersPostSection.classList.add('hidden');
+            } else {
+                othersPostBtn.classList.add('bg-blue-600', 'text-white');
+                othersPostBtn.classList.remove('bg-white', 'text-gray-600');
+                myPostBtn.classList.add('bg-white', 'text-gray-600');
+                myPostBtn.classList.remove('bg-blue-600', 'text-white');
+
+                myPostSection.classList.add('hidden');
+                othersPostSection.classList.remove('hidden');
+            }
+        }
+
+        // Set default to "Others Post"
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('others-post');
+        });
+    </script>
+
 
     <!-- Modal for creating a new post -->
     <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden" id="create-post-modal">
@@ -291,21 +328,60 @@
             });
 
             // Search functionality for both sections
-            $('#my-posts-search').on('input', function() {
-                let searchText = $(this).val().toLowerCase();
-                $('#my-posts-container div').each(function() {
-                    let postTitle = $(this).find('h3').text().toLowerCase();
-                    $(this).toggle(postTitle.includes(searchText));
+            // $('#my-posts-search').on('input', function() {
+            //     let searchText = $(this).val().toLowerCase();
+            //     $('#my-posts-container div').each(function() {
+            //         let postTitle = $(this).find('h4').text().toLowerCase(); // Change h3 to h4
+            //         $(this).toggle(postTitle.includes(searchText));
+            //     });
+            // });
+
+            // $('#other-posts-search').on('input', function() {
+            //     let searchText = $(this).val().toLowerCase();
+            //     $('#other-posts-container div').each(function() {
+            //         let postTitle = $(this).find('h4').text().toLowerCase(); // Change h3 to h4
+            //         $(this).toggle(postTitle.includes(searchText));
+            //     });
+            // });
+
+            $(document).ready(function() {
+                // Search functionality for both sections
+                $('#my-posts-search').on('input', function() {
+                    let searchText = $(this).val().toLowerCase();
+                    $('#my-posts-container div').each(function() {
+                        let postTitle = $(this).find('h4').text()
+                            .toLowerCase(); // Look for titles in h4
+                        let postBody = $(this).find('p').text()
+                            .toLowerCase(); // Include body text as well
+                        let postUser = $(this).find('.text-xs').text()
+                            .toLowerCase(); // Check poster name
+                        let isVisible = postTitle.includes(searchText) || postBody.includes(
+                            searchText) || postUser.includes(searchText);
+
+                        $(this).toggle(
+                            isVisible); // Toggle visibility based on the search criteria
+                    });
+                });
+
+                $('#other-posts-search').on('input', function() {
+                    let searchText = $(this).val().toLowerCase();
+                    $('#other-posts-container div').each(function() {
+                        let postTitle = $(this).find('h4').text()
+                            .toLowerCase(); // Look for titles in h4
+                        let postBody = $(this).find('p').text()
+                            .toLowerCase(); // Include body text as well
+                        let postUser = $(this).find('.text-xs').text()
+                            .toLowerCase(); // Check poster name
+                        let isVisible = postTitle.includes(searchText) || postBody.includes(
+                            searchText) || postUser.includes(searchText);
+
+                        $(this).toggle(
+                            isVisible); // Toggle visibility based on the search criteria
+                    });
                 });
             });
 
-            $('#other-posts-search').on('input', function() {
-                let searchText = $(this).val().toLowerCase();
-                $('#other-posts-container div').each(function() {
-                    let postTitle = $(this).find('h3').text().toLowerCase();
-                    $(this).toggle(postTitle.includes(searchText));
-                });
-            });
+
         });
     </script>
 @endsection

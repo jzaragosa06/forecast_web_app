@@ -721,10 +721,10 @@
                                     </a>
 
                                     <div>
-                                        <div>
+                                        <div class="w-full h-20 overflow-hidden mb-3 rounded-lg">
                                             <img id="profileImage"
                                                 src="{{ $post->post_image ? asset('storage/' . $post->post_image) : 'https://dotdata.com/wp-content/uploads/2020/07/time-series.jpg' }}"
-                                                class="w-75 h-25 object-cover mr-2" alt="Profile Photo">
+                                                class="w-full h-full object-cover" alt="Post Image">
                                         </div>
                                         <!-- Post title and other details -->
                                         <h5 class="text-base font-semibold mb-2 text-gray-600">
@@ -750,11 +750,12 @@
                                     <div class="flex flex-wrap mt-2">
                                         @foreach (explode(',', $post->topics) as $topic)
                                             <span
-                                                class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">
+                                                class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
                                                 {{ $topic }}
                                             </span>
                                         @endforeach
                                     </div>
+
                                 </div>
                             @endforeach
                         </div>

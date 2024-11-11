@@ -97,10 +97,10 @@
                         @if ($user->skills)
                             @foreach (explode(',', $user->skills) as $skill)
                                 <span
-                                    class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded">{{ $skill }}</span>
+                                    class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded">{{ $skill }}</span>
                             @endforeach
                         @else
-                            <p class="text-gray-500 text-xs">ANo skills added</p>
+                            <p class="text-gray-500 text-xs">No skills added</p>
                         @endif
 
                     </div>
@@ -118,9 +118,14 @@
                         @if ($myPosts->isEmpty())
                             <p class="text-sm text-gray-500">No post yet</p>
                         @else
-                            <div id="my-posts-container" class="space-y-3">
+                            <div id="my-posts-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 space-y-0">
                                 @foreach ($myPosts as $post)
                                     <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition">
+                                        <div class="w-full h-32 overflow-hidden mb-3 rounded-lg">
+                                            <img id="profileImage"
+                                                src="{{ $post->post_image ? asset('storage/' . $post->post_image) : 'https://dotdata.com/wp-content/uploads/2020/07/time-series.jpg' }}"
+                                                class="w-full h-full object-cover" alt="Post Image">
+                                        </div>
                                         <h3 class="text-lg font-semibold mb-1">
                                             <a href="{{ route('posts.show', $post->id) }}"
                                                 class="hover:text-blue-600">{{ $post->title }}</a>
@@ -130,7 +135,7 @@
                                         <div class="flex flex-wrap mt-2">
                                             @foreach (explode(',', $post->topics) as $topic)
                                                 <span
-                                                    class="bg-gray-200 text-gray-800 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">{{ $topic }}</span>
+                                                    class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">{{ $topic }}</span>
                                             @endforeach
                                         </div>
                                     </div>
@@ -140,10 +145,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
         </div>
     </div>
 
