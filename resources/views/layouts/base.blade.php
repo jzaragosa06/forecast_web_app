@@ -150,6 +150,11 @@
                     <i class="fas fa-comments text-xl mr-2 ml-4"></i>
                     <span class="text-sm sidebar-text transition-opacity duration-300">Discussion</span>
                 </a>
+                <a href="{{ route('public-files.index') }}"
+                    class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('public-files.index') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
+                    <i class="fa-solid fa-file text-xl mr-2 ml-4"></i>
+                    <span class="text-sm sidebar-text transition-opacity duration-300">Public Data</span>
+                </a>
             </nav>
         </div>
 

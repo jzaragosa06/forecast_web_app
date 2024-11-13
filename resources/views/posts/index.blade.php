@@ -151,9 +151,10 @@
                                 class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
                             <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
                         </div>
+
                         <!-- Post Body -->
                         <p class="text-sm text-gray-500 break-words overflow-hidden mb-2">
-                            {{ Str::limit(strip_tags($post->body), 100, '...') }}
+                            {{ Str::limit(strip_tags($post->body), 130, '...') }}
                         </p>
                         <!-- Topics Section -->
                         <div class="flex flex-wrap mt-2">
