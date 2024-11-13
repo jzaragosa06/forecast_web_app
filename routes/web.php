@@ -12,6 +12,7 @@ use App\Http\Controllers\ManageShowResultsController;
 use App\Http\Controllers\NotesController;
 use App\Http\Controllers\PreprocessInputFileController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicFilesController;
 use App\Http\Controllers\RenderImageController;
 use App\Http\Controllers\SaveInputController;
 use App\Http\Controllers\ShareController;
@@ -152,6 +153,15 @@ Route::prefix('fill')->group(function () {
 });
 
 Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
+
+Route::prefix('public-files')->group(function () {
+    Route::get('/', [PublicFilesController::class, 'index'])->name('public-files.index');
+});
+
+
+Route::prefix('public-files')->group(function () {
+    Route::post("/upload", [PublicFilesController::class, 'upload'])->name('public-files.upload');
+});
 
 
 // ============================================================================================================================================================
