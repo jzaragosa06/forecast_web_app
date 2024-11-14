@@ -21,7 +21,7 @@ class ManageOperationsController extends Controller
         $file = File::where('user_id', Auth::id())->where('file_id', $file_id)->firstOrFail();
         // Retrieve the file content from storage
         $file_content = Storage::get($file->filepath);
-
+        
         // Extract type, frequency, and description from the file record
         $type = $file->type;
         $freq = $file->freq;

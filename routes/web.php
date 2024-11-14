@@ -155,13 +155,13 @@ Route::prefix('fill')->group(function () {
 Route::post('comments', [CommentController::class, 'store'])->name('comments.store');
 
 Route::prefix('public-files')->group(function () {
+    Route::post("/upload", [PublicFilesController::class, 'upload'])->name('public-files.upload');
+    Route::post("/add-data-to-user-account/{id}", [PublicFilesController::class, 'add_data_to_account'])->name('public-files.add-data-to-user-account');
     Route::get('/', [PublicFilesController::class, 'index'])->name('public-files.index');
 });
 
 
-Route::prefix('public-files')->group(function () {
-    Route::post("/upload", [PublicFilesController::class, 'upload'])->name('public-files.upload');
-});
+
 
 
 // ============================================================================================================================================================

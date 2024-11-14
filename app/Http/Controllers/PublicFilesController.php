@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PublicFiles;
+use App\Models\File;
 use Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Http\Request;
@@ -75,12 +76,37 @@ class PublicFilesController extends Controller
             ]);
 
             session()->flash('upload_success', 'File uploaded and processed successfully.');
-            return redirect()->route("home");
+            return redirect()->route("public-files.index");
 
         } catch (Exception $e) {
             // Handle any exceptions that occur during file processing
             session()->flash('upload_failed', 'Failed to upload data. Failed to parse the file. Please ensure it is a valid CSV or Excel file. Error: ' . $e->getMessage());
-            return redirect()->route("home");
+            return redirect()->route('public-files.index');
         }
     }
+
+    public function add_data_to_account($id)
+    {
+        try {
+            $publicfile = PublicFiles::where('id', $id)->first();
+
+            File::create([
+                'user_id' => Auth::id(),
+                'filename' => $publicfile->filename,
+                'filepath' => $publicfile->filepath,
+                'type' => $publicfile->type,
+                'freq' => $publicfile->freq,
+                'source' => $publicfile->source,
+                'description' => $publicfile->description,
+            ]);
+
+            session()->flash('add_success', 'Data successfully added to your account!');
+            return redirect()->route('public-files.index');
+
+        } catch (Exception $e) {
+            session()->flash('add_failed', 'Data failed to add to your account!');
+            return redirect()->route('public-files.index');
+        }
+    }
+
 }
