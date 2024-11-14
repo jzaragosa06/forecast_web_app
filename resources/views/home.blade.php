@@ -374,6 +374,11 @@
                                     class="bg-white text-blue-600 border border-blue-600 px-3 py-1 rounded-md text-sm">
                                     Stocks Data
                                 </button>
+                                <!-- Stocks Data Button -->
+                                <button id="input-via-public-Btn"
+                                    class="bg-white text-blue-600 border border-blue-600 px-3 py-1 rounded-md text-sm">
+                                    Public Data
+                                </button>
                                 <!-- Info Icon -->
                                 <i id="data-info" class="fas fa-sm fa-info-circle text-gray-400 cursor-pointer ml-2"
                                     data-tooltip="These are buttons for displaying specific type of data"></i>
@@ -604,6 +609,116 @@
                                         <!-- Loop through timeSeriesData if there is data from 'uploads' -->
                                         @foreach ($timeSeriesData as $index => $fileData)
                                             @if ($files[$index]->source == 'stocks')
+                                                <div class="bg-white border rounded-lg shadow-md mb-4">
+                                                    <div class="p-4">
+                                                        <div class="flex">
+                                                            <!-- Left Section (Title, Type, Frequency, etc.) -->
+                                                            <div
+                                                                class="w-full lg:w-1/3 bg-gray-100 p-4 rounded-lg flex flex-col">
+                                                                <h4
+                                                                    class="text-base font-semibold mb-2 text-gray-700 hover:text-blue-600">
+
+                                                                    <a
+                                                                        href="{{ route('input.file.graph.view.post', $files[$index]->file_id) }}">{{ $files[$index]->filename }}
+                                                                    </a>
+                                                                </h4>
+                                                                <p class="text-xs mb-1">Type: {{ $files[$index]->type }}
+                                                                </p>
+                                                                <p class="text-xs mb-1">Frequency:
+                                                                    {{ $files[$index]->freq }}</p>
+
+                                                                <!-- Description section -->
+                                                                <div class="bg-gray-200 flex-grow p-4 rounded-lg">
+                                                                    <p class="text-xs mb-1">
+                                                                        {{ $files[$index]->description }}</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Right Section (Dropdown and Graph) -->
+                                                            <div
+                                                                class="w-full lg:w-2/3 flex flex-col justify-start items-end relative bg-gray-50 p-4 rounded-lg">
+                                                                <!-- Dropdown with Icon -->
+                                                                <div class="relative">
+                                                                    <button id="dropdownButton-{{ $index }}"
+                                                                        class="text-gray-600 hover:text-gray-800 focus:outline-none">
+                                                                        <!-- Icon (using Heroicons for example) -->
+                                                                        <svg class="w-6 h-6" fill="none"
+                                                                            stroke="currentColor" viewBox="0 0 24 24"
+                                                                            xmlns="http://www.w3.org/2000/svg">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round" stroke-width="2"
+                                                                                d="M19 9l-7 7-7-7"></path>
+                                                                        </svg>
+                                                                    </button>
+
+                                                                    <!-- Dropdown Menu -->
+                                                                    <div id="dropdownMenu-{{ $index }}"
+                                                                        class="hidden absolute right-0 bg-white shadow-md rounded-lg mt-2 w-48 z-10">
+                                                                        <ul class="py-2 text-sm text-gray-700">
+                                                                            {{-- <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Analyze
+                                                                                trend
+                                                                            </li>
+                                                                            <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Seasonality
+                                                                            </li>
+                                                                            <li
+                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                Forecast
+                                                                            </li> --}}
+                                                                            <a
+                                                                                href="{{ route('seqal.index', $files[$index]->file_id) }}">
+                                                                                <li
+                                                                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                                                    Series
+                                                                                    Alignment</li>
+                                                                            </a>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Graph Container -->
+                                                                <div class="graph-container mt-4 w-full"
+                                                                    style="height: 300px;">
+                                                                    <div id="graph-{{ $index }}"
+                                                                        style="height: 100%; background-color: #f9fafb;">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <!-- Display if no 'uploads' data is found -->
+                                        <div class="bg-white border rounded-lg shadow-md mb-4 p-4 text-center">
+                                            <p class="text-lg font-semibold text-gray-600">No data exists</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Graphs and description for public files added to account -->
+                            <div id="input-via-public-Container" class="hidden">
+                                <div class="container mx-auto p-4">
+                                    @php
+                                        // Filter the timeSeriesData to check for 'uploads' source
+                                        $uploadsExist = false;
+                                        foreach ($files as $index => $fileData) {
+                                            if ($files[$index]->source == 'public') {
+                                                $uploadsExist = true;
+                                                break;
+                                            }
+                                        }
+                                    @endphp
+
+                                    @if ($uploadsExist)
+                                        <!-- Loop through timeSeriesData if there is data from 'uploads' -->
+                                        @foreach ($timeSeriesData as $index => $fileData)
+                                            @if ($files[$index]->source == 'public')
                                                 <div class="bg-white border rounded-lg shadow-md mb-4">
                                                     <div class="p-4">
                                                         <div class="flex">
@@ -1159,9 +1274,11 @@
             const uploadsBtn = document.getElementById('input-via-uploads-Btn');
             const openmeteoBtn = document.getElementById('input-via-openmeteo-Btn');
             const stocksBtn = document.getElementById('input-via-stocks-Btn');
+            const publicBtn = document.getElementById('input-via-public-Btn');
             const uploadsContainer = document.getElementById('input-via-uploads-Container');
             const openmeteoContainer = document.getElementById('input-via-openmeteo-Container');
             const stocksContainer = document.getElementById('input-via-stocks-Container');
+            const publicContainer = document.getElementById('input-via-public-Container');
 
             // Function to reset button styles
             function resetButtons() {
@@ -1180,6 +1297,8 @@
                 uploadsContainer.classList.add('hidden');
                 openmeteoContainer.classList.add('hidden');
                 stocksContainer.classList.add('hidden');
+                publicContainer.classList.add('hidden');
+
             }
 
             // Event listeners to toggle between buttons and containers
@@ -1197,6 +1316,7 @@
                 openmeteoBtn.classList.add('bg-blue-600', 'text-white');
                 openmeteoBtn.classList.remove('bg-white', 'text-blue-600');
 
+
                 hideAllContainers();
                 openmeteoContainer.classList.remove('hidden');
             });
@@ -1208,6 +1328,15 @@
 
                 hideAllContainers();
                 stocksContainer.classList.remove('hidden');
+            });
+
+            publicBtn.addEventListener('click', () => {
+                resetButtons();
+                publicBtn.classList.add('bg-blue-600', 'text-white');
+                publicBtn.classList.remove('bg-white', 'text-blue-600');
+
+                hideAllContainers();
+                publicContainer.classList.remove('hidden');
             });
         });
 
