@@ -74,7 +74,6 @@
                     <!-- Title -->
                     <h5 class="font-semibold text-gray-600 text-base break-words hover:text-blue-600">{{ $file->title }}
                     </h5>
-
                     <!-- Description -->
                     <p class="text-gray-600 text-sm mt-2 mb-2 break-words overflow-hidden">
                         {{ Str::limit($file->description, 50) }}
@@ -89,7 +88,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Modal for displaying full details -->
             <div id="modal-{{ $file->id }}"
                 class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-800 bg-opacity-50">

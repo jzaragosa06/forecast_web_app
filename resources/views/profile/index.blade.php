@@ -186,39 +186,41 @@
 
             <div class="w-2/3 flex space-x-6">
                 <!-- First Part -->
-                <div class="bg-gray-100 shadow-inner rounded-lg flex-grow">
+                <div class="rounded-lg flex-grow">
                     <div class="p-6 text-left text-gray-500">
                         <!-- Title for the first part -->
                         <h2 class="text-xl font-semibold text-gray-400 mb-4">Posts</h2>
 
                         @if ($myPosts->isEmpty())
-                            <p class="text-sm text-gray-500">No post yet</p>
+                            <p class="text-sm text-gray-500 text-center">No post yet</p>
                         @else
                             <div id="my-posts-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 space-y-0">
                                 @foreach ($myPosts as $post)
-                                    <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition">
-                                        <div class="w-full h-32 overflow-hidden mb-3 rounded-lg">
+                                    <div class="bg-white rounded-lg shadow hover:shadow-md transition">
+                                        <!-- Image section with no padding/margin on edges -->
+                                        <div class="w-full h-24 overflow-hidden rounded-t-lg">
                                             <img id="profileImage"
                                                 src="{{ $post->post_image ? asset('storage/' . $post->post_image) : 'https://dotdata.com/wp-content/uploads/2020/07/time-series.jpg' }}"
-                                                class="w-full h-full object-cover" alt="Post Image">
+                                                class="w-full h-full object-cover rounded-t-lg" alt="Post Image">
                                         </div>
-                                        <h3 class="text-lg font-semibold mb-1">
-                                            <a href="{{ route('posts.show', $post->id) }}"
-                                                class="hover:text-blue-600">{{ $post->title }}</a>
-                                        </h3>
-                                        <p class="text-xs text-gray-500 mb-2">Posted by: {{ $post->user->name }}</p>
-                                        <p class="text-xs text-gray-500">{!! Str::limit($post->body, 100) !!}</p>
-                                        <div class="flex flex-wrap mt-2">
-                                            @foreach (explode(',', $post->topics) as $topic)
-                                                <span
-                                                    class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">{{ $topic }}</span>
-                                            @endforeach
+                                        <div class="p-3">
+                                            <h3 class="text-lg font-semibold mb-1">
+                                                <a href="{{ route('posts.show', $post->id) }}"
+                                                    class="hover:text-blue-600">{{ $post->title }}</a>
+                                            </h3>
+                                            <p class="text-xs text-gray-500 mb-2">Posted by: {{ $post->user->name }}</p>
+                                            <p class="text-xs text-gray-500">{!! Str::limit($post->body, 100) !!}</p>
+                                            <div class="flex flex-wrap mt-2">
+                                                @foreach (explode(',', $post->topics) as $topic)
+                                                    <span
+                                                        class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-2 py-1 rounded">{{ $topic }}</span>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
                         @endif
-
                     </div>
                 </div>
             </div>

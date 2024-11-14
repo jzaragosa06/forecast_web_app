@@ -82,40 +82,44 @@
             <!-- Grid for displaying posts -->
             <div id="my-posts-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($myPosts as $post)
-                    <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative">
+                    <div class="bg-white rounded-lg shadow hover:shadow-md transition relative">
                         <!-- Image Section -->
-                        <div class="w-full h-32 overflow-hidden mb-3 rounded-lg">
+                        <div class="w-full h-24 overflow-hidden rounded-t-lg">
                             <img id="profileImage"
                                 src="{{ $post->post_image ? asset('storage/' . $post->post_image) : 'https://dotdata.com/wp-content/uploads/2020/07/time-series.jpg' }}"
                                 class="w-full h-full object-cover" alt="Post Image">
                         </div>
-                        <!-- Post Title -->
-                        <h4 class="text-base font-semibold mb-2 text-gray-600">
-                            <a href="{{ route('posts.show', $post) }}"
-                                class="hover:text-blue-600 truncate">{{ $post->title }}</a>
-                        </h4>
-                        <!-- Posted By Section -->
-                        <div class="flex items-center mb-2">
-                            <img id="profileImage"
-                                src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
-                                class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
-                            <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
-                        </div>
-                        <!-- Post Body -->
-                        <p class="text-sm text-gray-500 break-words overflow-hidden mb-2">
-                            {{ Str::limit(strip_tags($post->body), 100, '...') }}
-                        </p>
-                        <!-- Topics Section -->
-                        <div class="flex flex-wrap mt-2">
-                            @foreach (explode(',', $post->topics) as $topic)
-                                <span class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
-                                    {{ $topic }}
-                                </span>
-                            @endforeach
+                        <div class="p-3">
+                            <!-- Post Title -->
+                            <h4 class="text-base font-semibold mb-2 text-gray-600">
+                                <a href="{{ route('posts.show', $post) }}"
+                                    class="hover:text-blue-600 truncate">{{ $post->title }}</a>
+                            </h4>
+                            <!-- Posted By Section -->
+                            <div class="flex items-center mb-2">
+                                <img id="profileImage"
+                                    src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                    class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
+                                <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
+                            </div>
+                            <!-- Post Body -->
+                            <p class="text-sm text-gray-500 break-words overflow-hidden mb-2">
+                                {{ Str::limit(strip_tags($post->body), 100, '...') }}
+                            </p>
+                            <!-- Topics Section -->
+                            <div class="flex flex-wrap mt-2">
+                                @foreach (explode(',', $post->topics) as $topic)
+                                    <span
+                                        class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
+                                        {{ $topic }}
+                                    </span>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 @endforeach
             </div>
+
         @endif
     </div>
 
@@ -132,41 +136,44 @@
             <!-- Grid for displaying posts -->
             <div id="other-posts-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($otherPosts as $post)
-                    <div class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative">
+                    <div class="bg-white rounded-lg shadow hover:shadow-md transition relative">
                         <!-- Image Section -->
-                        <div class="w-full h-32 overflow-hidden mb-3 rounded-lg">
+                        <div class="w-full h-24 overflow-hidden rounded-t-lg">
                             <img id="profileImage"
                                 src="{{ $post->post_image ? asset('storage/' . $post->post_image) : 'https://dotdata.com/wp-content/uploads/2020/07/time-series.jpg' }}"
                                 class="w-full h-full object-cover" alt="Post Image">
                         </div>
-                        <!-- Post Title -->
-                        <h4 class="text-base font-semibold mb-2 text-gray-600">
-                            <a href="{{ route('posts.show', $post) }}"
-                                class="hover:text-blue-600 truncate">{{ $post->title }}</a>
-                        </h4>
-                        <!-- Posted By Section -->
-                        <div class="flex items-center mb-2">
-                            <img id="profileImage"
-                                src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
-                                class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
-                            <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
-                        </div>
-
-                        <!-- Post Body -->
-                        <p class="text-sm text-gray-500 break-words overflow-hidden mb-2">
-                            {{ Str::limit(strip_tags($post->body), 130, '...') }}
-                        </p>
-                        <!-- Topics Section -->
-                        <div class="flex flex-wrap mt-2">
-                            @foreach (explode(',', $post->topics) as $topic)
-                                <span class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
-                                    {{ $topic }}
-                                </span>
-                            @endforeach
+                        <div class="p-3">
+                            <!-- Post Title -->
+                            <h4 class="text-base font-semibold mb-2 text-gray-600">
+                                <a href="{{ route('posts.show', $post) }}"
+                                    class="hover:text-blue-600 truncate">{{ $post->title }}</a>
+                            </h4>
+                            <!-- Posted By Section -->
+                            <div class="flex items-center mb-2">
+                                <img id="profileImage"
+                                    src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                    class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
+                                <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
+                            </div>
+                            <!-- Post Body -->
+                            <p class="text-sm text-gray-500 break-words overflow-hidden mb-2">
+                                {{ Str::limit(strip_tags($post->body), 100, '...') }}
+                            </p>
+                            <!-- Topics Section -->
+                            <div class="flex flex-wrap mt-2">
+                                @foreach (explode(',', $post->topics) as $topic)
+                                    <span
+                                        class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
+                                        {{ $topic }}
+                                    </span>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 @endforeach
             </div>
+
         @endif
     </div>
 

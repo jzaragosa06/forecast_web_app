@@ -820,7 +820,7 @@
                     </div>
                 </div>
                 <!-- Right side - one vertical block -->
-                <div class="border bg-gray-50 p-2 rounded-lg shadow-md h-full flex flex-col mt-4 md:mt-0">
+                <div class="border p-2 rounded-lg shadow-md h-full flex flex-col mt-4 md:mt-0">
                     <div class="flex items-center mb-2">
                         <h2 class="text-base font-semibold text-gray-700">Public Discussion</h2>
                         <i id="public-discussion-info" class="fas fa-sm fa-info-circle text-gray-400 ml-2 cursor-pointer"
@@ -834,52 +834,49 @@
                         <div id="other-posts-container" class="space-y-3">
                             @foreach ($otherPosts as $post)
                                 <div
-                                    class="bg-white p-3 rounded-lg shadow hover:shadow-md transition relative max-w-full overflow-hidden">
-                                    <!-- Add a blue arrow icon at the top-right -->
-                                    <a href="{{ route('posts.show', $post) }}"
-                                        class="absolute top-3 right-3 text-blue-600">
-                                        <!-- Arrow icon or content goes here -->
-                                    </a>
+                                    class="bg-white rounded-lg shadow hover:shadow-lg transition relative overflow-hidden max-w-full">
+                                    <!-- Image Section with edge-to-edge styling -->
+                                    <div class="w-full h-24 overflow-hidden rounded-t-lg">
+                                        <img src="{{ $post->post_image ? asset('storage/' . $post->post_image) : 'https://dotdata.com/wp-content/uploads/2020/07/time-series.jpg' }}"
+                                            class="w-full h-full object-cover" alt="Post Image">
+                                    </div>
 
-                                    <div>
-                                        <div class="w-full h-20 overflow-hidden mb-3 rounded-lg">
-                                            <img id="profileImage"
-                                                src="{{ $post->post_image ? asset('storage/' . $post->post_image) : 'https://dotdata.com/wp-content/uploads/2020/07/time-series.jpg' }}"
-                                                class="w-full h-full object-cover" alt="Post Image">
-                                        </div>
-                                        <!-- Post title and other details -->
-                                        <h5 class="text-base font-semibold mb-2 text-gray-600">
+                                    <!-- Post Content with padding -->
+                                    <div class="p-4">
+                                        <!-- Post Title -->
+                                        <h5 class="text-base font-semibold text-gray-700 mb-1">
                                             <a href="{{ route('posts.show', $post) }}"
-                                                class="hover:text-blue-600 break-words overflow-hidden">{{ $post->title }}</a>
+                                                class="hover:text-blue-600 line-clamp-1">
+                                                {{ $post->title }}
+                                            </a>
                                         </h5>
 
-                                        <!-- Flex container for profile image and posted by text -->
-                                        <div class="flex items-center mb-2">
-                                            <img id="profileImage"
-                                                src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
-                                                class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
-                                            <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
+                                        <!-- Flex Container for Profile Image and Username -->
+                                        <div class="flex items-center text-gray-500 text-xs mb-3">
+                                            <img src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                                class="w-5 h-5 rounded-full mr-2" alt="Profile Photo">
+                                            <span>Posted by: {{ $post->user->name }}</span>
                                         </div>
 
-                                        <!-- Post body with overflow control -->
-                                        <p class="text-sm text-gray-500 break-words overflow-hidden">
+                                        <!-- Post Description (Body) -->
+                                        <p class="text-sm text-gray-600 mb-3 line-clamp-3">
                                             {{ Str::limit(strip_tags($post->body), 100, '...') }}
                                         </p>
-                                    </div>
 
-                                    <!-- Topics section -->
-                                    <div class="flex flex-wrap mt-2">
-                                        @foreach (explode(',', $post->topics) as $topic)
-                                            <span
-                                                class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
-                                                {{ $topic }}
-                                            </span>
-                                        @endforeach
+                                        <!-- Topics Section -->
+                                        <div class="flex flex-wrap mt-2">
+                                            @foreach (explode(',', $post->topics) as $topic)
+                                                <span
+                                                    class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
+                                                    {{ $topic }}
+                                                </span>
+                                            @endforeach
+                                        </div>
                                     </div>
-
                                 </div>
                             @endforeach
                         </div>
+
                     @endif
                 </div>
 
