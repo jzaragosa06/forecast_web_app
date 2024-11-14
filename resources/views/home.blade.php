@@ -239,20 +239,26 @@
                                                 <div class="flex items-center">
                                                     <select name="file_id" id="file_id"
                                                         class="form-select text-sm border-2 border-gray-300 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                                        @foreach (Auth::user()->files as $file)
-                                                            <option value="{{ $file->file_id }}">{{ $file->filename }}
-                                                            </option>
+                                                        @foreach ($groupedFiles as $category => $files_group)
+                                                            <!-- Category Label -->
+                                                            <optgroup label="{{ ucfirst($category) }}"
+                                                                class="text-gray-600">
+                                                                <!-- List files under each category -->
+                                                                @foreach ($files_group as $file)
+                                                                    <option value="{{ $file->file_id }}">
+                                                                        {{ $file->filename }}</option>
+                                                                @endforeach
+                                                            </optgroup>
                                                         @endforeach
+                                                        <!-- Option to add more data -->
                                                         <option value="" id="add-more-from-option">Add more data +
                                                         </option>
                                                     </select>
                                                     <i id="file-info"
                                                         class="fas fa-sm fa-info-circle text-gray-400 ml-2 cursor-pointer"
                                                         data-tooltip="Select the file you want to analyze."></i>
-
                                                 </div>
                                             </div>
-
                                             <!-- Second Select File -->
                                             <div class="mb-4 relative">
                                                 <label for="operation"

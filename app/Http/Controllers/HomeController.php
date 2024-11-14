@@ -29,9 +29,6 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-
-
-
     public function index()
     {
         // Get the files associated with the authenticated user
@@ -90,10 +87,10 @@ class HomeController extends Controller
         $currentUserId = Auth::id();
         // Separate posts made by the current user and others
         $otherPosts = Post::where('user_id', '!=', $currentUserId)->latest()->get();
-
+        $groupedFiles = File::where('user_id', Auth::id())->get()->groupBy('source');
 
 
         // Pass the time series data to the view
-        return view('home', compact('timeSeriesData', 'files', 'file_assocs', 'sharedFiles', 'otherPosts'));
+        return view('home', compact('timeSeriesData', 'files', 'file_assocs', 'sharedFiles', 'otherPosts', 'groupedFiles'));
     }
 }
