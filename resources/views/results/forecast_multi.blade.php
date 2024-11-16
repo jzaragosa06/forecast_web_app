@@ -5,7 +5,6 @@
 @section('page-title', 'Forecast Result')
 
 @section('content')
-
     @if (session('success'))
         <!-- Notification Popup -->
         <div id="notification"
@@ -28,7 +27,6 @@
             {{ session('note_success') }}
         </div>
     @endif
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const notification = document.getElementById('notification');
@@ -69,6 +67,10 @@
                         class="bg-white text-blue-500 font-bold py-2 px-4 rounded focus:outline-none border border-blue-500">
                         Detailed Result
                     </button>
+                    <button id="dataUsedBtn"
+                        class="bg-white text-blue-500 font-bold py-2 px-4 rounded focus:outline-none border border-blue-500">
+                        Data Used
+                    </button>
                 </div>
 
                 <!-- Outsample Forecast Section (Initially visible) -->
@@ -105,6 +107,16 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- Data Used (Initially hidden) -->
+                <div id="dataUsed" class="space-y-4 hidden">
+                    <!-- Graph (Top Section) -->
+                    <div class="bg-white shadow-md rounded-lg p-4 h-80">
+                        <div id="chart3"></div>
+                    </div>
+
+
+                </div>
             </div>
 
             <!-- Info Card Section -->
@@ -135,7 +147,6 @@
             </div>
 
             <div id="detailedMetrics" class="hidden bg-white shadow-md rounded-lg p-4 flex flex-col overflow-y-auto max">
-
                 <!-- Explanation Section -->
                 <p id="explanation-paragraph-test" class="text-gray-700 mb-4">
                     Detailed explanation of test results.
@@ -159,6 +170,14 @@
                             <div id="mape" class="text-gray-600"></div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div id="dataUsedExp" class="hidden bg-white shadow-md rounded-lg p-4 flex flex-col overflow-y-auto max">
+                <div class="mb-4">
+                    <p id="explanation-paragraph-data-used" class="text-gray-700 mb-4">Lorem ipsum dolor sit amet,
+                        consectetur
+                        adipiscing elit.</p>
                 </div>
             </div>
         </div>
@@ -488,13 +507,22 @@
         $(document).ready(function() {
             const jsonData = @json($data);
             const data = JSON.parse(jsonData);
-            const colname = data.metadata.colname;
+            const colname = (data.metadata.colname)[(data.metadata.colname).length - 1];
+            const colnames = data.metadata.colname;
+
 
             $('#explanation-paragraph-out').html(data.forecast.pred_out_explanation.response1 + "<br>" + data
                 .forecast.pred_out_explanation.response2 + "<br>" + data.forecast.pred_out_explanation.response3
             );
 
             $('#explanation-paragraph-test').html(data.forecast.pred_test_explanation.response1);
+
+
+
+            const lastRemoved = colnames.slice(0, -1);
+            $('#explanation-paragraph-data-used').html(
+                `The time series variable we want to forecast (target variable) is the <b>${colname}</b>. In addition to the ${colname} variable, we also used the following to improve the forecast: <b>${lastRemoved}</b>. In the forecast, we take into account the effect of these variables on the target variable`
+            );
 
             $('#mae').text(data.forecast.metrics.mae);
             $('#mse').text(data.forecast.metrics.mse);
@@ -504,36 +532,386 @@
             $('#tstype').text(data.metadata.tstype);
             $('#freq').text(data.metadata.freq);
             $('#steps').text(data.metadata.steps);
-            $('#target').text(data.metadata.colname);
+            $('#target').text(colname);
+
 
             const outsampleBtn = document.getElementById('outsampleForecastBtn');
             const detailedBtn = document.getElementById('detailedResultBtn');
+            const dataUsedBtn = document.getElementById('dataUsedBtn');
+
             const outsampleSection = document.getElementById('outsampleForecast');
             const detailedSection = document.getElementById('detailedResult');
+            const dataUsedSection = document.getElementById('dataUsed');
+
             const infoOutsample = document.getElementById('infoOutsample');
             const detailedMetrics = document.getElementById('detailedMetrics');
+            const dataUsedExp = document.getElementById('dataUsedExp');
 
             outsampleBtn.addEventListener('click', function() {
                 outsampleSection.classList.remove('hidden');
                 detailedSection.classList.add('hidden');
+                dataUsedSection.classList.add('hidden'); // Hide dataUsedSection
                 infoOutsample.classList.remove('hidden');
                 detailedMetrics.classList.add('hidden');
+                dataUsedExp.classList.add('hidden'); // Hide dataUsedExp
                 outsampleBtn.classList.add('bg-blue-500', 'text-white');
                 outsampleBtn.classList.remove('bg-white', 'text-blue-500', 'border', 'border-blue-500');
                 detailedBtn.classList.remove('bg-blue-500', 'text-white');
                 detailedBtn.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
+                dataUsedBtn.classList.remove('bg-blue-500', 'text-white');
+                dataUsedBtn.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
             });
 
             detailedBtn.addEventListener('click', function() {
                 outsampleSection.classList.add('hidden');
                 detailedSection.classList.remove('hidden');
+                dataUsedSection.classList.add('hidden'); // Hide dataUsedSection
                 infoOutsample.classList.add('hidden');
                 detailedMetrics.classList.remove('hidden');
+                dataUsedExp.classList.add('hidden'); // Hide dataUsedExp
                 detailedBtn.classList.add('bg-blue-500', 'text-white');
                 detailedBtn.classList.remove('bg-white', 'text-blue-500', 'border', 'border-blue-500');
                 outsampleBtn.classList.remove('bg-blue-500', 'text-white');
                 outsampleBtn.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
+                dataUsedBtn.classList.remove('bg-blue-500', 'text-white');
+                dataUsedBtn.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
             });
+
+            dataUsedBtn.addEventListener('click', function() {
+                outsampleSection.classList.add('hidden'); // Hide outsampleSection
+                detailedSection.classList.add('hidden'); // Hide detailedSection
+                dataUsedSection.classList.remove('hidden');
+                infoOutsample.classList.add('hidden');
+                detailedMetrics.classList.add('hidden');
+                dataUsedExp.classList.remove('hidden'); // Show dataUsedExp
+                dataUsedBtn.classList.add('bg-blue-500', 'text-white');
+                dataUsedBtn.classList.remove('bg-white', 'text-blue-500', 'border', 'border-blue-500');
+                outsampleBtn.classList.remove('bg-blue-500', 'text-white');
+                outsampleBtn.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
+                detailedBtn.classList.remove('bg-blue-500', 'text-white');
+                detailedBtn.classList.add('bg-white', 'text-blue-500', 'border', 'border-blue-500');
+            });
+
+
+        });
+
+        $(document).ready(function() {
+            // Fetch and parse JSON data from the server-side
+            const jsonData = @json($data); // Server-side rendered data
+            const data = JSON.parse(jsonData);
+            const colname = (data.metadata.colname)[(data.metadata.colname).length - 1];
+            const colnames = data.metadata.colname;
+
+            renderChart1();
+            renderChart2();
+            renderChart3();
+            // renderForecastTable_out();
+            renderForecastTable_test();
+
+            $('#forecastTable').DataTable({
+                "pageLength": 10,
+                "ordering": true,
+                "searching": false, // Remove the search box
+                "lengthChange": true // Remove the entries dropdown
+            });
+
+            function renderChart1() {
+                // Forecast index
+                let forecastIndex = data.forecast.pred_out.index;
+                let originalDataIndex = data.data.entire_data.index;
+                let full_index = [...originalDataIndex, ...forecastIndex];
+
+                let forecastData_null = [...Array(originalDataIndex.length).fill(null), ...data.forecast.pred_out[
+                    `${colname}`]];
+                let origDataValue = data.data.entire_data[`${colname}`];
+
+
+                // Initialize the first chart using ApexCharts
+                let options1 = {
+                    chart: {
+                        type: 'line',
+                        height: 300,
+                        toolbar: {
+                            show: false,
+                        }
+                    },
+                    // title: {
+                    //     text: 'Forecast Result',
+                    //     align: 'left',
+                    //     style: {
+                    //         fontSize: '18px', // Font size of the title
+                    //         color: '#263238' // Color of the title
+                    //     }
+                    // },
+                    series: [{
+                        name: `${colname}`,
+                        data: origDataValue,
+
+                    }, {
+                        name: `Forecast on ${colname}`,
+                        data: forecastData_null,
+
+                    }],
+                    xaxis: {
+                        categories: full_index,
+                        type: 'datetime'
+                    },
+                    yaxis: {
+                        title: {
+                            text: `${colname}`,
+                        },
+                        labels: {
+                            formatter: function(value) {
+                                // Check if the value is a valid number before applying toFixed
+                                return isNaN(value) ? value : value.toFixed(
+                                    2); // Safely format only valid numeric values
+                            }
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function(value) {
+                                // Check if the value is a valid number before applying toFixed
+                                return isNaN(value) ? value : value.toFixed(
+                                    2); // Safely format only valid numeric values
+                            }
+                        }
+                    },
+                    stroke: {
+                        curve: 'smooth',
+                        width: 2,
+                    },
+
+                };
+
+                let chart1 = new ApexCharts(document.querySelector("#chart1"), options1);
+                chart1.render();
+            }
+
+
+            function renderChart2() {
+                let full_index = data.data.entire_data.index;
+                let trainData = data.data.train_data[`${colname}`];
+
+                let testValue = [...Array(trainData.length).fill(null), ...data.data.test_data[`${colname}`]];
+                let predValue = [...Array(trainData.length).fill(null), ...data.forecast.pred_test[`${colname}`]];
+
+
+                // Initialize the first chart using ApexCharts
+                let options2 = {
+                    chart: {
+                        type: 'line',
+                        height: 300,
+                        toolbar: {
+                            show: false,
+                        }
+                    },
+                    title: {
+                        text: 'Forecast Result in Test Set',
+                        align: 'left',
+                        style: {
+                            fontSize: '18px', // Font size of the title
+                            color: '#263238' // Color of the title
+                        }
+                    },
+                    series: [{
+                            name: 'train data',
+                            data: trainData,
+
+                        }, {
+                            name: 'Test data',
+                            data: testValue,
+
+                        },
+                        {
+                            name: 'Pred test data',
+                            data: predValue,
+
+                        },
+                    ],
+                    xaxis: {
+                        categories: full_index,
+                        type: 'datetime',
+                    },
+                    yaxis: {
+                        labels: {
+                            formatter: function(value) {
+                                // Check if the value is a valid number before applying toFixed
+                                return isNaN(value) ? value : value.toFixed(
+                                    2); // Safely format only valid numeric values
+                            }
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function(value) {
+                                // Check if the value is a valid number before applying toFixed
+                                return isNaN(value) ? value : value.toFixed(
+                                    2); // Safely format only valid numeric values
+                            }
+                        }
+                    },
+                    stroke: {
+                        curve: 'smooth',
+                        width: 2,
+                    },
+
+                };
+
+                let chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
+                chart2.render();
+            }
+
+            function renderChart3() {
+                let index = data.data.entire_data.index;
+                let seriesData = [];
+                let yAxisCongif = [];
+
+                // Utility function to handle missing values
+                const cleanData = (arr) => arr.map(value => (value === '' || value === null) ? null : value);
+
+                //for configuration of the width of the line. 
+                const width = Array(colnames.length).fill(1);
+                width[width.length - 1] = 3;
+                colnames.forEach((col, index) => {
+                    seriesData.push({
+                        name: col,
+                        data: cleanData(data.data.entire_data[`${col}`])
+                    });
+
+
+
+
+                    yAxisCongif.push({
+                        title: {
+                            text: `${col}`,
+                        },
+                        labels: {
+                            show: true,
+                            formatter: function(value) {
+                                return isNaN(value) ? value : value.toFixed(2);
+                            }
+                        },
+                        axisBorder: {
+                            show: true,
+                        },
+                        axisTicks: {
+                            show: true,
+                        }
+                    });
+                });
+
+                // Initialize the chart with ApexCharts
+                var options3 = {
+                    chart: {
+                        type: 'line',
+                        height: 300,
+                        zoom: {
+                            enabled: true
+                        },
+                        toolbar: {
+                            show: false,
+                        },
+                        events: {
+                            markerClick: function(event, chartContext, opts) {
+                                console.log(opts);
+                                console.log(opts.seriesIndex);
+
+                                //well fetch the colname from the index
+                                handleExplanationSelection(colname_seriesIndexDict[opts.seriesIndex]);
+
+
+                            }
+                        },
+                    },
+                    series: seriesData,
+                    xaxis: {
+                        categories: index, // x-axis labels (dates/times)
+                        title: {
+                            text: 'Date/Time'
+                        },
+                        type: 'datetime',
+                    },
+                    yaxis: yAxisCongif,
+                    stroke: {
+                        curve: 'smooth',
+                        width: width,
+                    },
+                    markers: {
+                        size: 0
+                    },
+                    tooltip: {
+                        enabled: true,
+                        shared: true,
+                        intersect: false
+                    },
+                };
+
+                let chart3 = new ApexCharts(document.querySelector("#chart3"), options3);
+                chart3.render();
+
+            }
+
+            function renderForecastTable_out() {
+                let forecastIndex = data.forecast.pred_out.index;
+                let forecastValues = data.forecast.pred_out[`${colname}`];
+                let tableBody = document.getElementById('forecastTableBody-out');
+
+                let rows = '';
+                forecastIndex.forEach((date, index) => {
+                    const value = forecastValues[index];
+                    rows += `
+                    <tr class="border-b border-gray-200">
+                        <td class="py-2 px-4">${date}</td>
+                        <td class="py-2 px-4">${value}</td>
+                    </tr>
+                `;
+                });
+
+                tableBody.innerHTML = rows;
+            }
+
+            function renderForecastTable_test() {
+                let forecastIndex = data.data.test_data.index;
+                let forecastValues = data.forecast.pred_test[`${colname}`];
+                let testValues = data.data.test_data[`${colname}`];
+                let tableBody = document.getElementById('forecastTableBody-test');
+
+                let rows = '';
+
+                // Calculate the min and max of actual values for normalization
+                const minActualValue = Math.min(...testValues);
+                const maxActualValue = Math.max(...testValues);
+                const range = maxActualValue - minActualValue;
+
+                forecastIndex.forEach((date, index) => {
+                    const value = forecastValues[index];
+                    const actualValue = testValues[index];
+                    const error = value - actualValue;
+                    const absoluteError = Math.abs(error);
+
+                    // Normalize the absolute error based on the range of actual values
+                    const normalizedError = range > 0 ? (absoluteError / range) :
+                        0; // Avoid division by zero
+                    const colorIntensity = Math.min(255, Math.max(0, normalizedError *
+                        255)); // Scale to 0-255
+
+                    // Set the color to a gradient from white (no error) to red (maximum error)
+                    const errorColor =
+                        `rgba(255, ${255 - colorIntensity}, ${255 - colorIntensity}, 0.5)`; // Gradient from white to red
+
+                    rows += `
+                            <tr class="border-b border-gray-200">
+                                <td class="py-2 px-4">${date}</td>
+                                <td class="py-2 px-4">${value}</td>
+                                <td class="py-2 px-4">${actualValue}</td>
+                                <td class="py-2 px-4" style="background-color: ${errorColor};">${error.toFixed(2)}</td>
+                            </tr>
+                        `;
+                });
+
+                tableBody.innerHTML = rows;
+            }
         });
 
 
@@ -707,236 +1085,6 @@
                     }
                 });
             }
-
-        });
-
-        $(document).ready(function() {
-            // Fetch and parse JSON data from the server-side
-            const jsonData = @json($data); // Server-side rendered data
-            const data = JSON.parse(jsonData);
-            const colname = (data.metadata.colname)[(data.metadata.colname).length - 1];
-
-
-            renderChart1();
-            renderChart2();
-            // renderForecastTable_out();
-            renderForecastTable_test();
-
-            $('#forecastTable').DataTable({
-                "pageLength": 10,
-                "ordering": true,
-                "searching": false, // Remove the search box
-                "lengthChange": true // Remove the entries dropdown
-            });
-
-            function renderChart1() {
-                // Forecast index
-                let forecastIndex = data.forecast.pred_out.index;
-                let originalDataIndex = data.data.entire_data.index;
-                let full_index = [...originalDataIndex, ...forecastIndex];
-
-                let forecastData_null = [...Array(originalDataIndex.length).fill(null), ...data.forecast.pred_out[
-                    `${colname}`]];
-                let origDataValue = data.data.entire_data[`${colname}`];
-
-
-                // Initialize the first chart using ApexCharts
-                let options1 = {
-                    chart: {
-                        type: 'line',
-                        height: 300,
-                        toolbar: {
-                            show: false,
-                        }
-                    },
-                    // title: {
-                    //     text: 'Forecast Result',
-                    //     align: 'left',
-                    //     style: {
-                    //         fontSize: '18px', // Font size of the title
-                    //         color: '#263238' // Color of the title
-                    //     }
-                    // },
-                    series: [{
-                        name: `${colname}`,
-                        data: origDataValue,
-
-                    }, {
-                        name: `Forecast on ${colname}`,
-                        data: forecastData_null,
-
-                    }],
-                    xaxis: {
-                        categories: full_index,
-                        type: 'datetime'
-                    },
-                    yaxis: {
-                        title: {
-                            text: `${colname}`,
-                        },
-                        labels: {
-                            formatter: function(value) {
-                                // Check if the value is a valid number before applying toFixed
-                                return isNaN(value) ? value : value.toFixed(
-                                    2); // Safely format only valid numeric values
-                            }
-                        }
-                    },
-                    tooltip: {
-                        y: {
-                            formatter: function(value) {
-                                // Check if the value is a valid number before applying toFixed
-                                return isNaN(value) ? value : value.toFixed(
-                                    2); // Safely format only valid numeric values
-                            }
-                        }
-                    },
-                    stroke: {
-                        curve: 'smooth',
-                        width: 2,
-                    },
-
-                };
-
-                let chart1 = new ApexCharts(document.querySelector("#chart1"), options1);
-                chart1.render();
-            }
-
-
-            function renderChart2() {
-                let full_index = data.data.entire_data.index;
-                let trainData = data.data.train_data[`${colname}`];
-
-                let testValue = [...Array(trainData.length).fill(null), ...data.data.test_data[`${colname}`]];
-                let predValue = [...Array(trainData.length).fill(null), ...data.forecast.pred_test[`${colname}`]];
-
-
-                // Initialize the first chart using ApexCharts
-                let options2 = {
-                    chart: {
-                        type: 'line',
-                        height: 300,
-                        toolbar: {
-                            show: false,
-                        }
-                    },
-                    title: {
-                        text: 'Forecast Result in Test Set',
-                        align: 'left',
-                        style: {
-                            fontSize: '18px', // Font size of the title
-                            color: '#263238' // Color of the title
-                        }
-                    },
-                    series: [{
-                            name: 'train data',
-                            data: trainData,
-
-                        }, {
-                            name: 'Test data',
-                            data: testValue,
-
-                        },
-                        {
-                            name: 'Pred test data',
-                            data: predValue,
-
-                        },
-                    ],
-                    xaxis: {
-                        categories: full_index,
-                        type: 'datetime',
-                    },
-                    yaxis: {
-                        labels: {
-                            formatter: function(value) {
-                                // Check if the value is a valid number before applying toFixed
-                                return isNaN(value) ? value : value.toFixed(
-                                    2); // Safely format only valid numeric values
-                            }
-                        }
-                    },
-                    tooltip: {
-                        y: {
-                            formatter: function(value) {
-                                // Check if the value is a valid number before applying toFixed
-                                return isNaN(value) ? value : value.toFixed(
-                                    2); // Safely format only valid numeric values
-                            }
-                        }
-                    },
-                    stroke: {
-                        curve: 'smooth',
-                        width: 2,
-                    },
-
-                };
-
-                let chart2 = new ApexCharts(document.querySelector("#chart2"), options2);
-                chart2.render();
-            }
-
-            function renderForecastTable_out() {
-                let forecastIndex = data.forecast.pred_out.index;
-                let forecastValues = data.forecast.pred_out[`${colname}`];
-                let tableBody = document.getElementById('forecastTableBody-out');
-
-                let rows = '';
-                forecastIndex.forEach((date, index) => {
-                    const value = forecastValues[index];
-                    rows += `
-                    <tr class="border-b border-gray-200">
-                        <td class="py-2 px-4">${date}</td>
-                        <td class="py-2 px-4">${value}</td>
-                    </tr>
-                `;
-                });
-
-                tableBody.innerHTML = rows;
-            }
-
-            function renderForecastTable_test() {
-                let forecastIndex = data.data.test_data.index;
-                let forecastValues = data.forecast.pred_test[`${colname}`];
-                let testValues = data.data.test_data[`${colname}`];
-                let tableBody = document.getElementById('forecastTableBody-test');
-
-                let rows = '';
-
-                // Calculate the min and max of actual values for normalization
-                const minActualValue = Math.min(...testValues);
-                const maxActualValue = Math.max(...testValues);
-                const range = maxActualValue - minActualValue;
-
-                forecastIndex.forEach((date, index) => {
-                    const value = forecastValues[index];
-                    const actualValue = testValues[index];
-                    const error = value - actualValue;
-                    const absoluteError = Math.abs(error);
-
-                    // Normalize the absolute error based on the range of actual values
-                    const normalizedError = range > 0 ? (absoluteError / range) :
-                        0; // Avoid division by zero
-                    const colorIntensity = Math.min(255, Math.max(0, normalizedError *
-                        255)); // Scale to 0-255
-
-                    // Set the color to a gradient from white (no error) to red (maximum error)
-                    const errorColor =
-                        `rgba(255, ${255 - colorIntensity}, ${255 - colorIntensity}, 0.5)`; // Gradient from white to red
-
-                    rows += `
-            <tr class="border-b border-gray-200">
-                <td class="py-2 px-4">${date}</td>
-                <td class="py-2 px-4">${value}</td>
-                <td class="py-2 px-4">${actualValue}</td>
-                <td class="py-2 px-4" style="background-color: ${errorColor};">${error.toFixed(2)}</td>
-            </tr>
-        `;
-                });
-
-                tableBody.innerHTML = rows;
-            }
-
 
         });
     </script>
