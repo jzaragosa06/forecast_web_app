@@ -80,8 +80,55 @@
                         <div id="chart1"></div>
                     </div>
 
-
+                    <!-- New Row with Two Equal Containers -->
+                    <div class="flex space-x-4 h-full">
+                        <!-- First Container -->
+                        <div class="flex-1 bg-white shadow-md rounded-lg p-4">
+                            <div class="flex items-center text-lg font-semibold mb-2">
+                                Data Description
+                                <!-- Tooltip Icon -->
+                                <div class="relative group ml-2">
+                                    <i class="fas fa-info-circle text-gray-500 hover:text-gray-700 cursor-pointer"></i>
+                                    <div
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded py-1 px-2">
+                                        This describes the data used to make a forecast
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <!-- Content for Data Description -->
+                                {{ $description }}
+                            </div>
+                        </div>
+                        <!-- Second Container -->
+                        <div class="flex-1 bg-white shadow-md rounded-lg p-4">
+                            <div class="flex items-center text-lg font-semibold mb-2">
+                                Forecast
+                                <!-- Tooltip Icon -->
+                                <div class="relative group ml-2">
+                                    <i class="fas fa-info-circle text-gray-500 hover:text-gray-700 cursor-pointer"></i>
+                                    <div
+                                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded py-1 px-2">
+                                        This describes the forecast for the given time series
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="forecast-table-out" class="min-w-full bg-white">
+                                <thead>
+                                    <tr>
+                                        <th class="border px-4 py-2">Date</th>
+                                        <th class="border px-4 py-2">Forecasted Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="forecastTableBody-out">
+                                    <!-- Data will be dynamically rendered -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+
+
 
                 <!-- Detailed Result Section (Initially hidden) -->
                 <div id="detailedResult" class="space-y-4 hidden">
@@ -605,7 +652,7 @@
             renderChart1();
             renderChart2();
             renderChart3();
-            // renderForecastTable_out();
+            renderForecastTable_out();
             renderForecastTable_test();
 
             $('#forecastTable').DataTable({
@@ -861,15 +908,16 @@
                 forecastIndex.forEach((date, index) => {
                     const value = forecastValues[index];
                     rows += `
-                    <tr class="border-b border-gray-200">
-                        <td class="py-2 px-4">${date}</td>
-                        <td class="py-2 px-4">${value}</td>
-                    </tr>
-                `;
+                                <tr class="border-b border-gray-200">
+                                    <td class="py-2 px-4 text-center">${date}</td>
+                                    <td class="py-2 px-4 text-center">${value}</td>
+                                </tr>
+                            `;
                 });
 
                 tableBody.innerHTML = rows;
             }
+
 
             function renderForecastTable_test() {
                 let forecastIndex = data.data.test_data.index;
