@@ -57,7 +57,6 @@
     <div class="container mx-auto my-6 h-screen">
         <!-- Layout container with grid -->
         <div id="main-content" class="grid grid-cols-3 gap-4 h-full transition-all duration-300">
-
             <!-- Left Column (Buttons and Graphs) -->
             <div class="col-span-2 flex flex-col space-y-4 h-full">
                 <!-- Toggle buttons aligned to the top left -->

@@ -53,7 +53,7 @@
     <div class="container mx-auto my-6 h-screen bg-gray-50">
         <!-- Layout container with grid -->
 
-        <div class="grid grid-cols-3 gap-4 h-full">
+        <div id="main-content" class="grid grid-cols-3 gap-4 h-full">
             <!-- Left Column (Graphs and Notes) -->
             <div class="col-span-2 flex flex-col space-y-3 h-full">
                 <div id="button-container" class="flex overflow-x-auto gap-2 mb-4">
@@ -62,22 +62,6 @@
 
                 <div id="chart-container" class="flex flex-col gap-6">
                     <!-- Dynamic charts will be inserted here -->
-                </div>
-
-
-                <!-- Notes Section (Bottom) -->
-                <div class="bg-white shadow-md rounded-lg p-3 flex-1 flex flex-col">
-                    <h2 class="font-semibold text-gray-700 text-sm">Notes</h2>
-                    <div class="bg-gray-50 p-2 rounded overflow-y-auto flex-1 text-sm">
-                        <div id="notesEditor" class="h-full"></div>
-                    </div>
-                    <input type="hidden" id="notesContent" name="notesContent">
-                    <div class="mt-2">
-                        <button id="saveNotes"
-                            class="bg-blue-500 text-white font-bold py-1 px-3 rounded hover:bg-blue-600 text-sm">
-                            Save Notes
-                        </button>
-                    </div>
                 </div>
             </div>
 
@@ -96,16 +80,37 @@
             </div>
 
         </div>
+        <!-- The line graph for pdf. render->capture->include -->
+        <canvas id="lineChart" width="600" height="400" style="display:none;"></canvas>
 
-        <!-- Chat Button -->
-        <button id="chatButton"
-            class="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-500 focus:outline-none">
-            AI Chat 💬
+        <!-- Download Button -->
+        <button id="downloadButton"
+            class="fixed bottom-32 right-6 mb-4 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-500 focus:outline-none">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m-4 4l4 4 4-4" />
+            </svg>
         </button>
 
-        <div id="chatBox" class="hidden fixed bottom-6 right-6 w-96 h-96 bg-white rounded-lg shadow-xl overflow-hidden">
+        <!-- Chat with AI Button -->
+        <button id="chatButton"
+            class="fixed bottom-20 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-500 focus:outline-none">
+            <i class="fa-solid fa-robot fa-bounce fa-lg" style="color: #ffffff;"></i>
+        </button>
+
+        <!-- Chat with AI Panel -->
+        <div id="chatBox"
+            class="hidden fixed bottom-5 right-6 w-96 h-96 bg-white rounded-lg shadow-xl overflow-hidden z-50">
             <div class="bg-gray-200 border-b p-3 flex justify-between items-center">
-                <h3 class="text-lg font-semibold text-gray-700">Chat with AI</h3>
+                <div class="flex items-center space-x-2">
+                    <!-- Google Gemini Icon -->
+                    <img src="https://lh3.googleusercontent.com/Xtt-WZqHiV8OjACMMMr6wMdoMGE7bABi-HYujupzevufo1kiHUFQZukI1JILhjItrPNrDWLq6pfd=s600-w600"
+                        alt="Google Gemini Icon" class="w-5 h-5">
+                    <h3 class="text-lg font-semibold text-gray-700">Chat with AI</h3>
+                    <span class="text-sm text-gray-500 ml-2">Powered with Google Gemini</span>
+                </div>
                 <button id="closeChat" class="text-gray-400 hover:text-gray-600 focus:outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -113,7 +118,6 @@
                     </svg>
                 </button>
             </div>
-
             <div id="chatMessages" class="p-4 h-64 overflow-y-auto bg-gray-50">
                 @if ($history)
                     {!! $history->history !!}
@@ -121,26 +125,285 @@
                     <div id="initial-message" class="text-sm text-gray-600">Welcome! How can I assist you today?</div>
                 @endif
             </div>
-
             <div class="bg-white p-3 border-t flex items-center space-x-2">
                 <input type="text" id="chatInput"
                     class="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     placeholder="Type your message...">
                 <button id="sendMessage"
                     class="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-500 focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
+                    <i class="fa-solid fa-arrow-up" style="color: #ffffff;"></i>
                 </button>
             </div>
         </div>
+
+        <!-- Notes Side Panel (Initially hidden) -->
+        <div id="side-panel"
+            class="fixed top-0 right-0 h-full w-80 bg-white shadow-lg p-4 flex flex-col transition-transform duration-300 transform translate-x-full">
+
+            <!-- Panel Header -->
+            <h2 class="font-semibold text-gray-700 mb-4">Notes</h2>
+
+            <!-- Editor Container (flex-1 to fill remaining space) -->
+            <div class="bg-white p-2 rounded overflow-y-auto flex-1">
+                <div id="notesEditor" class="h-full"></div>
+            </div>
+
+            <!-- Save Button -->
+            <input type="hidden" id="notesContent" name="notesContent">
+            <div class="mt-4">
+                <button id="saveNotes" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                    Save Notes
+                </button>
+            </div>
+        </div>
+
+
+        <!-- Notes button-->
+        <button id="toggle-button"
+            class="fixed bottom-3 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-500 focus:outline-none"
+            onclick="togglePanel()">
+            <i class="fa-solid fa-pen-to-square fa-lg" style="color: #ffffff;"></i>
+        </button>
+
+
     </div>
 @endsection
 
-
-
 @section('scripts')
+    <script>
+        // Function to toggle the side panel visibility
+        function togglePanel() {
+            const sidePanel = document.getElementById("side-panel");
+            const mainContent = document.getElementById("main-content");
+
+            // Check if the side panel is currently open
+            const isOpen = !sidePanel.classList.contains("translate-x-full");
+
+            if (isOpen) {
+                // Close the side panel
+                sidePanel.classList.add("translate-x-full");
+                mainContent.classList.remove("mr-80");
+            } else {
+                // Open the side panel
+                sidePanel.classList.remove("translate-x-full");
+                mainContent.classList.add("mr-80");
+            }
+        }
+    </script>
+
+    <script>
+        function stripHTMLTags(input) {
+            return input.replace(/<[^>]*>/g, '');
+        }
+
+        $("#downloadButton").click(async function(e) {
+            e.preventDefault();
+
+            // Parse JSON data and metadata
+            const jsonData = @json($data);
+            const data = JSON.parse(jsonData);
+            const colnames = data.metadata.colname; // Array of column names (variables)
+            const description = stripHTMLTags(@json($description));
+            const note = @json(isset($note) ? strip_tags($note->content) : '');
+
+            const {
+                jsPDF
+            } = window.jspdf;
+            const pdf = new jsPDF();
+
+            // PDF Header
+            pdf.setFillColor(230, 230, 230);
+            pdf.rect(0, 0, pdf.internal.pageSize.width, 30, 'F');
+            const logoImage = new Image();
+            logoImage.src = "{{ asset('storage/idiot-guid-imgs/logo.png') }}";
+
+            let currentChart = null; // Variable to hold the current chart instance
+            logoImage.onload = async () => {
+                const logoWidth = 20;
+                const logoHeight = 20;
+                pdf.addImage(logoImage, 'PNG', 10, 5, logoWidth, logoHeight);
+                pdf.setFontSize(22);
+                pdf.setFont("helvetica", "bold");
+                pdf.text("DataForesight", 40, 20);
+                pdf.setFontSize(12);
+                pdf.setFont("helvetica", "normal");
+                pdf.text("The following describes the result of analysis.", 40, 25);
+
+                // Background for Data section
+                pdf.setFillColor(240, 240, 240);
+                pdf.rect(10, 35, pdf.internal.pageSize.width - 20, 20, 'F');
+                pdf.setFontSize(10);
+                pdf.text("Background of the data used for analysis: " + description, 12, 42, {
+                    maxWidth: pdf.internal.pageSize.width - 24
+                });
+
+
+                // Add chart (adjust this part for your image dimensions)
+                const canvas = document.getElementById("lineChart");
+                const ctx = canvas.getContext("2d");
+                const originalWidth = canvas.width;
+                const originalHeight = canvas.height;
+                canvas.width = originalWidth * 2;
+                canvas.height = originalHeight * 2;
+                ctx.scale(2, 2);
+
+
+                // Process components dynamically
+                for (const component of data.components) {
+                    pdf.setFillColor(240, 240, 240);
+                    pdf.rect(10, 60, pdf.internal.pageSize.width - 20, 12, 'F');
+                    pdf.setFont("helvetica", "bold");
+                    pdf.setFontSize(14);
+                    pdf.text(`${component} Seasonality`, 12, 68, {
+                        maxWidth: pdf.internal.pageSize.width - 24
+                    });
+
+                    const labels = component === "weekly" ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
+                        'Sun'
+                    ] : generateYearlyLabels();
+
+                    const datasets = [];
+                    const yAxisConfig = {};
+
+
+                    colnames.forEach((col, index) => {
+                        datasets.push({
+                            label: col,
+                            data: data.seasonality_per_period[col][component].values,
+                            borderColor: `hsl(${(index * 360) / colnames.length}, 70%, 50%)`,
+                            fill: false,
+                            pointRadius: 0,
+                            yAxisID: `y-axis-${index + 1}`,
+                        })
+
+                        yAxisConfig[`y-axis-${index + 1}`] = {
+                            type: 'linear',
+                            position: 'left', // Alternating y-axis sides
+                            title: {
+                                display: true,
+                                text: col
+                            },
+                        };
+                    });
+                    // Destroy the current chart instance if it exists
+                    if (currentChart) {
+                        currentChart.destroy();
+                    }
+
+                    // Create a new Chart.js instance
+                    currentChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels,
+                            datasets
+                        },
+                        options: {
+                            responsive: false,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: `${capitalize(component)} Seasonality (${colnames.join(", ")})`
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Date/Time',
+                                    }
+                                },
+                                ...yAxisConfig,
+                            }
+                        }
+                    });
+
+                    // Wait for chart rendering
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    const imageData = canvas.toDataURL("image/png");
+                    pdf.addImage(imageData, 'PNG', 10, 75, 180, 80);
+
+                    colnames.forEach((col, index) => {
+                        pdf.addPage();
+                        pdf.setFillColor(240, 240, 240);
+                        pdf.rect(10, 20, pdf.internal.pageSize.width - 20, 15, 'F');
+                        pdf.setFont("helvetica", "bold");
+                        pdf.setFontSize(14);
+                        pdf.text(
+                            `Key Details on ${component} seasonality of ${col} (AI Generated)`,
+                            10, 30);
+
+                        // Key details content with pagination
+                        pdf.setFont("helvetica", "normal");
+                        pdf.setFontSize(10);
+
+                        let response1 = stripHTMLTags(data.explanations[component][col]
+                            .response1);
+                        let response2 = stripHTMLTags(data.explanations[component][col]
+                            .response2);
+                        let keyDetails = response1 + response2;
+
+                        // Split text and paginate
+                        const lines = pdf.splitTextToSize(keyDetails, pdf.internal.pageSize
+                            .width - 20);
+                        let yPosition = 40; // Start position for the first line
+
+                        lines.forEach(line => {
+                            if (yPosition > pdf.internal.pageSize.height -
+                                10) { // Check if we are near the bottom of the page
+                                pdf.addPage(); // Add a new page
+                                yPosition = 20; // Reset y position for the new page
+                            }
+                            pdf.text(line, 10, yPosition);
+                            yPosition += 10; // Move y position down for each line
+                        });
+                    });
+                    //add new page
+                    pdf.addPage();
+                }
+
+                // Notes Section
+                pdf.addPage();
+                pdf.setFillColor(240, 240, 240);
+                pdf.rect(10, 20, pdf.internal.pageSize.width - 20, 15, 'F');
+                pdf.setFont("helvetica", "bold");
+                pdf.setFontSize(14);
+                pdf.text("Notes", 10, 30);
+
+                pdf.setFont("helvetica", "normal");
+                pdf.setFontSize(10);
+
+                if (note) {
+                    pdf.text(note, 10, 40, {
+                        maxWidth: pdf.internal.pageSize.width - 20
+                    });
+                } else {
+                    pdf.text("No notes added", 10, 40);
+                }
+
+                pdf.save("report.pdf");
+            };
+        });
+
+        function generateYearlyLabels() {
+            const labels = [];
+            const arbitraryYear = 2020; // Arbitrary non-leap year
+            let currentDate = new Date(arbitraryYear, 0, 1); // Start at January 1
+
+            while (currentDate.getFullYear() === arbitraryYear) {
+                labels.push(currentDate.toDateString()); // Use readable date format
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            return labels;
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+    </script>
+
+
     <script>
         $(document).ready(function() {
             // Initialize Quill editor with basic options
@@ -153,14 +416,10 @@
                 quill.root.innerHTML = `{!! $note->content !!}`;
             @endif
 
-
             // Save Notes button click event
             $('#saveNotes').click(function() {
                 // Get the Quill content in Delta format (optional, if needed)
                 var delta = quill.getContents();
-
-
-
                 // Get the Quill content in HTML format to store in the backend
                 var htmlContent = quill.root.innerHTML;
 
@@ -205,14 +464,16 @@
                     return;
                 }
 
+                $('#initial-message').remove();
+
                 // Append the question (user's message) to the chat container
                 $('#chatMessages').append(`
-                    <div class="flex justify-end mb-4">
-                        <div class="bg-blue-500 text-white p-3 rounded-lg max-w-xs w-auto shadow">
-                            <p>${message}</p>
-                        </div>
+                <div class="flex justify-end mb-4">
+                    <div class="bg-blue-500 text-white p-3 rounded-lg max-w-xs w-auto shadow">
+                        <p>${message}</p>
                     </div>
-                `);
+                </div>
+            `);
 
                 // Clear input field after sending
                 $('#chatInput').val('');
@@ -228,7 +489,7 @@
                     },
                     data: {
                         message: message,
-                        about: "trend",
+                        about: "forecast",
                     },
                     success: function(response) {
                         console.log(response);
@@ -238,12 +499,14 @@
 
                         // Append the AI's response to the chat container
                         $('#chatMessages').append(`
-                            <div class="flex justify-start mb-4">
-                                <div class="bg-gray-200 text-gray-700 p-3 rounded-lg max-w-xs w-auto shadow">
-                                    <p>${response.response}</p>
-                                </div>
+                        <div class="flex justify-start mb-4">
+                            <div class="bg-gray-200 text-gray-700 p-3 rounded-lg max-w-xs w-auto shadow">
+                                <p>${response.response}</p>
                             </div>
-                        `);
+                        </div>
+                    `);
+
+
 
                         // Scroll to the bottom of the chat
                         $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
@@ -254,6 +517,7 @@
                     }
                 });
             });
+
 
 
             function saveChatHistory() {
@@ -271,35 +535,7 @@
                         file_assoc_id: '{{ $file_assoc_id }}',
                     },
                     success: function(response) {
-                        // Check if notification element already exists, if not, create it
-                        let notification = document.getElementById('notification');
-                        if (!notification) {
-                            notification = document.createElement('div');
-                            notification.id = 'notification';
-                            notification.classList.add(
-                                'fixed', 'top-4', 'left-1/2', 'transform', '-translate-x-1/2',
-                                'text-white',
-                                'px-4', 'py-2', 'rounded-lg', 'shadow-lg', 'transition-opacity',
-                                'opacity-100'
-                            );
-                            document.body.appendChild(notification);
-                        }
-
-                        // Set the message and apply success styles
-                        notification.classList.remove('bg-red-500');
-                        notification.classList.add('bg-green-500');
-                        notification.textContent = response.message;
-
-                        // Display the notification
-                        notification.classList.remove('opacity-0');
-
-                        // Automatically hide the notification after a few seconds
-                        setTimeout(() => {
-                            notification.classList.add('opacity-0');
-                        }, 3000);
-                        setTimeout(() => {
-                            notification.remove();
-                        }, 3500);
+                        console.log("Chat history saved.");
                     },
                     error: function(error) {
                         console.log("Error saving chat history:", error);
@@ -307,6 +543,7 @@
                 });
             }
         });
+
 
         $(document).ready(function() {
             // Select elements
