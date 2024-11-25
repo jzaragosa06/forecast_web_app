@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use App\Models\FileUserShare;
+use App\Models\Post;
+use App\Models\PublicFiles;
 use Exception;
 use Illuminate\Http\Request;
 use Auth;
@@ -44,9 +46,12 @@ class ManageResultsUsingCRUDController extends Controller
         $shared_users = DB::table('file_user_shares')
             ->where('shared_by_user_id', Auth::id())
             ->get();
+        
+            
+        $posts = Post::where('user_id', Auth::id())->get();
+        $files_shared_on_public = PublicFiles::where('user_id', Auth::id())->get();
 
-
-        return view('CRUD.index', compact('files_assoc', 'files', 'files_input', 'users', 'shared_users'));
+        return view('CRUD.index', compact('files_assoc', 'files', 'files_input', 'users', 'shared_users', 'posts', 'files_shared_on_public'));
     }
 
     public function delete_file_assoc($file_assoc_id)

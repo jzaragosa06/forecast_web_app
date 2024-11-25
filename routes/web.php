@@ -141,7 +141,8 @@ Route::prefix('posts')->group(function () {
     Route::get('/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/store', [PostController::class, 'store'])->name('posts.store');
     Route::get('/show/{id}', [PostController::class, 'show'])->name('posts.show');
-
+    Route::post('/upvote/{post_id}', [PostController::class, 'upvote'])->name("posts.upvote");
+    Route::post('/delete/{post_id}', [PostController::class, 'delete'])->name('posts.delete');
 });
 
 Route::prefix('queries')->group(function () {
@@ -158,12 +159,9 @@ Route::prefix('public-files')->group(function () {
     Route::post("/upload", [PublicFilesController::class, 'upload'])->name('public-files.upload');
     Route::post("/add-data-to-user-account/{id}", [PublicFilesController::class, 'add_data_to_account'])->name('public-files.add-data-to-user-account');
     Route::get('/', [PublicFilesController::class, 'index'])->name('public-files.index');
+    Route::post("/upvote/{fileId}", [PublicFilesController::class, 'upvote'])->name("public-files.upvote");
+    Route::post('/delete/{id}', [PublicFilesController::class, 'delete'])->name('public-files.delete');
 });
-
-
-
-
-
 // ============================================================================================================================================================
 
 
