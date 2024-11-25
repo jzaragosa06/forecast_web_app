@@ -130,8 +130,14 @@ class PostController extends Controller
         $file_assocs = FileAssociation::where('user_id', $currentUserId)->get();
 
         // Separate posts made by the current user and others
-        $myPosts = Post::where('user_id', $currentUserId)->latest()->get();
-        $otherPosts = Post::where('user_id', '!=', $currentUserId)->latest()->get();
+        $myPosts = Post::where('user_id', $currentUserId)->withCount('upvotes')
+            ->orderBy('upvotes_count', 'desc')
+            ->get();
+
+        $otherPosts = Post::where('user_id', '!=', $currentUserId)
+            ->withCount('upvotes')
+            ->orderBy('upvotes_count', 'desc')
+            ->get();
 
         // Pass both collections to the view
         return view('posts.index', compact('myPosts', 'otherPosts', 'file_assocs'));

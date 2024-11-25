@@ -16,7 +16,13 @@ class PublicFilesController extends Controller
     public function index()
     {
         // Get all the public files
-        $publicfiles = PublicFiles::all();
+        $publicfiles = PublicFiles::withCount('upvotes') // Add upvotes count
+            ->orderBy('upvotes_count', 'desc') // Order by upvotes count
+            ->get(); // Execute the query and retrieve the results
+
+
+
+
         return view('publicfile.index', compact('publicfiles'));
     }
 

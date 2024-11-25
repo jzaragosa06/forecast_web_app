@@ -97,6 +97,15 @@ class ShareController extends Controller
         // ===========================
         $users = User::where('id', '!=', Auth::id())->get();
         // ===========================
+        //===============================================================================
+
+        //we need to handle the notification message being read and the shared file being read. 
+        // $notif  = Notification::where('user_id')
+        $notif = Notification::where('user_id', Auth::id())->where('file_assoc_id', $file_assoc_id)->first();
+        $notif->read = 1;
+        $notif->save();
+
+        // ==============================================================================
 
 
 

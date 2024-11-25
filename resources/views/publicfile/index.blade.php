@@ -121,7 +121,10 @@
                     </div>
                 </div>
 
+
             </div>
+
+
 
             <!-- Modal for displaying full details -->
             <div id="modal-{{ $file->id }}"

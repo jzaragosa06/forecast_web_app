@@ -85,8 +85,14 @@ class HomeController extends Controller
             ->get();
 
         $currentUserId = Auth::id();
+
         // Separate posts made by the current user and others
-        $otherPosts = Post::where('user_id', '!=', $currentUserId)->latest()->get();
+        // $otherPosts = Post::where('user_id', '!=', $currentUserId)->orderBy()->get();
+        $otherPosts = Post::where('user_id', '!=', $currentUserId)
+            ->withCount('upvotes') // Assumes "upvotes" is a relationship
+            ->orderBy('upvotes_count', 'desc')
+            ->get();
+
         $groupedFiles = File::where('user_id', Auth::id())->get()->groupBy('source');
 
 
