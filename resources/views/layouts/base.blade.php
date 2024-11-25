@@ -138,12 +138,12 @@
                 <a href="{{ route('crud.index') }}"
                     class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('crud.index') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
                     <i class="fas fa-tasks text-xl mr-2 ml-4"></i>
-                    <span class="text-sm sidebar-text transition-opacity duration-300">Manage Results</span>
+                    <span class="text-sm sidebar-text transition-opacity duration-300">Manage Data</span>
                 </a>
                 <a href="{{ route('share.index') }}"
                     class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('share.index') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
                     <i class="fas fa-share-square text-xl mr-2 ml-4"></i>
-                    <span class="text-sm sidebar-text transition-opacity duration-300">Shared Results</span>
+                    <span class="text-sm sidebar-text transition-opacity duration-300">Share Results</span>
                 </a>
                 <a href="{{ route('posts.index') }}"
                     class="flex items-center p-3 rounded-lg transition-all duration-300 ease-in-out {{ request()->routeIs('posts.index') ? 'bg-blue-500' : 'hover:bg-blue-500' }}">
@@ -156,46 +156,97 @@
                     <span class="text-sm sidebar-text transition-opacity duration-300">Public Data</span>
                 </a>
             </nav>
+
+            <!-- JavaScript for Collapse Functionality with Persistence -->
+            {{-- <script>
+                const sidebar = document.getElementById('sidebar');
+                const collapseButton = document.getElementById('collapseButton');
+                const collapseIcon = document.getElementById('collapseIcon');
+                const sidebarTitle = document.getElementById('sidebarTitle');
+                const sidebarTextElements = document.querySelectorAll('.sidebar-text');
+
+                // Load sidebar state from localStorage
+                function loadSidebarState() {
+                    const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                    if (isCollapsed) {
+                        sidebar.classList.remove('w-56');
+                        sidebar.classList.add('w-20');
+                        collapseIcon.classList.remove('fa-angle-double-left');
+                        collapseIcon.classList.add('fa-angle-double-right');
+                        sidebarTitle.classList.add('hidden');
+                        sidebarTextElements.forEach(element => element.classList.add('opacity-0'));
+                    }
+                }
+
+                // Toggle sidebar and save state to localStorage
+                collapseButton.addEventListener('click', () => {
+                    sidebar.classList.toggle('w-56');
+                    sidebar.classList.toggle('w-20');
+                    collapseIcon.classList.toggle('fa-angle-double-left');
+                    collapseIcon.classList.toggle('fa-angle-double-right');
+                    sidebarTitle.classList.toggle('hidden');
+                    sidebarTextElements.forEach(element => element.classList.toggle('opacity-0'));
+
+                    // Save the collapsed state
+                    const isCollapsed = sidebar.classList.contains('w-20');
+                    localStorage.setItem('sidebarCollapsed', isCollapsed);
+                });
+
+                // Load the sidebar state when the page loads
+                document.addEventListener('DOMContentLoaded', loadSidebarState);
+            </script> --}}
+
+            <script>
+                const sidebar = document.getElementById('sidebar');
+                const collapseButton = document.getElementById('collapseButton');
+                const collapseIcon = document.getElementById('collapseIcon');
+                const sidebarTitle = document.getElementById('sidebarTitle');
+                const sidebarTextElements = document.querySelectorAll('.sidebar-text');
+
+                // Load sidebar state from localStorage
+                function loadSidebarState() {
+                    const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                    updateSidebarState(isCollapsed);
+                }
+
+                // Function to update the sidebar state
+                function updateSidebarState(isCollapsed) {
+                    if (isCollapsed) {
+                        sidebar.classList.remove('w-56');
+                        sidebar.classList.add('w-20');
+                        collapseIcon.classList.remove('fa-angle-double-left');
+                        collapseIcon.classList.add('fa-angle-double-right');
+                        sidebarTitle.classList.add('hidden');
+                        sidebarTextElements.forEach(element => element.classList.add('opacity-0'));
+                    } else {
+                        sidebar.classList.add('w-56');
+                        sidebar.classList.remove('w-20');
+                        collapseIcon.classList.add('fa-angle-double-left');
+                        collapseIcon.classList.remove('fa-angle-double-right');
+                        sidebarTitle.classList.remove('hidden');
+                        sidebarTextElements.forEach(element => element.classList.remove('opacity-0'));
+                    }
+                }
+
+                // Toggle sidebar and save state to localStorage
+                collapseButton.addEventListener('click', () => {
+                    const isCollapsed = sidebar.classList.contains('w-20');
+                    // Toggle the sidebar state
+                    updateSidebarState(!isCollapsed);
+
+                    // Save the new state
+                    const newState = !isCollapsed;
+                    localStorage.setItem('sidebarCollapsed', newState);
+                });
+
+                // Load the sidebar state when the page loads
+                document.addEventListener('DOMContentLoaded', loadSidebarState);
+            </script>
+
+
         </div>
 
-        <!-- JavaScript for Collapse Functionality with Persistence -->
-        <script>
-            const sidebar = document.getElementById('sidebar');
-            const collapseButton = document.getElementById('collapseButton');
-            const collapseIcon = document.getElementById('collapseIcon');
-            const sidebarTitle = document.getElementById('sidebarTitle');
-            const sidebarTextElements = document.querySelectorAll('.sidebar-text');
 
-            // Load sidebar state from localStorage
-            function loadSidebarState() {
-                const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-                if (isCollapsed) {
-                    sidebar.classList.remove('w-56');
-                    sidebar.classList.add('w-20');
-                    collapseIcon.classList.remove('fa-angle-double-left');
-                    collapseIcon.classList.add('fa-angle-double-right');
-                    sidebarTitle.classList.add('hidden');
-                    sidebarTextElements.forEach(element => element.classList.add('opacity-0'));
-                }
-            }
-
-            // Toggle sidebar and save state to localStorage
-            collapseButton.addEventListener('click', () => {
-                sidebar.classList.toggle('w-56');
-                sidebar.classList.toggle('w-20');
-                collapseIcon.classList.toggle('fa-angle-double-left');
-                collapseIcon.classList.toggle('fa-angle-double-right');
-                sidebarTitle.classList.toggle('hidden');
-                sidebarTextElements.forEach(element => element.classList.toggle('opacity-0'));
-
-                // Save the collapsed state
-                const isCollapsed = sidebar.classList.contains('w-20');
-                localStorage.setItem('sidebarCollapsed', isCollapsed);
-            });
-
-            // Load the sidebar state when the page loads
-            document.addEventListener('DOMContentLoaded', loadSidebarState);
-        </script>
 
 
 
