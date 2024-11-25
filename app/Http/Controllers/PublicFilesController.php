@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Models\PublicFiles;
 use App\Models\File;
+use App\Models\UpvoteFile;
+
 use Auth;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Http\Request;
@@ -106,6 +108,48 @@ class PublicFilesController extends Controller
         } catch (Exception $e) {
             session()->flash('add_failed', 'Data failed to add to your account!');
             return redirect()->route('public-files.index');
+        }
+    }
+
+
+    public function upvote($fileId)
+    {
+        // Ensure the user is authenticated
+        $user = Auth::id();
+
+        // Check if the user has already upvoted the file
+        $existingUpvote = UpvoteFile::where('public_file_id', $fileId)
+            ->where('user_id', $user)
+            ->first();
+
+        if ($existingUpvote) {
+            session()->flash('upvote_failed', 'You have already upvoted this file');
+            return redirect()->route('public-files.index');
+        }
+
+        // Add the upvote
+        UpvoteFile::create([
+            'public_file_id' => $fileId,
+            'user_id' => $user,
+        ]);
+
+        session()->flash('upvote_success', 'Upvote successfully added');
+
+        return redirect()->route('public-files.index');
+    }
+
+    public function delete($id)
+    {
+        try {
+            $file = PublicFiles::where('id', $id)->first();
+            $title = $file->title;
+            $file->delete();
+
+            session()->flash('success', $title . " deleted successfully");
+            return redirect()->route('crud.index');
+        } catch (Exception $e) {
+            session()->flash('fail', "Fail to delete");
+            return redirect()->route('crud.index');
         }
     }
 

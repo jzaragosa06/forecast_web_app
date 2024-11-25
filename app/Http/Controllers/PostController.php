@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CommentNotification;
 use App\Models\FileAssociation;
+use App\Models\UpvotePost;
+use Exception;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Auth;
@@ -36,7 +38,7 @@ class PostController extends Controller
             $path = $request->file('post_image')->store('thumbnails', 'public');
         }
 
-        
+
         // Create the post with the appropriate image path (or null if no image)
         $post = Post::create([
             'user_id' => Auth::id(),
@@ -133,5 +135,46 @@ class PostController extends Controller
 
         // Pass both collections to the view
         return view('posts.index', compact('myPosts', 'otherPosts', 'file_assocs'));
+    }
+
+    public function upvote($post_id)
+    {
+        // Ensure the user is authenticated
+        $user = Auth::id();
+
+        // Check if the user has already upvoted the file
+        $existingUpvote = UpvotePost::where('post_id', $post_id)
+            ->where('user_id', $user)
+            ->first();
+
+        if ($existingUpvote) {
+            session()->flash('upvote_failed', 'You have already upvoted this post');
+            return redirect()->route('posts.index');
+        }
+
+        // Add the upvote
+        UpvotePost::create([
+            'post_id' => $post_id,
+            'user_id' => $user,
+        ]);
+
+        session()->flash('upvote_success', 'Upvote successfully added');
+        return redirect()->route('posts.index');
+    }
+
+    public function delete($post_id)
+    {
+
+        try {
+            $post = Post::where('id', $post_id)->first();
+            $title = $post->title;
+            $post->delete();
+
+            session()->flash('success', $title . " deleted successfully");
+            return redirect()->route('crud.index');
+        } catch (Exception $e) {
+            session()->flash('fail', "Fail to delete");
+            return redirect()->route('crud.index');
+        }
     }
 }

@@ -22,4 +22,9 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class)->whereNull('parent_id');
     }
+
+    public function upvotes()
+    {
+        return $this->hasMany(UpvotePost::class, 'post_id');
+    }
 }

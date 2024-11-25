@@ -12,6 +12,12 @@
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
             {{ session('success') }}
         </div>
+    @elseif (session('fail'))
+        <!-- Notification Popup -->
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('fail') }}
+        </div>
     @elseif (session('operation_success'))
         <div id="notification"
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
@@ -235,7 +241,8 @@
                                             <!-- First Select File -->
                                             <div class="mb-4 relative">
                                                 <label for="file_id"
-                                                    class="block text-xs font-medium mb-1 text-gray-600">Select File</label>
+                                                    class="block text-xs font-medium mb-1 text-gray-600">Select
+                                                    File</label>
                                                 <div class="flex items-center">
                                                     <select name="file_id" id="file_id"
                                                         class="form-select text-sm border-2 border-gray-300 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
@@ -282,7 +289,8 @@
                                                     class="flex items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                                                     <i class="fas fa-chart-line text-white"></i>
                                                     <!-- Changed icon for analysis -->
-                                                    <span class="ml-2 text-xs">Analyze</span> <!-- Reduced font size -->
+                                                    <span class="ml-2 text-xs">Analyze</span>
+                                                    <!-- Reduced font size -->
                                                 </button>
                                             </div>
 
@@ -325,7 +333,8 @@
                                         <h4 class="text-base font-semibold mb-2 text-gray-700">Recent Results</h4>
                                         <div class="flex-grow">
                                             @if ($file_assocs->isEmpty())
-                                                <p class="text-gray-500 text-xs text-center">No recent results found.</p>
+                                                <p class="text-gray-500 text-xs text-center">No recent results found.
+                                                </p>
                                             @else
                                                 <ul class="space-y-2">
                                                     @foreach ($file_assocs->slice(0, 5) as $index => $file_assoc)
@@ -421,7 +430,8 @@
                                                                         href="{{ route('input.file.graph.view.post', $files[$index]->file_id) }}">{{ $files[$index]->filename }}
                                                                     </a>
                                                                 </h4>
-                                                                <p class="text-xs mb-1">Type: {{ $files[$index]->type }}
+                                                                <p class="text-xs mb-1">Type:
+                                                                    {{ $files[$index]->type }}
                                                                 </p>
                                                                 <p class="text-xs mb-1">Frequency:
                                                                     {{ $files[$index]->freq }}</p>
@@ -446,7 +456,8 @@
                                                                             xmlns="http://www.w3.org/2000/svg">
                                                                             <path stroke-linecap="round"
                                                                                 stroke-linejoin="round" stroke-width="2"
-                                                                                d="M19 9l-7 7-7-7"></path>
+                                                                                d="M19 9l-7 7-7-7">
+                                                                            </path>
                                                                         </svg>
                                                                     </button>
 
@@ -519,7 +530,8 @@
                                                                         href="{{ route('input.file.graph.view.post', $files[$index]->file_id) }}">{{ $files[$index]->filename }}
                                                                     </a>
                                                                 </h4>
-                                                                <p class="text-xs mb-1">Type: {{ $files[$index]->type }}
+                                                                <p class="text-xs mb-1">Type:
+                                                                    {{ $files[$index]->type }}
                                                                 </p>
                                                                 <p class="text-xs mb-1">Frequency:
                                                                     {{ $files[$index]->freq }}</p>
@@ -544,7 +556,8 @@
                                                                             xmlns="http://www.w3.org/2000/svg">
                                                                             <path stroke-linecap="round"
                                                                                 stroke-linejoin="round" stroke-width="2"
-                                                                                d="M19 9l-7 7-7-7"></path>
+                                                                                d="M19 9l-7 7-7-7">
+                                                                            </path>
                                                                         </svg>
                                                                     </button>
 
@@ -628,7 +641,8 @@
                                                                         href="{{ route('input.file.graph.view.post', $files[$index]->file_id) }}">{{ $files[$index]->filename }}
                                                                     </a>
                                                                 </h4>
-                                                                <p class="text-xs mb-1">Type: {{ $files[$index]->type }}
+                                                                <p class="text-xs mb-1">Type:
+                                                                    {{ $files[$index]->type }}
                                                                 </p>
                                                                 <p class="text-xs mb-1">Frequency:
                                                                     {{ $files[$index]->freq }}</p>
@@ -653,7 +667,8 @@
                                                                             xmlns="http://www.w3.org/2000/svg">
                                                                             <path stroke-linecap="round"
                                                                                 stroke-linejoin="round" stroke-width="2"
-                                                                                d="M19 9l-7 7-7-7"></path>
+                                                                                d="M19 9l-7 7-7-7">
+                                                                            </path>
                                                                         </svg>
                                                                     </button>
 
@@ -738,7 +753,8 @@
                                                                         href="{{ route('input.file.graph.view.post', $files[$index]->file_id) }}">{{ $files[$index]->filename }}
                                                                     </a>
                                                                 </h4>
-                                                                <p class="text-xs mb-1">Type: {{ $files[$index]->type }}
+                                                                <p class="text-xs mb-1">Type:
+                                                                    {{ $files[$index]->type }}
                                                                 </p>
                                                                 <p class="text-xs mb-1">Frequency:
                                                                     {{ $files[$index]->freq }}</p>
@@ -763,7 +779,8 @@
                                                                             xmlns="http://www.w3.org/2000/svg">
                                                                             <path stroke-linecap="round"
                                                                                 stroke-linejoin="round" stroke-width="2"
-                                                                                d="M19 9l-7 7-7-7"></path>
+                                                                                d="M19 9l-7 7-7-7">
+                                                                            </path>
                                                                         </svg>
                                                                     </button>
 
@@ -914,7 +931,8 @@
                                 <i id="horizon-info" class="fas fa-sm fa-info-circle text-gray-400 cursor-pointer"></i>
                                 <div
                                     class="absolute left-full top-0 ml-2 hidden z-50 bg-black py-1.5 px-3 font-sans text-sm font-normal text-white group-hover:block whitespace-normal break-words w-48">
-                                    Forecast horizon is the number of steps you want to forecast. Given a daily interval of
+                                    Forecast horizon is the number of steps you want to forecast. Given a daily interval
+                                    of
                                     data (D), 12 forecasts the next 12 days.
                                 </div>
 
@@ -1001,7 +1019,8 @@
                                 <!-- Tooltip -->
                                 <div
                                     class="absolute left-full top-0 ml-2 hidden z-50 bg-black py-1.5 px-3 font-sans text-sm font-normal text-white group-hover:block whitespace-normal break-words w-48">
-                                    Describe what this data is about. Describe its background, and especially, describe the
+                                    Describe what this data is about. Describe its background, and especially, describe
+                                    the
                                     variables.
                                 </div>
                             </div>
@@ -1149,7 +1168,8 @@
                     <div class="space-y-2">
                         <!-- Stock Combo Box -->
                         <div>
-                            <label for="stock-selection" class="block text-sm font-medium text-gray-700">Select or Enter
+                            <label for="stock-selection" class="block text-sm font-medium text-gray-700">Select or
+                                Enter
                                 Stock</label>
                             <input list="stocks" id="stock-selection" name="stock-selection"
                                 class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
@@ -1165,7 +1185,8 @@
                         <div class="flex space-x-4">
                             <!-- Start Date -->
                             <div class="w-1/2">
-                                <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                                <label for="start-date" class="block text-sm font-medium text-gray-700">Start
+                                    Date</label>
                                 <input type="date" id="start-date-stocks" max=""
                                     class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             </div>

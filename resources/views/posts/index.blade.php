@@ -21,6 +21,17 @@
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
             {{ session('operation_failed') }}
         </div>
+    @elseif (session('upvote_success'))
+        <!-- Notification Popup -->
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('upvote_success') }}
+        </div>
+    @elseif (session('upvote_failed'))
+        <div id="notification"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
+            {{ session('upvote_failed') }}
+        </div>
     @endif
 
     <script>
@@ -91,7 +102,7 @@
                         </div>
                         <div class="p-3">
                             <!-- Post Title -->
-                            <h4 class="text-base font-semibold mb-2 text-gray-600">
+                            <h4 class="text-base font-semibold break-words mb-2 text-gray-600 truncate">
                                 <a href="{{ route('posts.show', $post) }}"
                                     class="hover:text-blue-600 truncate">{{ $post->title }}</a>
                             </h4>
@@ -115,6 +126,24 @@
                                     </span>
                                 @endforeach
                             </div>
+                        </div>
+                        <hr>
+                        <!-- Upvote Section -->
+                        <div class="flex items-center text-gray-700 p-4 justify-end">
+                            <form action="{{ route('posts.upvote', $post->id) }}" method="POST">
+                                @csrf
+                                <!-- Upvote Button -->
+                                <button type="submit"
+                                    class="flex items-center space-x-2 text-blue-500 hover:text-blue-700">
+                                    <!-- Upvote Icon -->
+                                    <i class="fa-solid fa-circle-up" style="color: #2977ff;"></i>
+                                    <!-- Upvote Text -->
+                                    <span class="text-sm font-medium">Upvote</span>
+                                    <!-- Upvote Count -->
+                                    <span class="ml-3 text-sm">{{ $post->upvotes()->count() }}</span>
+                                </button>
+                            </form>
+
                         </div>
                     </div>
                 @endforeach
@@ -145,7 +174,7 @@
                         </div>
                         <div class="p-3">
                             <!-- Post Title -->
-                            <h4 class="text-base font-semibold mb-2 text-gray-600">
+                            <h4 class="text-base font-semibold break-words mb-2 text-gray-600 truncate">
                                 <a href="{{ route('posts.show', $post) }}"
                                     class="hover:text-blue-600 truncate">{{ $post->title }}</a>
                             </h4>
@@ -168,6 +197,24 @@
                                         {{ $topic }}
                                     </span>
                                 @endforeach
+                            </div>
+                            <hr>
+                            <!-- Upvote Section -->
+                            <div class="flex items-center text-gray-700 p-4 justify-end">
+                                <form action="{{ route('posts.upvote', $post->id) }}" method="POST">
+                                    @csrf
+                                    <!-- Upvote Button -->
+                                    <button type="submit"
+                                        class="flex items-center space-x-2 text-blue-500 hover:text-blue-700">
+                                        <!-- Upvote Icon -->
+                                        <i class="fa-solid fa-circle-up" style="color: #2977ff;"></i>
+                                        <!-- Upvote Text -->
+                                        <span class="text-sm font-medium">Upvote</span>
+                                        <!-- Upvote Count -->
+                                        <span class="ml-3 text-sm">{{ $post->upvotes()->count() }}</span>
+                                    </button>
+                                </form>
+
                             </div>
                         </div>
                     </div>

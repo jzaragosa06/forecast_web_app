@@ -71,13 +71,35 @@
                 <div class="text-sm text-gray-800 break-words overflow-hidden">
                     <p>{!! $post->body !!}</p>
                 </div>
-                <div class="flex flex-wrap mt-2">
-                    @foreach (explode(',', $post->topics) as $topic)
-                        <span class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
-                            {{ $topic }}
-                        </span>
-                    @endforeach
+
+                <div class="grid grid-cols-5 mt-2">
+                    <!-- Topics Section -->
+                    <div class="col-span-4 flex flex-wrap">
+                        @foreach (explode(',', $post->topics) as $topic)
+                            <span class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
+                                {{ $topic }}
+                            </span>
+                        @endforeach
+                    </div>
+
+                    <!-- Upvote Section -->
+                    <div class="col-span-1 flex items-center justify-end text-gray-700 p-4">
+                        <form action="{{ route('posts.upvote', $post->id) }}" method="POST">
+                            @csrf
+                            <!-- Upvote Button -->
+                            <button type="submit" class="flex items-center space-x-2 text-blue-500 hover:text-blue-700">
+                                <!-- Upvote Icon -->
+                                <i class="fa-solid fa-circle-up" style="color: #2977ff;"></i>
+                                <!-- Upvote Text -->
+                                <span class="text-sm font-medium">Upvote</span>
+                                <!-- Upvote Count -->
+                                <span class="ml-3 text-sm">{{ $post->upvotes()->count() }}</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
+
+
 
                 <!-- Comments Section -->
                 {{-- <div class="mt-6 bg-white p-4 rounded-lg shadow-md relative"> --}}
