@@ -7,42 +7,6 @@
 @section('content')
     <div class="container mx-auto p-2">
         <!-- Card Container -->
-        {{-- <div class="bg-gray-50 rounded-lg shadow-md p-4 w-full">
-            <div class="flex justify-end items-center mb-4">
-                <div class="relative">
-                    <p>Time series alignment allows you to add more time series data on an existing time series. This is
-                        useful when you want to include another variable that is useful in your analysis</p>
-                    <!-- Dropdown Button -->
-                    <button id="dropdown-button" class="bg-gray-200 text-gray-700 p-2 rounded-md focus:outline-none">
-                        Add
-                    </button>
-                    <!-- Dropdown Menu -->
-                    <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                        <ul class="py-1">
-                            <li class="flex items-center">
-                                <!-- Styled File Input -->
-                                <label for="file-upload"
-                                    class="cursor-pointer text-gray-700 px-2 py-2 hover:bg-gray-200 w-full text-left">
-                                    Add via Upload
-                                </label>
-                                <input type="file" id="file-upload" class="hidden" accept=".csv" />
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-                <!-- Save Button -->
-                <button id="save-btn" class="bg-blue-500 text-white px-4 py-2 ml-4 rounded-md hover:bg-blue-600">
-                    Save
-                </button>
-            </div>
-        </div>
-
-        <div id="data-container" class="mt-4 w-full">
-            <!-- Your content and visualization can go here -->
-        </div> --}}
-
-        <!-- Card Container -->
         <div class="bg-gray-50 rounded-lg shadow-md p-4 w-full">
             <!-- Flex container for alignment of text and buttons -->
             <div class="flex justify-between items-center mb-4">
@@ -90,8 +54,6 @@
     </div>
 
     <script>
-        // -----------------------------------------------------------------------------------------------------
-
         function render_combinedArray_as_table() {
             // Clear previous data
             $('#data-container').empty();
@@ -500,6 +462,7 @@
                 formData.append('type', 'multivariate');
                 formData.append('filename', timeSeriesData['filename']);
                 formData.append('freq', timeSeriesData['freq']);
+                formData.append('source', 'uploads');
                 formData.append('description', timeSeriesData['description']);
 
 

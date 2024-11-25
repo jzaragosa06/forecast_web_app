@@ -356,92 +356,6 @@
             tempData = dataCopy;
         }
 
-        // function convertToCSV(headers, data) {
-        //     const csvRows = [];
-        //     csvRows.push(headers.join(','));
-        //     for (const row of data) {
-        //         // convert to desired format
-        //         row[0] = convertDate(row[0]);
-        //         csvRows.push(row.join(','));
-        //     }
-        //     return csvRows.join('\n');
-        // }
-
-        // function convertDate(inputDate) {
-        //     // Parse the input date string into a Date object
-        //     const parsedDate = new Date(inputDate);
-
-        //     // Format the date as MM/dd/yyyy (full year format)
-        //     const formattedDate = dateFns.format(parsedDate, 'MM/dd/yyyy');
-        //     return formattedDate;
-        // }
-
-        // document.getElementById('submit-button').addEventListener('click', () => {
-        //     console.log('');
-        //     let finalData = JSON.parse(JSON.stringify(data));
-
-        //     headers.forEach((header, index) => {
-        //         if (index > 0) { // Skip the date column
-        //             let method = fillMethods[index] || 'forward';
-        //             fillMissingValues(method, index);
-        //         }
-        //     });
-
-        //     const csvData = convertToCSV(headers, tempData);
-
-        //     //extract the additional data from the controller. 
-        //     const type = @json($type);
-        //     const description = $('#description').val();
-        //     const filename = $('#filename').val();
-        //     const source = @json($source);
-
-
-
-        //     // Create a FormData object to send the CSV and other data
-        //     const formData = new FormData();
-        //     formData.append('csv_file', new Blob([csvData], {
-        //         type: 'text/csv'
-        //     }), 'data.csv');
-
-
-        //     formData.append('type', type);
-        //     formData.append('freq', freq);
-        //     formData.append('description', description);
-        //     formData.append('filename', filename);
-        //     formData.append('source', source);
-
-        //     // Inspect FormData
-        //     for (let [key, value] of formData.entries()) {
-        //         console.log(key, value);
-        //     }
-
-
-        //     // Send the data using AJAX
-        //     $.ajax({
-        //         url: '{{ route('save') }}', // URL to your Laravel route
-        //         type: 'POST',
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-        //                 'content') // Add CSRF token here
-        //         },
-        //         data: formData,
-        //         processData: false, // Prevent jQuery from automatically transforming the data into a query string
-        //         contentType: false, // Let the browser set the content type
-        //         success: function(response) {
-        //             console.log('Data saved successfully:', response);
-
-        //             // Redirect the user manually
-        //             window.location.href = response.redirect_url;
-        //         },
-        //         error: function(xhr, status, error) {
-        //             console.error('Error saving data:', error);
-        //             // Redirect the user manually
-        //             window.location.href = response.redirect_url;
-        //             // Handle error response
-        //         }
-        //     });
-        // });
-
         function getSelectedVariables() {
             // Collect all checked checkboxes
             const selected = [];
@@ -504,7 +418,8 @@
 
             let type = @json($type);
             const description = document.getElementById("description").value;
-            const filename = document.getElementById("filename").value;
+            
+            const filename = $('#filename').val();
             const source = @json($source);
 
             if (selectedVariables.length == 1) {

@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 use App\Models\File;
 use App\Models\SeqalTempFiles;
 use Auth;
+use Exception;
 use Storage;
+use Illuminate\Support\Facades\Log;
+
 
 
 use Illuminate\Http\Request;
@@ -46,24 +49,29 @@ class TSSeqAlController extends Controller
 
     public function temporary_save(Request $request)
     {
-        if ($request->hasFile('csv_file')) {
-            $csvFile = $request->file('csv_file');
-            $filename = $request->get('filename');
-            $path = $csvFile->storeAs('seqal_temporary_uploads', $filename);
+        try {
+            if ($request->hasFile('csv_file')) {
+                $csvFile = $request->file('csv_file');
+                $filename = $request->get('filename');
+                $path = $csvFile->storeAs('seqal_temporary_uploads', $filename);
 
-            $uploadedFile = SeqalTempFiles::create([
-                'file_id' => $request->get('file_id'),
-                'user_id' => Auth::id(),
-                'type' => $request->get('type'),
-                'freq' => $request->get('freq'),
-                'filename' => $filename,
-                'description' => $request->get('description'),
-                'filepath' => $path,
-            ]);
+                $uploadedFile = SeqalTempFiles::create([
+                    'file_id' => $request->get('file_id'),
+                    'user_id' => Auth::id(),
+                    'type' => $request->get('type'),
+                    'freq' => $request->get('freq'),
+                    'source' => $request->get('source'),
+                    'filename' => $filename,
+                    'description' => $request->get('description'),
+                    'filepath' => $path,
+                ]);
 
-            return response()->json([
-                'redirect_url' => route('seqal.preprocess', $uploadedFile->id)
-            ]);
+                return response()->json([
+                    'redirect_url' => route('seqal.preprocess', $uploadedFile->id)
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error('error: ' . $e);
         }
     }
 
@@ -81,10 +89,11 @@ class TSSeqAlController extends Controller
         $freq = $file->freq;
         $description = $file->description;
         $filename = $file->filename;
+        $source = $file->source;
 
 
         //we will be forwarding to the multivariate time sereis preprocessing
-        return view('uploadData.multivariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename'));
+        return view('uploadData.multivariate', compact('data', 'headers', 'type', 'freq', 'description', 'filename', 'source'));
     }
 
     // ===========================================================================================================
