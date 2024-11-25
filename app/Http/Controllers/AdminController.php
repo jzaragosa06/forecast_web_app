@@ -187,12 +187,20 @@ class AdminController extends Controller
 
     public function queries()
     {
+        if (!Session::has('admin_logged_in')) {
+            return redirect()->route('admin.login');
+        }
+
         $userQueries = UserQueries::all(); // Fetch all queries from the database
         return view('admin.queries', compact('userQueries'));
     }
 
     public function respond(Request $request, $id)
     {
+        if (!Session::has('admin_logged_in')) {
+            return redirect()->route('admin.login');
+        }
+
         $query = UserQueries::find($id);
 
         if ($query) {

@@ -4,8 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+
+    <title>{{ config('app.name', 'DataForesight') }}</title>
+    <link rel="icon" href="assets/favicon.ico">
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center h-screen">
@@ -33,11 +39,7 @@
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
                             <!-- Username Icon (dummy icon for illustration) -->
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" class="h-5 w-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5.121 17.804A7.963 7.963 0 0112 20a7.963 7.963 0 016.879-2.196M12 12a7.963 7.963 0 00-6.879 2.196M12 12a7.963 7.963 0 006.879 2.196M12 12V4m-6.879 7.196a7.963 7.963 0 016.879-2.196m6.879 2.196A7.963 7.963 0 0112 4" />
-                            </svg>
+                            <i class="fa-solid fa-user"></i>
                         </span>
                     </div>
                 </div>
@@ -47,11 +49,7 @@
                         <input name ="password" id="password" type="password" placeholder="Password"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" class="h-5 w-5">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 12v-2m0 2a2 2 0 100-4 2 2 0 000 4zm6 6H6m6 0a6 6 0 016-6m-6 6a6 6 0 01-6-6m12 6H6" />
-                            </svg>
+                            <i class="fa-solid fa-key"></i>
                         </span>
                     </div>
                 </div>
