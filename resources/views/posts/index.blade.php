@@ -11,26 +11,11 @@
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
             {{ session('success') }}
         </div>
-    @elseif (session('operation_success'))
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('operation_success') }}
-        </div>
-    @elseif (session('operation_failed'))
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('operation_failed') }}
-        </div>
-    @elseif (session('upvote_success'))
+    @elseif (session('fail'))
         <!-- Notification Popup -->
         <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('upvote_success') }}
-        </div>
-    @elseif (session('upvote_failed'))
-        <div id="notification"
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('upvote_failed') }}
+            {{ session('fail') }}
         </div>
     @endif
 
@@ -66,8 +51,7 @@
                 onclick="showSection('my-post')">
                 My Post
             </button>
-            <button id="others-post-btn"
-                class="toggle-btn px-4 py-2 rounded-r text-white bg-blue-600 border border-gray-300"
+            <button id="others-post-btn" class="toggle-btn px-4 py-2 rounded-r text-white bg-blue-600 border border-gray-300"
                 onclick="showSection('others-post')">
                 Others Post
             </button>

@@ -51,7 +51,7 @@ class PreprocessInputFileController extends Controller
             }
         } catch (Exception $e) {
             // Handle exceptions
-            session()->flash('upload_failed', 'Failed to upload data. ' . $e->getMessage());
+            session()->flash('fail', 'Failed to upload data. ' . $e->getMessage());
             return redirect()->route("home");
         }
     }

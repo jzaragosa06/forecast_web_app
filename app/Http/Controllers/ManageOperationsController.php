@@ -21,7 +21,7 @@ class ManageOperationsController extends Controller
         $file = File::where('user_id', Auth::id())->where('file_id', $file_id)->firstOrFail();
         // Retrieve the file content from storage
         $file_content = Storage::get($file->filepath);
-        
+
         // Extract type, frequency, and description from the file record
         $type = $file->type;
         $freq = $file->freq;
@@ -78,7 +78,7 @@ class ManageOperationsController extends Controller
                             'action' => 'Perform Forecast',
                             'description' => 'Successfully performed a forecast on file ' . $file->filename,
                         ]);
-                        session()->flash('operation_success', 'Data analyzed successfully!');
+                        session()->flash('success', 'Data analyzed successfully!');
                         return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
                     } else {
                         Logs::create([
@@ -86,7 +86,7 @@ class ManageOperationsController extends Controller
                             'action' => 'Perform Forecast',
                             'description' => 'Failed to performed a forecast on file ' . $file->filename,
                         ]);
-                        session()->flash('operation_failed', 'Failed to analyze data!');
+                        session()->flash('fail', 'Failed to analyze data!');
                         return redirect()->route('home');
                     }
                 } catch (\Throwable $th) {
@@ -95,7 +95,7 @@ class ManageOperationsController extends Controller
                         'action' => 'Perform Forecast',
                         'description' => 'Failed to performed a forecast on file ' . $file->filename,
                     ]);
-                    session()->flash('operation_failed', 'Failed to analyze data!');
+                    session()->flash('fail', 'Failed to analyze data!');
                     return redirect()->route('home');
                 }
             } else {
@@ -148,7 +148,7 @@ class ManageOperationsController extends Controller
                             'description' => 'Successfully performed a forecast on file ' . $file->filename,
                         ]);
 
-                        session()->flash('operation_success', 'Data analyzed successfully!');
+                        session()->flash('success', 'Data analyzed successfully!');
                         return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
 
                     } else {
@@ -157,7 +157,7 @@ class ManageOperationsController extends Controller
                             'action' => 'Perform Forecast',
                             'description' => 'Failed to performed a forecast on file ' . $file->filename,
                         ]);
-                        session()->flash('operation_failed', 'Failed to analyze data!');
+                        session()->flash('fail', 'Failed to analyze data!');
                         return redirect()->route('home');
                     }
                 } catch (\Throwable $th) {
@@ -166,7 +166,7 @@ class ManageOperationsController extends Controller
                         'action' => 'Perform Forecast',
                         'description' => 'Failed to performed a forecast on file ' . $file->filename,
                     ]);
-                    session()->flash('operation_failed', 'Failed to analyze data!');
+                    session()->flash('fail', 'Failed to analyze data!');
                     return redirect()->route('home');
                 }
 
@@ -215,7 +215,7 @@ class ManageOperationsController extends Controller
                         'action' => 'Analyze Trend',
                         'description' => 'Successfully analyzed trend on ' . $file->filename . ' using Facebook Prophet.',
                     ]);
-                    session()->flash('operation_success', 'Data analyzed successfully!');
+                    session()->flash('success', 'Data analyzed successfully!');
                     return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
                 } else {
                     Logs::create([
@@ -224,7 +224,7 @@ class ManageOperationsController extends Controller
                         'description' => 'Failed analyzed trend on ' . $file->filename . ' using Facebook Prophet.',
                     ]);
 
-                    session()->flash('operation_failed', 'Failed to analyze data!');
+                    session()->flash('fail', 'Failed to analyze data!');
                     return redirect()->route('home');
                 }
 
@@ -235,7 +235,7 @@ class ManageOperationsController extends Controller
                     'description' => 'Failed analyzed trend on ' . $file->filename . ' using Facebook Prophet.',
                 ]);
 
-                session()->flash('operation_failed', 'Failed to analyze data!');
+                session()->flash('fail', 'Failed to analyze data!');
                 return redirect()->route('home');
             }
 
@@ -283,7 +283,7 @@ class ManageOperationsController extends Controller
                         'description' => 'Successfully analyzed seasonality on ' . $file->filename . ' using Facebook Prophet.',
                     ]);
 
-                    session()->flash('operation_success', 'Data analyzed successfully!');
+                    session()->flash('success', 'Data analyzed successfully!');
                     return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
                 } else {
                     Logs::create([
@@ -292,7 +292,7 @@ class ManageOperationsController extends Controller
                         'description' => 'Failed to analyzed seasonality on ' . $file->filename . ' using Facebook Prophet.',
                     ]);
 
-                    session()->flash('operation_failed', 'Failed to analyze data!');
+                    session()->flash('fail', 'Failed to analyze data!');
                     return redirect()->route('home');
                 }
 
@@ -303,7 +303,7 @@ class ManageOperationsController extends Controller
                     'description' => 'Failed to analyzed seasonality on ' . $file->filename . ' using Facebook Prophet.',
                 ]);
 
-                session()->flash('operation_failed', 'Failed to analyze data!');
+                session()->flash('fail', 'Failed to analyze data!');
                 return redirect()->route('home');
 
             }

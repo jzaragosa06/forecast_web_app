@@ -63,7 +63,7 @@ class ShareController extends Controller
 
         }
         $message = $file_association->assoc_filename . " shared successfully";
-        session()->flash('share_success', $message);
+        session()->flash('success', $message);
         // Redirect back or return success response
         return redirect()->route('crud.index');
     }

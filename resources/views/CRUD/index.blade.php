@@ -16,31 +16,6 @@
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
             {{ session('fail') }}
         </div>
-    @elseif (session('operation_success'))
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('operation_success') }}
-        </div>
-    @elseif (session('operation_failed'))
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('operation_failed') }}
-        </div>
-    @elseif (session('delete_success'))
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('delete_success') }}
-        </div>
-    @elseif (session('delete_failed'))
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('delete_failed') }}
-        </div>
-    @elseif (session('share_success'))
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('share_success') }}
-        </div>
     @endif
 
     <script>

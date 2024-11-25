@@ -36,7 +36,7 @@ class CommentController extends Controller
             "post_owner_id" => $post_owner_id,
             "commenter_user_id" => Auth::id(),
         ]);
-        session()->flash('comment_success', 'Comment added successfully!');
+        session()->flash('success', 'Comment added successfully!');
         return redirect()->route('posts.show', $request->post_id);
     }
 }

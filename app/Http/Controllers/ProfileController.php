@@ -70,7 +70,7 @@ class ProfileController extends Controller
             'action' => 'Updated Profile Photo',
             'description' => 'Successfully updated profile photo ',
         ]);
-        session()->flash('pic_success', 'Profile picture saved successfully!');
+        session()->flash('success', 'Profile picture saved successfully!');
 
         return redirect()->back()->with('success', 'Profile photo updated successfully');
     }
@@ -103,7 +103,7 @@ class ProfileController extends Controller
             'social_links_kaggle' => $request->social_links_kaggle,
             'contact_num' => $request->contact_num,
         ]);
-        session()->flash('info_success', 'Profile info saved successfully!');
+        session()->flash('success', 'Profile info saved successfully!');
 
         return redirect()->route('profile.index')->with('success', 'Profile updated successfully!');
     }

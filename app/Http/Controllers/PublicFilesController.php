@@ -77,12 +77,12 @@ class PublicFilesController extends Controller
                 'thumbnail' => $thumbnail_path,
             ]);
 
-            session()->flash('upload_success', 'File uploaded and processed successfully.');
+            session()->flash('success', 'File uploaded and processed successfully.');
             return redirect()->route("public-files.index");
 
         } catch (Exception $e) {
             // Handle any exceptions that occur during file processing
-            session()->flash('upload_failed', 'Failed to upload data. Failed to parse the file. Please ensure it is a valid CSV or Excel file. Error: ' . $e->getMessage());
+            session()->flash('fail', 'Failed to upload data. Failed to parse the file. Please ensure it is a valid CSV or Excel file. Error: ' . $e->getMessage());
             return redirect()->route('public-files.index');
         }
     }
@@ -102,11 +102,11 @@ class PublicFilesController extends Controller
                 'description' => $publicfile->description,
             ]);
 
-            session()->flash('add_success', 'Data successfully added to your account!');
+            session()->flash('success', 'Data successfully added to your account!');
             return redirect()->route('public-files.index');
 
         } catch (Exception $e) {
-            session()->flash('add_failed', 'Data failed to add to your account!');
+            session()->flash('fail', 'Data failed to add to your account!');
             return redirect()->route('public-files.index');
         }
     }
@@ -123,7 +123,7 @@ class PublicFilesController extends Controller
             ->first();
 
         if ($existingUpvote) {
-            session()->flash('upvote_failed', 'You have already upvoted this file');
+            session()->flash('fail', 'You have already upvoted this file');
             return redirect()->route('public-files.index');
         }
 
@@ -133,7 +133,7 @@ class PublicFilesController extends Controller
             'user_id' => $user,
         ]);
 
-        session()->flash('upvote_success', 'Upvote successfully added');
+        session()->flash('success', 'Upvote successfully added');
 
         return redirect()->route('public-files.index');
     }

@@ -12,15 +12,11 @@
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
             {{ session('success') }}
         </div>
-    @elseif (session('operation_success'))
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('operation_success') }}
-        </div>
-    @elseif (session('operation_failed'))
+    @elseif (session('fail'))
+        <!-- Notification Popup -->
         <div id="notification"
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('operation_failed') }}
+            {{ session('fail') }}
         </div>
     @elseif (session('note_success'))
         <div id="notification"

@@ -50,7 +50,7 @@ class PostController extends Controller
         ]);
 
         // Flash a success message and redirect to the post show page
-        session()->flash('post_success', 'Posted successfully!');
+        session()->flash('success', 'Posted successfully!');
         return redirect()->route('posts.show', $post->id);
     }
 
@@ -148,7 +148,7 @@ class PostController extends Controller
             ->first();
 
         if ($existingUpvote) {
-            session()->flash('upvote_failed', 'You have already upvoted this post');
+            session()->flash('fail', 'You have already upvoted this post');
             return redirect()->route('posts.index');
         }
 
@@ -158,7 +158,7 @@ class PostController extends Controller
             'user_id' => $user,
         ]);
 
-        session()->flash('upvote_success', 'Upvote successfully added');
+        session()->flash('success', 'Upvote successfully added');
         return redirect()->route('posts.index');
     }
 

@@ -46,8 +46,8 @@ class ManageResultsUsingCRUDController extends Controller
         $shared_users = DB::table('file_user_shares')
             ->where('shared_by_user_id', Auth::id())
             ->get();
-        
-            
+
+
         $posts = Post::where('user_id', Auth::id())->get();
         $files_shared_on_public = PublicFiles::where('user_id', Auth::id())->get();
 
@@ -69,10 +69,10 @@ class ManageResultsUsingCRUDController extends Controller
             DB::table('file_associations')->where('file_assoc_id', $file_assoc_id)->delete();
             DB::table('file_associations')->where('file_assoc_id', $file_assoc_id)->delete();
             $message = $file_assoc_filename . " deleted successfully!";
-            session()->flash('delete_success', $message);
+            session()->flash('success', $message);
         } catch (\Throwable $th) {
             $message = $file_assoc_filename . " failed to delete!";
-            session()->flash('delete_failed', $message);
+            session()->flash('fail', $message);
         }
         return redirect()->route('crud.index');
     }
@@ -98,7 +98,7 @@ class ManageResultsUsingCRUDController extends Controller
                 'description' => 'Successfully deleted ' . $filename,
             ]);
             $message = $filename . " deleted successfully!";
-            session()->flash('delete_success', $message);
+            session()->flash('success', $message);
         } catch (\Throwable $th) {
             Logs::create([
                 'user_id' => Auth::id(),
@@ -107,7 +107,7 @@ class ManageResultsUsingCRUDController extends Controller
             ]);
 
             $message = $filename . " failed to delete!";
-            session()->flash('delete_failed', $message);
+            session()->flash('fail', $message);
         }
 
         return redirect()->route('crud.index');
