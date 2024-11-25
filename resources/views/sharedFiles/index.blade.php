@@ -45,7 +45,7 @@
                                         </div>
                                         <p class="text-xs text-gray-400">On: {{ $file->shared_at }}</p>
                                     </div>
-                                    <a href="{{ $file->associated_file_path }}"
+                                    <a href="{{ route('share.view_file', ['file_assoc_id' => $file->file_assoc_id, 'user_id' => $file->user_id]) }}"
                                         class="text-indigo-500 text-sm hover:underline">
                                         View
                                     </a>
@@ -76,7 +76,7 @@
                                         </div>
                                         <p class="text-xs text-gray-400">On: {{ $file->shared_at }}</p>
                                     </div>
-                                    <a href="{{ $file->associated_file_path }}"
+                                    <a href="{{ route('share.view_file', ['file_assoc_id' => $file->file_assoc_id, 'user_id' => $file->user_id]) }}"
                                         class="text-indigo-500 text-sm hover:underline">
                                         View
                                     </a>

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Notification;
 use Illuminate\Support\Facades\DB;
 use Storage;
+use App\Models\File;
 use App\Models\ChatHistory;
 use App\Models\Note;
 use App\Models\User;
@@ -71,7 +72,6 @@ class ShareController extends Controller
     public function view_shared_file($file_assoc_id, $user_id)
     {
 
-
         // Fetch the file association and join with the files table to get the file details.
         $file_assoc = DB::table('file_associations')
             ->join('files', 'file_associations.file_id', '=', 'files.file_id')
@@ -84,6 +84,7 @@ class ShareController extends Controller
             abort(404, 'File Association not found');
         }
 
+
         $operation = $file_assoc->operation;
         $inputFileType = $file_assoc->file_type;
 
@@ -93,44 +94,45 @@ class ShareController extends Controller
         $note = Note::where('file_assoc_id', $file_assoc_id)->first();
         $history = ChatHistory::where('file_assoc_id', $file_assoc_id)->first();
 
+        // ===========================
+        $users = User::where('id', '!=', Auth::id())->get();
+        // ===========================
 
-        //===============================================================================
-        //we need to handle the notification message being read and the shared file being read. 
-        // $notif  = Notification::where('user_id')
-        $notif = Notification::where('user_id', Auth::id())->where('file_assoc_id', $file_assoc_id)->first();
-        $notif->read = 1;
-        $notif->save();
 
-        // ==============================================================================
+
         // ===================================
         //I put it here to prevent redundancy
-
-        $sharedBy = User::where('id', $user_id)->first();
         Logs::create([
             'user_id' => Auth::id(),
-            'action' => 'View Shared Result File',
-            'description' => 'Viewed result file ' . $file_assoc->assoc_filename . ', which was shared by ' . $sharedBy->name,
+            'action' => 'View Result File',
+            'description' => 'Viewed ' . $file_assoc->assoc_filename,
         ]);
         // ===================================
 
+        $file = File::where("file_id", $file_assoc->file_id)->first();
+        $description = $file->description;
+
+        $additional[] = [
+            'description' => $description,
+        ];
         // Handle different operations and file types
         if ($operation == "forecast") {
             if ($inputFileType == "univariate") {
-                return view('sharedFiles.forecast_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('sharedFiles.forecast_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
             } else {
-                return view('sharedFiles.forecast_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('sharedFiles.forecast_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
             }
         } elseif ($operation == "trend") {
             if ($inputFileType == "univariate") {
-                return view('sharedFiles.trend_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('sharedFiles.trend_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'additional' => $additional, 'description' => $description]);
             } else {
-                return view('sharedFiles.trend_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('sharedFiles.trend_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'additional' => $additional, 'description' => $description]);
             }
         } else {
             if ($inputFileType == "univariate") {
-                return view('sharedFiles.seasonality_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('sharedFiles.seasonality_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
             } else {
-                return view('sharedFiles.seasonality_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history]);
+                return view('sharedFiles.seasonality_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
             }
         }
     }
@@ -163,8 +165,10 @@ class ShareController extends Controller
             ->where('file_user_shares.shared_by_user_id', '=', $userId)
             ->select(
                 'file_associations.assoc_filename',
+                'file_associations.file_assoc_id',
                 'file_associations.associated_file_path',
                 'users.name as shared_to',
+                'users.id as user_id',
                 'users.profile_photo as profile_photo',
                 'file_user_shares.created_at as shared_at'
             )->orderBy('file_user_shares.created_at', 'desc')
