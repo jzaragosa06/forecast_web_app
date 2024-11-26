@@ -922,8 +922,6 @@
                     <input type="hidden" name="file_id" id="modal_file_id">
                     <input type="hidden" name="operation" value="forecast">
 
-
-
                     <div class="mb-4">
                         <!-- Label and Icon Wrapper -->
                         <div class="flex items-center">
@@ -934,18 +932,21 @@
                                 <i id="horizon-info" class="fas fa-sm fa-info-circle text-gray-400 cursor-pointer"></i>
                                 <div
                                     class="absolute left-full top-0 ml-2 hidden z-50 bg-black py-1.5 px-3 font-sans text-sm font-normal text-white group-hover:block whitespace-normal break-words w-48">
-                                    Forecast horizon is the number of steps you want to forecast. Given a daily interval
-                                    of
-                                    data (D), 12 forecasts the next 12 days.
+                                    Forecast horizon is the number of steps you want to forecast. Given a daily interval of
+                                    data (D), 10 forecasts the next 10 days.
                                 </div>
-
                             </div>
                         </div>
 
                         <input type="number" name="horizon" id="horizon"
                             class="form-input block w-full border-2 border-gray-400 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-2"
                             placeholder="e.g., 12" required>
+
+                        <!-- Note -->
+                        <p class="text-sm text-gray-500 mt-1">for multivariate time series type of data, only 10 steps are
+                            supported.</p>
                     </div>
+
 
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Run
                         Forecast</button>
@@ -1051,6 +1052,14 @@
     <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden"
         id="ts-add-via-api-open-meteo-modal" style="display:none;">
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-2/3">
+            {{-- <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h5 class="text-lg font-semibold">Open Meteo</h5>
+                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
+                    aria-label="Close">
+                    &times;
+                </button>
+            </div> --}}
+
             <div class="flex justify-between items-center border-b pb-2 mb-2">
                 <h5 class="text-lg font-semibold">Open Meteo</h5>
                 <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
@@ -1058,7 +1067,15 @@
                     &times;
                 </button>
             </div>
-            <div class="modal-body  overflow-y-auto max-h-[75vh]">
+            <p class="text-xs text-gray-500 mb-4">
+                This tool enables you to select specific weather variables such as temperature, humidity, or wind speed for
+                a chosen location. It allows you to extract the corresponding time series data for that location within a
+                specified start and end date range. Maximum of 5 weather variables
+                is supported.
+            </p>
+
+
+            <div class="modal-body overflow-y-auto max-h-[75vh]">
                 <form action="" method="POST">
                     @csrf
 
@@ -1096,19 +1113,6 @@
                         </div>
                     </div>
 
-
-                    {{-- <div class="mb-4">
-                        <!-- Date Pickers -->
-                        <label for="start-date" class="block text-sm font-medium mb-1">Start Date</label>
-                        <input type="date" id="start-date"
-                            class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
-                    </div>
-                    <div class="mb-4">
-                        <label for="end-date" class="block text-sm font-medium mb-1">End Date</label>
-                        <input type="date" id="end-date"
-                            class="form-input block w-full border-gray-300 rounded-md shadow-sm" required>
-                    </div> --}}
-
                     <div class="mb-4">
                         <!-- Date Pickers -->
                         <label for="start-date" class="block text-sm font-medium mb-1">Start Date</label>
@@ -1140,13 +1144,13 @@
                             <span id="long"></span>
                         </p>
                     </div>
-
-
-
-
-                    <!-- Date Pickers and other elements -->
-                    <button id="fetch-data-open-meteo-btn" type="submit"
-                        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Fetch</button>
+                    <!-- Fetch Button Positioned -->
+                    <div class="absolute bottom-4 right-8">
+                        <button id="fetch-data-open-meteo-btn" type="submit"
+                            class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700">
+                            Fetch
+                        </button>
+                    </div>
                 </form>
 
             </div>
@@ -1183,7 +1187,6 @@
                                 @endforeach
                             </datalist>
                         </div>
-
                         <!-- Date Range -->
                         <div class="flex space-x-4">
                             <!-- Start Date -->
@@ -1526,9 +1529,6 @@
                             let lat = position.coords.latitude;
                             let lon = position.coords.longitude;
 
-                            console.log(lat);
-                            console.log(lon);
-
                             if (map) {
                                 // Update the map's center and place a marker
                                 let currentLocation = new google.maps.LatLng(lat, lon);
@@ -1572,10 +1572,10 @@
                     if (!map) {
                         map = new google.maps.Map(document.getElementById('map'), {
                             center: {
-                                lat: -34.397,
-                                lng: 150.644
+                                lat: 16.042869,
+                                lng: 120.486262,
                             }, // Set default center
-                            zoom: 8
+                            zoom: 16
                         });
 
                         // Add marker on click
@@ -1643,6 +1643,7 @@
                 showSpinner();
 
 
+
                 // Extract latitude and longitude
                 let lat = $('#lat').text().trim(); // Assuming lat and long values are stored here
                 let long = $('#long').text().trim();
@@ -1656,6 +1657,7 @@
                 // If no checkboxes are selected, alert the user
                 if (selectedDaily.length === 0) {
                     alert('Please select at least one data field');
+                    hideSpinner();
                     return;
                 }
 
@@ -1663,8 +1665,33 @@
                 let apiUrl = 'https://archive-api.open-meteo.com/v1/archive';
                 let startDate = $('#start-date').val(); // Extracting start date
                 let endDate = $('#end-date').val(); // Extracting end date
-
                 let dailyParams = selectedDaily.join(',');
+
+                if (!startDate) {
+                    alert("Start date is required!");
+                    $('#start-date').focus();
+                    hideSpinner();
+                    return;
+                }
+
+                if (!endDate) {
+                    alert("End date is required!");
+                    $('#end-date').focus();
+                    hideSpinner();
+                    return;
+                }
+
+                // Convert dates to comparable formats
+                let startDateObj = new Date(startDate);
+                let endDateObj = new Date(endDate);
+
+                if (startDateObj >= endDateObj) {
+                    alert("Start date must be earlier than the end date.");
+                    $('#start-date').focus();
+                    hideSpinner();
+                    return;
+                }
+
 
                 let requestUrl =
                     `${apiUrl}?latitude=${lat}&longitude=${long}&start_date=${startDate}&end_date=${endDate}&daily=${dailyParams}&timezone=auto`;
@@ -1695,8 +1722,8 @@
                         let type;
                         let freq = 'D';
                         let description =
-                            `time sereis data involving ${selectedDaily.join(',')}`;
-                        let filename = `${selectedDaily.join('-')}-${currentDate}.csv`;
+                            `time sereis data involving ${selectedDaily.join(', ')}`;
+                        let filename = `${selectedDaily.join('-')}.csv`;
 
                         if (selectedDaily.length == 1) {
                             type = "univariate";

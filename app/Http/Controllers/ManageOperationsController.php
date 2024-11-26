@@ -17,6 +17,12 @@ class ManageOperationsController extends Controller
         $file_id = $request->get("file_id");
         $operation = $request->get("operation");
 
+        if (!$file_id || !$operation) {
+            session()->flash('fail', 'No uploaded data found!');
+            return redirect()->route('home');
+
+        }
+
         // Get the file information using the file ID and user ID
         $file = File::where('user_id', Auth::id())->where('file_id', $file_id)->firstOrFail();
         // Retrieve the file content from storage

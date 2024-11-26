@@ -1,15 +1,15 @@
 <?php return array(
   'daily' =>
     array(
-      'weather_code' => 'Weather Code',
+      // 'weather_code' => 'Weather Code',
       'temperature_2m_max' => 'Maximum Temperature (2 m)',
       'temperature_2m_min' => 'Minimum Temperature (2 m)',
       'temperature_2m_mean' => 'Mean Temperature (2 m)',
       'apparent_temperature_max' => 'Maximum Apparent Temperature (2 m)',
       'apparent_temperature_min' => 'Minimum Apparent Temperature (2 m)',
       'apparent_temperature_mean' => 'Mean Apparent Temperature (2m)',
-      'sunrise' => 'Sunrise',
-      'sunset' => 'Sunset',
+      // 'sunrise' => 'Sunrise',
+      // 'sunset' => 'Sunset',
       'daylight_duration' => 'Daylight Duration',
       'sunshine_duration' => 'Sunshine Duration',
       'precipitation_sum' => 'Precipitation Sum',
