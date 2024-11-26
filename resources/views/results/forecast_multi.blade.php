@@ -1065,7 +1065,6 @@
                 // Clear input field after sending
                 $('#chatInput').val('');
 
-
                 // Send the message to the Laravel controller using AJAX
                 $.ajax({
                     url: '{{ route('llm.ask') }}', // Laravel route
@@ -1077,11 +1076,13 @@
                     data: {
                         message: message,
                         about: "forecast",
+                        description: @json($description),
                     },
                     success: function(response) {
                         console.log(response);
                         console.log(response.response);
                         console.log(message);
+                        console.log(@json($description));
 
 
                         // Append the AI's response to the chat container

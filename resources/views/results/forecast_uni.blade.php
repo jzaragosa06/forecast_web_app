@@ -696,6 +696,7 @@
                     data: {
                         message: message,
                         about: "forecast",
+                        description: @json($description),
                     },
                     success: function(response) {
                         console.log(response);
