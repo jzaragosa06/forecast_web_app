@@ -1052,13 +1052,7 @@
     <div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden"
         id="ts-add-via-api-open-meteo-modal" style="display:none;">
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-2/3">
-            {{-- <div class="flex justify-between items-center border-b pb-2 mb-2">
-                <h5 class="text-lg font-semibold">Open Meteo</h5>
-                <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
-                    aria-label="Close">
-                    &times;
-                </button>
-            </div> --}}
+
 
             <div class="flex justify-between items-center border-b pb-2 mb-2">
                 <h5 class="text-lg font-semibold">Open Meteo</h5>
@@ -1068,7 +1062,8 @@
                 </button>
             </div>
             <p class="text-xs text-gray-500 mb-4">
-                This tool enables you to select specific weather variables such as temperature, humidity, or wind speed for
+                This feature enables you to select specific weather variables such as temperature, humidity, or wind speed
+                for
                 a chosen location. It allows you to extract the corresponding time series data for that location within a
                 specified start and end date range. Maximum of 5 weather variables
                 is supported.
@@ -1162,12 +1157,29 @@
         class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40 hidden" style="display:none;">
         <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-lg">
             <div class="flex justify-between items-center mb-4">
-                <h5 class="text-lg font-semibold text-gray-800">Stock Market Data</h5>
+                <h5 class="text-lg font-semibold text-gray-800">Company's Stock Market Data</h5>
                 <button type="button" class="text-gray-600 hover:text-gray-800" data-dismiss="modal"
                     aria-label="Close">
                     &times;
                 </button>
             </div>
+
+            <p class="text-xs text-gray-500 mb-4">
+                This allows you to access common stocks. This feature lets you specify a company's stock symbol and retrieve
+                its time series data, including:
+            </p>
+            <ul class="text-xs text-gray-500 list-disc ml-6">
+                <li><strong>Open Value:</strong> The stock's opening price.</li>
+                <li><strong>Close Value:</strong> The stock's closing price.</li>
+                <li><strong>Adjusted Close:</strong> The closing price adjusted for splits and dividends.</li>
+                <li><strong>Volume:</strong> The total number of shares traded.</li>
+            </ul>
+            <p class="text-xs text-gray-500 mb-4">
+                Refer to this article to know more about <a class="underline text-blue-600"
+                    href="https://www.investopedia.com/terms/c/commonstock.asp">common stocks</a>. tData can be extracted
+                for a specified start and end date range.
+            </p>
+
 
             <div class="modal-body">
                 <!-- Stock selection using Combo Box (Input + Datalist) -->
@@ -1872,24 +1884,39 @@
                 if (!stockSymbol) {
                     alert("Stock symbol is required!");
                     $('#stock-selection').focus(); // Focus the empty input
+                    hideSpinner();
                     return;
                 }
 
                 if (!startDate) {
                     alert("Start date is required!");
                     $('#start-date-stocks').focus();
+                    hideSpinner();
                     return;
                 }
 
                 if (!endDate) {
                     alert("End date is required!");
                     $('#end-date-stocks').focus();
+                    hideSpinner();
                     return;
                 }
 
                 if (!interval) {
                     alert("Interval is required!");
                     $('#interval').focus();
+                    hideSpinner();
+                    return;
+                }
+
+                // Convert dates to comparable formats
+                let startDateObj = new Date(startDate);
+                let endDateObj = new Date(endDate);
+
+                if (startDateObj >= endDateObj) {
+                    alert("Start date must be earlier than the end date.");
+                    $('#start-date').focus();
+                    hideSpinner();
                     return;
                 }
 
@@ -1928,7 +1955,7 @@
 
                         let description =
                             `Time sereis data involving the ${stockSymbol} stocks between ${startDate} and ${endDate}. `;
-                        let filename = `Stock-${stockSymbol}-${currentDate}.csv`;
+                        let filename = `Stock-${stockSymbol}.csv`;
 
 
                         formData.append('type', type);

@@ -87,10 +87,16 @@ class PostController extends Controller
 
 
         //This part indicate that that post was seen by the user
-        $comment_notif = CommentNotification::where("post_id", $id)->where("post_owner_Id", Auth::id())->first();
-        if ($comment_notif) {
-            $comment_notif->read = 1;
-            $comment_notif->save();
+        // Fetch all comment notifications for the post and the authenticated user
+        $comment_notifications = CommentNotification::where("post_id", $id)
+            ->where("post_owner_id", Auth::id())
+            ->get();
+
+        if ($comment_notifications->isNotEmpty()) {
+            foreach ($comment_notifications as $notification) {
+                $notification->read = true;
+                $notification->save();
+            }
         }
         // ====================================================================
         $file = File::where('file_id', $file_id)->firstOrFail();
