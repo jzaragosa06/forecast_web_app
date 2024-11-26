@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Auth;
-use PhpParser\Node\Stmt\TryCatch;
 use Storage;
 use App\Models\Logs;
 
@@ -85,7 +84,11 @@ class ManageOperationsController extends Controller
                             'description' => 'Successfully performed a forecast on file ' . $file->filename,
                         ]);
                         session()->flash('success', 'Data analyzed successfully!');
-                        return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
+                        Log::info('file assoc id: ' . $file_assoc->file_assoc_id);
+                        Log::info('Created file association:', $file_assoc->toArray());
+                        return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id));
+
+
                     } else {
                         Logs::create([
                             'user_id' => Auth::id(),
@@ -155,7 +158,10 @@ class ManageOperationsController extends Controller
                         ]);
 
                         session()->flash('success', 'Data analyzed successfully!');
-                        return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
+                        Log::info('file assoc id: ' . $file_assoc->file_assoc_id);
+                        Log::info('Created file association:', $file_assoc->toArray());
+                        return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id));
+
 
                     } else {
                         Logs::create([
@@ -222,7 +228,11 @@ class ManageOperationsController extends Controller
                         'description' => 'Successfully analyzed trend on ' . $file->filename . ' using Facebook Prophet.',
                     ]);
                     session()->flash('success', 'Data analyzed successfully!');
-                    return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
+                    Log::info('file assoc id: ' . $file_assoc->file_assoc_id);
+                    Log::info('Created file association:', $file_assoc->toArray());
+                    return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id));
+
+
                 } else {
                     Logs::create([
                         'user_id' => Auth::id(),
@@ -244,8 +254,6 @@ class ManageOperationsController extends Controller
                 session()->flash('fail', 'Failed to analyze data!');
                 return redirect()->route('home');
             }
-
-
         } else {
             // Handle seasonality
             try {
@@ -290,7 +298,11 @@ class ManageOperationsController extends Controller
                     ]);
 
                     session()->flash('success', 'Data analyzed successfully!');
-                    return redirect()->route('manage.results.get', $file_assoc->file_assoc_id);
+                    Log::info('file assoc id: ' . $file_assoc->file_assoc_id);
+                    Log::info('Created file association:', $file_assoc->toArray());
+                    return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id));
+
+
                 } else {
                     Logs::create([
                         'user_id' => Auth::id(),
