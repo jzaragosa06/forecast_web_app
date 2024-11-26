@@ -675,7 +675,7 @@
                         type: 'line',
                         height: 300,
                         toolbar: {
-                            show: false,
+                            show: true,
                         }
                     },
                     // title: {
@@ -746,7 +746,7 @@
                         type: 'line',
                         height: 300,
                         toolbar: {
-                            show: false,
+                            show: true,
                         }
                     },
                     title: {
@@ -853,7 +853,7 @@
                             enabled: true
                         },
                         toolbar: {
-                            show: false,
+                            show: true,
                         },
                         events: {
                             markerClick: function(event, chartContext, opts) {

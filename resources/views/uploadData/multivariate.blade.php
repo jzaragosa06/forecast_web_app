@@ -271,7 +271,7 @@
                     type: 'line',
                     height: 350,
                     toolbar: {
-                        show: false,
+                        show: true,
                     }
                 },
                 series: [{

@@ -155,7 +155,7 @@
                         type: 'line',
                         height: 350,
                         toolbar: {
-                            show: false
+                            show: true
                         }
                     },
                     series: [{
@@ -270,11 +270,9 @@
             }
 
             document.getElementById('submit-button').addEventListener('click', () => {
-                alert(tempData);
                 const csvData = generateCSV(tempData);
 
 
-                console.log('content of the csv data: look for the format', csvData);
 
                 //extract the additional data from the controller. 
                 const type = @json($type);

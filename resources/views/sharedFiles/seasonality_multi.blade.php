@@ -502,7 +502,7 @@
                             enabled: true
                         },
                         toolbar: {
-                            show: false
+                            show: true
                         },
                         events: {
                             markerClick: function(event, chartContext, opts) {

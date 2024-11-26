@@ -26,20 +26,6 @@ class PreprocessInputFileController extends Controller
             $data = $spreadsheet->getActiveSheet()->toArray();
             $headers = array_shift($data); // Get headers and remove from data
 
-            // Enforce row and column constraints
-            // if (count($headers) > 5) {
-
-            //     throw new Exception("The uploaded file has more than 5 columns. Only up to 5 columns are allowed.");
-            //     session()->flash('upload_failed', "The uploaded file has more than 5 columns. Only up to 5 columns are allowed.");
-            //     return redirect()->route("home");
-            // }
-
-            // if (count($data) > 500) {
-            //     throw new Exception("The uploaded file has more than 500 rows. Only up to 500 rows are allowed.");
-            //     session()->flash('upload_failed', "The uploaded file has more than 500 rows. Only up to 500 rows are allowed.");
-            //     return redirect()->route("home");
-            // }
-
             // Determine if the data is univariate or multivariate
             $type = (count($headers) == 2) ? "univariate" : "multivariate";
 

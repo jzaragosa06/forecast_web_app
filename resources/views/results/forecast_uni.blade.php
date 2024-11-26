@@ -787,7 +787,7 @@
                         type: 'line',
                         height: 300,
                         toolbar: {
-                            show: false,
+                            show: true,
                         }
                     },
                     // title: {
@@ -858,7 +858,7 @@
                         type: 'line',
                         height: 300,
                         toolbar: {
-                            show: false,
+                            show: true,
                         }
                     },
                     title: {

@@ -619,7 +619,7 @@
                             enabled: true
                         },
                         toolbar: {
-                            show: false
+                            show: true
                         }
                     },
                     // title: {
