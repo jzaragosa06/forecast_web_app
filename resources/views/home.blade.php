@@ -1354,6 +1354,76 @@
     </script>
 
     <script>
+        // $(document).ready(function() {
+        //     const uploadsBtn = document.getElementById('input-via-uploads-Btn');
+        //     const openmeteoBtn = document.getElementById('input-via-openmeteo-Btn');
+        //     const stocksBtn = document.getElementById('input-via-stocks-Btn');
+        //     const publicBtn = document.getElementById('input-via-public-Btn');
+        //     const uploadsContainer = document.getElementById('input-via-uploads-Container');
+        //     const openmeteoContainer = document.getElementById('input-via-openmeteo-Container');
+        //     const stocksContainer = document.getElementById('input-via-stocks-Container');
+        //     const publicContainer = document.getElementById('input-via-public-Container');
+
+        //     // Function to reset button styles
+        //     function resetButtons() {
+        //         uploadsBtn.classList.add('bg-white', 'text-blue-600');
+        //         uploadsBtn.classList.remove('bg-blue-600', 'text-white');
+
+        //         openmeteoBtn.classList.add('bg-white', 'text-blue-600');
+        //         openmeteoBtn.classList.remove('bg-blue-600', 'text-white');
+
+        //         stocksBtn.classList.add('bg-white', 'text-blue-600');
+        //         stocksBtn.classList.remove('bg-blue-600', 'text-white');
+        //     }
+
+        //     // Function to hide all containers
+        //     function hideAllContainers() {
+        //         uploadsContainer.classList.add('hidden');
+        //         openmeteoContainer.classList.add('hidden');
+        //         stocksContainer.classList.add('hidden');
+        //         publicContainer.classList.add('hidden');
+
+        //     }
+
+        //     // Event listeners to toggle between buttons and containers
+        //     uploadsBtn.addEventListener('click', () => {
+        //         resetButtons();
+        //         uploadsBtn.classList.add('bg-blue-600', 'text-white');
+        //         uploadsBtn.classList.remove('bg-white', 'text-blue-600');
+
+        //         hideAllContainers();
+        //         uploadsContainer.classList.remove('hidden');
+        //     });
+
+        //     openmeteoBtn.addEventListener('click', () => {
+        //         resetButtons();
+        //         openmeteoBtn.classList.add('bg-blue-600', 'text-white');
+        //         openmeteoBtn.classList.remove('bg-white', 'text-blue-600');
+
+
+        //         hideAllContainers();
+        //         openmeteoContainer.classList.remove('hidden');
+        //     });
+
+        //     stocksBtn.addEventListener('click', () => {
+        //         resetButtons();
+        //         stocksBtn.classList.add('bg-blue-600', 'text-white');
+        //         stocksBtn.classList.remove('bg-white', 'text-blue-600');
+
+        //         hideAllContainers();
+        //         stocksContainer.classList.remove('hidden');
+        //     });
+
+        //     publicBtn.addEventListener('click', () => {
+        //         resetButtons();
+        //         publicBtn.classList.add('bg-blue-600', 'text-white');
+        //         publicBtn.classList.remove('bg-white', 'text-blue-600');
+
+        //         hideAllContainers();
+        //         publicContainer.classList.remove('hidden');
+        //     });
+        // });
+
         $(document).ready(function() {
             const uploadsBtn = document.getElementById('input-via-uploads-Btn');
             const openmeteoBtn = document.getElementById('input-via-openmeteo-Btn');
@@ -1366,23 +1436,19 @@
 
             // Function to reset button styles
             function resetButtons() {
-                uploadsBtn.classList.add('bg-white', 'text-blue-600');
-                uploadsBtn.classList.remove('bg-blue-600', 'text-white');
-
-                openmeteoBtn.classList.add('bg-white', 'text-blue-600');
-                openmeteoBtn.classList.remove('bg-blue-600', 'text-white');
-
-                stocksBtn.classList.add('bg-white', 'text-blue-600');
-                stocksBtn.classList.remove('bg-blue-600', 'text-white');
+                const buttons = [uploadsBtn, openmeteoBtn, stocksBtn, publicBtn];
+                buttons.forEach(button => {
+                    button.classList.add('bg-white', 'text-blue-600');
+                    button.classList.remove('bg-blue-600', 'text-white');
+                });
             }
 
             // Function to hide all containers
             function hideAllContainers() {
-                uploadsContainer.classList.add('hidden');
-                openmeteoContainer.classList.add('hidden');
-                stocksContainer.classList.add('hidden');
-                publicContainer.classList.add('hidden');
-
+                const containers = [uploadsContainer, openmeteoContainer, stocksContainer, publicContainer];
+                containers.forEach(container => {
+                    container.classList.add('hidden');
+                });
             }
 
             // Event listeners to toggle between buttons and containers
@@ -1399,7 +1465,6 @@
                 resetButtons();
                 openmeteoBtn.classList.add('bg-blue-600', 'text-white');
                 openmeteoBtn.classList.remove('bg-white', 'text-blue-600');
-
 
                 hideAllContainers();
                 openmeteoContainer.classList.remove('hidden');
