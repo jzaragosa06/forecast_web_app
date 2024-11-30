@@ -43,7 +43,7 @@
                                                 class="w-5 h-5 object-cover rounded-full" alt="Profile Photo">
                                             <p class="text-xs text-gray-500">Shared to: {{ $file->shared_to }}</p>
                                         </div>
-                                        <p class="text-xs text-gray-400">On: {{ $file->shared_at }}</p>
+                                        <p class="text-xs text-gray-400">On: {{ $file->created_at }}</p>
                                     </div>
                                     <a href="{{ route('share.view_file', ['file_assoc_id' => $file->file_assoc_id, 'user_id' => $file->user_id]) }}"
                                         class="text-indigo-500 text-sm hover:underline">
@@ -74,7 +74,7 @@
                                                 class="w-5 h-5 object-cover rounded-full" alt="Profile Photo">
                                             <p class="text-xs text-gray-500">Shared by: {{ $file->shared_by }}</p>
                                         </div>
-                                        <p class="text-xs text-gray-400">On: {{ $file->shared_at }}</p>
+                                        <p class="text-xs text-gray-400">On: {{ $file->created_at }}</p>
                                     </div>
                                     <a href="{{ route('share.view_file', ['file_assoc_id' => $file->file_assoc_id, 'user_id' => $file->user_id]) }}"
                                         class="text-indigo-500 text-sm hover:underline">

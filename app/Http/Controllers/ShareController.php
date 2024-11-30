@@ -162,7 +162,7 @@ class ShareController extends Controller
                 'users.id as user_id',
                 'users.name as shared_by',
                 'users.profile_photo as profile_photo',
-                'file_user_shares.created_at as shared_at'
+                'file_user_shares.created_at'
             )->orderBy('file_user_shares.created_at', 'desc')
 
             ->get();
@@ -179,7 +179,7 @@ class ShareController extends Controller
                 'users.name as shared_to',
                 'users.id as user_id',
                 'users.profile_photo as profile_photo',
-                'file_user_shares.created_at as shared_at'
+                'file_user_shares.created_at'
             )->orderBy('file_user_shares.created_at', 'desc')
 
             ->get();

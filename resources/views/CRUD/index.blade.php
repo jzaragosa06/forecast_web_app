@@ -137,7 +137,7 @@
                                         <h6 class="font-semibold text-gray-700">{{ $file->filename }}</h6>
                                         <p class="text-sm text-gray-500">Type: {{ $file->type }}</p>
                                         <p class="text-sm text-gray-500">Created on:
-                                            {{ $file->created_at->format('Y-m-d') }}
+                                            {{ $file->created_at->diffForHumans() }}
                                         </p>
                                         <p class="text-sm text-gray-500">Description: {{ $file->description }}</p>
                                     </div>
@@ -172,7 +172,7 @@
                                         <h6 class="font-semibold text-gray-700">{{ $file_assoc->assoc_filename }}</h6>
                                         <p class="text-sm text-gray-500">Operation: {{ $file_assoc->operation }}</p>
                                         <p class="text-sm text-gray-500">Created on:
-                                            {{ $file_assoc->created_at->format('Y-m-d') }}</p>
+                                            {{ $file_assoc->created_at->diffForHumans() }}</p>
                                         <p class="text-sm text-gray-500">Description: {{ $file_assoc->description }}</p>
                                     </div>
                                     <div class="flex space-x-2">
@@ -219,7 +219,7 @@
                                             {{ Str::limit(strip_tags($post->body), 125, '...') }}
                                         </p>
                                         <p class="text-sm text-gray-500">Created on:
-                                            {{ $post->created_at->format('Y-m-d') }}
+                                            {{ $post->created_at->diffForHumans() }}
                                         </p>
                                         <!-- Topics Section -->
                                         <div class="flex flex-wrap mt-2">
@@ -262,7 +262,7 @@
                                         <h6 class="font-semibold text-gray-700">{{ $file->title }}</h6>
                                         <p class="text-sm text-gray-500">Type: {{ $file->freq }}</p>
                                         <p class="text-sm text-gray-500">Created on:
-                                            {{ $file->created_at->format('Y-m-d') }}</p>
+                                            {{ $file->created_at->diffForHumans() }}</p>
                                         <p class="text-sm text-gray-500">Description: {{ $file->description }}</p>
                                         <!-- Topics Section -->
                                         <div class="flex flex-wrap mt-2">

@@ -52,7 +52,7 @@
                 <!-- Post Title and Meta Info -->
                 <h1 class="text-2xl text-gray-600 font-semibold mb-2">{{ $post->title }}</h1>
                 <p class="text-sm text-gray-500">Posted by: {{ $post->user->name }} on
-                    {{ $post->created_at->format('M d, Y') }}</p>
+                    {{ $post->created_at->diffForHumans() }}</p>
                 <!-- Post Body -->
                 <div class="text-sm text-gray-800 break-words overflow-hidden">
                     <p>{!! $post->body !!}</p>

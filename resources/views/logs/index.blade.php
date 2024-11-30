@@ -31,7 +31,7 @@
                                         {{ $log->description }}
                                     </td>
                                     <td class="py-3 px-6 text-left">
-                                        {{ $log->created_at->format('Y-m-d H:i:s') }}
+                                        {{ $log->created_at->diffForHumans() }}
                                     </td>
                                 </tr>
                             @endforeach

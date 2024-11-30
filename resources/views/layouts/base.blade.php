@@ -446,7 +446,7 @@
                                                         class="text-gray-900">{{ $comment_notification->name }}</strong>
                                                     Added a comment
                                                     <div class="text-xs text-gray-500">
-                                                        {{ $comment_notification->created_at }}</div>
+                                                        {{ $comment_notification->created_at->diffForHumans() }}</div>
                                                 </div>
 
                                                 <a href="{{ route('posts.show', $comment_notification->post_id) }}">

@@ -420,6 +420,8 @@
                                                                 </p>
                                                                 <p class="text-xs mb-1">Frequency:
                                                                     {{ $files[$index]->freq }}</p>
+                                                                <p class="text-xs mb-1">Uploaded:
+                                                                    {{ $files[$index]->created_at->diffForHumans() }}</p>
 
                                                                 <!-- Description section -->
                                                                 <div class="bg-gray-200 flex-grow p-4 rounded-lg">
@@ -520,6 +522,9 @@
                                                                 </p>
                                                                 <p class="text-xs mb-1">Frequency:
                                                                     {{ $files[$index]->freq }}</p>
+                                                                <p class="text-xs mb-1">Uploaded:
+                                                                    {{ $files[$index]->created_at->diffForHumans() }}</p>
+
 
                                                                 <!-- Description section -->
                                                                 <div class="bg-gray-200 flex-grow p-4 rounded-lg">
@@ -631,6 +636,9 @@
                                                                 </p>
                                                                 <p class="text-xs mb-1">Frequency:
                                                                     {{ $files[$index]->freq }}</p>
+                                                                <p class="text-xs mb-1">Uploaded:
+                                                                    {{ $files[$index]->created_at->diffForHumans() }}</p>
+
 
                                                                 <!-- Description section -->
                                                                 <div class="bg-gray-200 flex-grow p-4 rounded-lg">
@@ -731,6 +739,9 @@
                                                                 </p>
                                                                 <p class="text-xs mb-1">Frequency:
                                                                     {{ $files[$index]->freq }}</p>
+                                                                <p class="text-xs mb-1">Uploaded:
+                                                                    {{ $files[$index]->created_at->diffForHumans() }}</p>
+
 
                                                                 <!-- Description section -->
                                                                 <div class="bg-gray-200 flex-grow p-4 rounded-lg">
