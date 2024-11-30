@@ -6,6 +6,7 @@ use App\Models\File;
 use App\Models\UpvoteFile;
 
 use Auth;
+use Dotenv\Exception\ValidationException;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -29,6 +30,11 @@ class PublicFilesController extends Controller
     public function upload(Request $request)
     {
         try {
+            $request->validate([
+                'file' => 'required|file|mimes:csv,xls,xlsx|max:2048', // Validate the uploaded file
+                'thumbnail' => 'nullable|image|max:2048',     // Thumbnail is optional but must be an image with max size 2 MB
+            ]);
+
             $title = $request->get('title');
             $file = $request->file('file');
 
@@ -86,6 +92,9 @@ class PublicFilesController extends Controller
             session()->flash('success', 'File uploaded and processed successfully.');
             return redirect()->route("public-files.index");
 
+        } catch (ValidationException $e) {
+            session()->flash('fail', 'Validation failed. Uploaded files should be less than 2MB: ' . $e);
+            return redirect()->route('public-files.index');
         } catch (Exception $e) {
             // Handle any exceptions that occur during file processing
             session()->flash('fail', 'Failed to upload data. Failed to parse the file. Please ensure it is a valid CSV or Excel file. Error: ' . $e->getMessage());

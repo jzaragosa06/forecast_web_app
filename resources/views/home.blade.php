@@ -661,19 +661,7 @@
                                                                     <div id="dropdownMenu-{{ $index }}"
                                                                         class="hidden absolute right-0 bg-white shadow-md rounded-lg mt-2 w-48 z-10">
                                                                         <ul class="py-2 text-sm text-gray-700">
-                                                                            {{-- <li
-                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                                                                Analyze
-                                                                                trend
-                                                                            </li>
-                                                                            <li
-                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                                                                Seasonality
-                                                                            </li>
-                                                                            <li
-                                                                                class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                                                                Forecast
-                                                                            </li> --}}
+
                                                                             <a
                                                                                 href="{{ route('seqal.index', $files[$index]->file_id) }}">
                                                                                 <li
@@ -1300,6 +1288,7 @@
             $('#description-info').on('mouseenter', showTooltip).on('mouseleave', hideTooltip);
         });
     </script>
+
     <script>
         // Toggle dropdown visibility
         document.querySelectorAll('[id^=dropdownButton-]').forEach(button => {
@@ -1596,6 +1585,42 @@
                         });
                     }
 
+                    // Try to get the user's current location
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                const userLocation = {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude
+                                };
+
+                                // Center the map on the user's location
+                                map.setCenter(userLocation);
+
+                                // Remove existing marker if present
+                                if (marker) {
+                                    marker.setMap(null);
+                                }
+
+                                // Add a marker at the user's location
+                                marker = new google.maps.Marker({
+                                    position: userLocation,
+                                    map: map,
+                                    title: 'Your Location'
+                                });
+
+                                // Update the latitude and longitude in the HTML
+                                $('#lat').text(position.coords.latitude, );
+                                $('#long').text(position.coords.longitude, );
+                            },
+                            function(error) {
+                                console.error('Error getting location:', error);
+                            }
+                        );
+                    } else {
+                        console.error('Geolocation is not supported by this browser.');
+                    }
+
                     // Simulate map loading completion
                     setTimeout(() => {
                         hideSpinner($getFromMapsBtn, 'Map Opened',
@@ -1606,14 +1631,17 @@
 
                 // Place a marker on map and pan to it
                 function placeMarkerAndPanTo(latLng, map) {
+                    // Remove existing marker if present
                     if (marker) {
-                        marker.setPosition(latLng);
-                    } else {
-                        marker = new google.maps.Marker({
-                            position: latLng,
-                            map: map
-                        });
+                        marker.setMap(null);
                     }
+
+                    // Add a new marker
+                    marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map
+                    });
+
                     map.panTo(latLng);
 
                     let lat = latLng.lat();
@@ -1623,6 +1651,7 @@
                     $('#lat').text(lat);
                     $('#long').text(lon);
                 }
+
             });
 
 

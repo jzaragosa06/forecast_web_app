@@ -57,6 +57,19 @@ class ProfileController extends Controller
     {
         $user = User::where('id', Auth::id())->firstOrFail();
 
+        try {
+            // Validate the request
+            $request->validate([
+                'new_profile_photo' => 'required|image|max:2048', // 2 MB limit
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Check if the error is related to max size
+            if ($e->validator->fails() && $e->validator->errors()->has('new_profile_photo')) {
+                session()->flash('fail', 'The profile photo must not exceed 2 MB.');
+            }
+            return redirect()->back();
+        }
+
         if ($request->hasFile('new_profile_photo')) {
             $path = $request->file('new_profile_photo')->store('profile_photos', 'public');
             $user->profile_photo = $path;
@@ -64,15 +77,14 @@ class ProfileController extends Controller
 
         $user->save();
 
-
         Logs::create([
             'user_id' => Auth::id(),
             'action' => 'Updated Profile Photo',
-            'description' => 'Successfully updated profile photo ',
+            'description' => 'Successfully updated profile photo',
         ]);
-        session()->flash('success', 'Profile picture saved successfully!');
 
-        return redirect()->back()->with('success', 'Profile photo updated successfully');
+        session()->flash('success', 'Profile picture saved successfully!');
+        return redirect()->back();
     }
 
     public function update(Request $request)

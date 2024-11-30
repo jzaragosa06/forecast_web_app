@@ -5,38 +5,16 @@
 @section('page-title', 'Publicly Shared Time Series Data')
 
 @section('content')
-    @if (session('upload_success'))
+    @if (session('success'))
         <!-- Notification Popup -->
         <div id="notification"
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('upload_success') }}
+            {{ session('success') }}
         </div>
-    @elseif (session('upload_failed'))
+    @elseif (session('fail'))
         <div id="notification"
             class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('upload_failed') }}
-        </div>
-    @elseif (session('add_success'))
-        <!-- Notification Popup -->
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('add_success') }}
-        </div>
-    @elseif (session('add_failed'))
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('add_failed') }}
-        </div>
-    @elseif (session('upvote_success'))
-        <!-- Notification Popup -->
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('upvote_success') }}
-        </div>
-    @elseif (session('upvote_failed'))
-        <div id="notification"
-            class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg transition-opacity opacity-100">
-            {{ session('upvote_failed') }}
+            {{ session('fail') }}
         </div>
     @endif
 
