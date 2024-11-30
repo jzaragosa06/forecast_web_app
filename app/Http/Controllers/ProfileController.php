@@ -6,11 +6,9 @@ use App\Models\FileAssociation;
 use App\Models\FileUserShare;
 use Auth;
 use App\Models\Post;
-
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Logs;
-
 
 class ProfileController extends Controller
 {
@@ -19,6 +17,7 @@ class ProfileController extends Controller
         $user = User::where('id', Auth::id())->firstOrFail();
         // count of the results files created. 
         // $resultsCount = FileAssociation::where('user_id', Auth::id())->count();
+
         $resultCount = FileAssociation::distinct('file_assoc_id')->count('file_assoc_id');
         $collabCount = FileUserShare::distinct('shared_to_user_id')->count('shared_to_user_id');
         // Get the currently authenticated user ID
@@ -28,9 +27,9 @@ class ProfileController extends Controller
         // Separate posts made by the current user and others
         $myPosts = Post::where('user_id', $currentUserId)->latest()->get();
 
-
-
-        return view('profile.index', compact('user', 'resultCount', 'collabCount', 'myPosts'));
+        //total number of results shared
+        $totalshared = FileUserShare::where('shared_by_user_id', Auth::id())->count();
+        return view('profile.index', compact('user', 'collabCount', 'myPosts', 'totalshared'));
 
     }
 
@@ -38,10 +37,6 @@ class ProfileController extends Controller
     public function public($id)
     {
         $user = User::where('id', $id)->firstOrFail();
-        // count of the results files created. 
-        // $resultsCount = FileAssociation::where('user_id', Auth::id())->count();
-        $resultCount = FileAssociation::distinct('file_assoc_id')->count('file_assoc_id');
-        $collabCount = FileUserShare::distinct('shared_to_user_id')->count('shared_to_user_id');
 
         // Get the currently authenticated user ID
         $userId = $id;
@@ -49,8 +44,9 @@ class ProfileController extends Controller
 
         // Separate posts made by the current user and others
         $myPosts = Post::where('user_id', $userId)->latest()->get();
-
-        return view('profile.public', compact('user', 'resultCount', 'collabCount', 'myPosts'));
+        //total number of results shared
+        $totalshared = FileUserShare::where('shared_by_user_id', $id)->count();
+        return view('profile.public', compact('user', 'myPosts', 'totalshared'));
     }
 
     public function update_photo(Request $request)

@@ -127,9 +127,10 @@
                             <img id="profileImage"
                                 src="{{ $file->user->profile_photo ? asset('storage/' . $file->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
                                 class="w-6 h-6 object-cover rounded-full" alt="Profile Photo">
-                            <p class="text-gray-600 text-sm">Uploaded by: {{ $file->user->name }}</p>
+                            <p class="text-gray-600 text-sm">Uploaded by: {{ $file->user->name }} |
+                                {{ $file->created_at->diffForHumans() }}</p>
                         </div>
-                        <p class="text-gray-500 text-sm">Created: {{ $file->created_at->format('M d, Y') }}</p>
+
                     </div>
 
                     <!-- Add to Account Button with Tooltip -->

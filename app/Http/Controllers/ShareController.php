@@ -184,8 +184,11 @@ class ShareController extends Controller
 
             ->get();
 
+        $shareToMeCount = FileUserShare::where('shared_to_user_id', Auth::id())->count();
+        $shareByMeCount = FileUserShare::where('shared_by_user_id', Auth::id())->count();
+
         // Pass data to the view
-        return view('sharedFiles.index', compact('sharedWithMe', 'filesSharedByMe'));
+        return view('sharedFiles.index', compact('sharedWithMe', 'filesSharedByMe', 'shareToMeCount', 'shareByMeCount'));
     }
 
 }

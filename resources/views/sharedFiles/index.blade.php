@@ -5,7 +5,7 @@
 @section('page-title', 'Share Results')
 
 @section('content')
-    <div x-data="{ selectedTab: 'sharedByMe' }" class="flex justify-center p-4">
+    <div x-data="{ selectedTab: 'sharedWithMe' }" class="flex justify-center p-4">
         <div class="w-full max-w-2xl">
             <!-- Toggle Buttons for "Shared with Others" and "Shared with Me" -->
             <div class="flex justify-center space-x-4 mb-6">
@@ -26,10 +26,17 @@
             <div class="flex flex-col space-y-6">
                 <!-- Files I Shared with Others -->
                 <div x-show="selectedTab === 'sharedByMe'" class="bg-white shadow-md rounded-lg p-6">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Files I Shared with Others</h2>
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-gray-800">Files I Shared with Others</h2>
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-square-poll-horizontal fa-xl text-blue-600"></i>
+                            <span class="text-gray-800">Total: {{ $shareByMeCount }}</span>
+                        </div>
+                    </div>
+
                     <!-- Minimalist Search Bar for Files I Shared -->
                     <input type="text" id="searchSharedByMe" placeholder="Search files by name or recipient..."
-                        class="mb-4 p-2 border border-gray-300 rounded-full w-full focus:outline-none" />
+                        class="mt-4 mb-4 p-2 border border-gray-300 rounded-full w-full focus:outline-none" />
                     @if ($filesSharedByMe->isEmpty())
                         <p class="text-gray-500 text-center">You haven't shared any files yet.</p>
                     @else
@@ -57,7 +64,13 @@
 
                 <!-- Files Shared with Me -->
                 <div x-show="selectedTab === 'sharedWithMe'" class="bg-white shadow-md rounded-lg p-6">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Files Shared with Me</h2>
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-gray-800">Files Shared to Me</h2>
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-square-poll-horizontal fa-xl text-blue-600"></i>
+                            <span class="text-gray-800">Total: {{ $shareToMeCount }}</span>
+                        </div>
+                    </div>
                     <!-- Minimalist Search Bar for Files Shared with Me -->
                     <input type="text" id="searchSharedWithMe" placeholder="Search files by name or sender..."
                         class="mb-4 p-2 border border-gray-300 rounded-full w-full focus:outline-none" />

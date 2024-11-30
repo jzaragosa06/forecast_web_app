@@ -19,7 +19,6 @@
         </div>
     @endif
 
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const notification = document.getElementById('notification');
@@ -135,9 +134,7 @@
                     @else
                         <p class="text-xs text-gray-600 mb-1">No social links added</p>
                     @endif
-
                 </div>
-
 
                 <!-- About Section -->
                 <div class="mt-6">
@@ -161,6 +158,27 @@
 
                     </div>
                 </div>
+
+                <!-- Total of Results Shared Section -->
+                <div class="mt-6">
+                    <h3 class="font-semibold">Total Results Shared</h3>
+                    <p class="text-sm text-gray-700 mt-2 flex items-center">
+                        <i class="fa-solid fa-square-poll-vertical fa-xl text-blue-600 mr-2"></i>
+                        {{ $totalshared }}
+                    </p>
+                </div>
+
+                <!-- Date Joined Section -->
+                <div class="mt-6">
+                    <h3 class="font-semibold">Joined</h3>
+                    <p class="text-sm text-gray-700 mt-2 flex items-center">
+                        <i class="fa-solid fa-user fa-xl text-blue-600 mr-2"></i>
+                        {{ $user->created_at->diffForHumans() }}
+                    </p>
+                </div>
+
+
+
 
                 <!-- Edit Profile Button -->
                 <div class="mt-8">

@@ -95,7 +95,8 @@
                                 <img id="profileImage"
                                     src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
                                     class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
-                                <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
+                                <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }} |
+                                    {{ $post->created_at->diffForHumans() }}</p>
                             </div>
                             <!-- Post Body -->
                             <p class="text-sm text-gray-500 break-words overflow-hidden mb-2">
@@ -167,7 +168,8 @@
                                 <img id="profileImage"
                                     src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
                                     class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
-                                <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
+                                <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }} |
+                                    {{ $post->created_at->diffForHumans() }}</p>
                             </div>
                             <!-- Post Body -->
                             <p class="text-sm text-gray-500 break-words overflow-hidden mb-2">
