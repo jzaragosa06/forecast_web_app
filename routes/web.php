@@ -50,11 +50,12 @@ Route::get('/documentation', function () {
 
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/don-show-guide-again', [HomeController::class, 'idiot_guide_dont_show_again'])->name('idiot_guide_dont_show_again');
+
 
 Route::prefix('upload')->group(function () {
     Route::post('/time-series', [PreprocessInputFileController::class, 'preprocess_fillna'])->name('upload.ts');
     Route::post('/save/time-series', [SaveInputController::class, 'save'])->name('save');
-
 });
 
 Route::prefix('analyze')->group(function () {

@@ -94,9 +94,17 @@ class HomeController extends Controller
             ->get();
 
         $groupedFiles = File::where('user_id', Auth::id())->get()->groupBy('source');
-
+        $user = User::where('id', Auth::id())->first();
 
         // Pass the time series data to the view
-        return view('home', compact('timeSeriesData', 'files', 'file_assocs', 'sharedFiles', 'otherPosts', 'groupedFiles'));
+        return view('home', compact('timeSeriesData', 'files', 'file_assocs', 'sharedFiles', 'otherPosts', 'groupedFiles', 'user'));
+    }
+
+    public function idiot_guide_dont_show_again()
+    {
+        $user = User::where('id', Auth::id())->first();
+        $user->idiot_guide = 0;
+        $user->save();
+        return redirect()->route('home');
     }
 }

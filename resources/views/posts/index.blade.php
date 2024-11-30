@@ -336,6 +336,7 @@
 
         </div>
     </div>
+
 @endsection
 
 @section('scripts')
@@ -344,6 +345,7 @@
         var quill = new Quill('#editor', {
             theme: 'snow'
         });
+
 
         // Submit the form with Quill content
         $('form').on('submit', function() {
@@ -368,22 +370,6 @@
                 }
             });
 
-            // Search functionality for both sections
-            // $('#my-posts-search').on('input', function() {
-            //     let searchText = $(this).val().toLowerCase();
-            //     $('#my-posts-container div').each(function() {
-            //         let postTitle = $(this).find('h4').text().toLowerCase(); // Change h3 to h4
-            //         $(this).toggle(postTitle.includes(searchText));
-            //     });
-            // });
-
-            // $('#other-posts-search').on('input', function() {
-            //     let searchText = $(this).val().toLowerCase();
-            //     $('#other-posts-container div').each(function() {
-            //         let postTitle = $(this).find('h4').text().toLowerCase(); // Change h3 to h4
-            //         $(this).toggle(postTitle.includes(searchText));
-            //     });
-            // });
 
             $(document).ready(function() {
                 // Search functionality for both sections

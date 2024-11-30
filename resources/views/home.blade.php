@@ -45,13 +45,15 @@
 
     <!-- Multi-Step Guide Modal -->
     <div id="guideModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-        <!-- Added hidden class here -->
         <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full z-50">
             <h2 class="text-2xl font-semibold text-gray-600 mb-6">Getting Started Guide</h2>
             <!-- Guide Step Content -->
             <div id="guideSteps" class="text-gray-600 flex flex-col items-center">
-                <!-- Image for Each Step -->
-                <img id="guideImage" src="" alt="Guide Step Image" class="w-2/3 mb-6 rounded-lg shadow-md">
+                <!-- Fixed Size Image Container -->
+                <div id="imageContainer"
+                    class="w-full max-w-md h-64 mb-6 rounded-lg shadow-md flex items-center justify-center">
+                    <img id="guideImage" src="" alt="Guide Step Image" class="max-w-full max-h-full object-contain">
+                </div>
                 <!-- Step Text -->
                 <div id="guideText" class="text-base text-center">
                     <!-- Placeholder for Step Content -->
@@ -60,98 +62,37 @@
 
             <!-- Navigation Buttons -->
             <div class="flex justify-end mt-6 space-x-4">
+                <!-- Skip Button -->
+                <button id="skipButton" onclick="closeModal()"
+                    class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-6 rounded">
+                    Skip
+                </button>
+                <!-- Back Button -->
                 <button id="backButton" onclick="prevStep()"
                     class="hidden bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-6 rounded">
                     Back
                 </button>
+                <!-- Next Button -->
                 <button id="nextButton" onclick="nextStep()"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
                     Next
                 </button>
+                <!-- Got It Button -->
+                <button id="gotItButton" onclick="closeModal()"
+                    class="hidden bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+                    Got It
+                </button>
+                <!-- Got It & Don't Show This Again Button -->
+                <form action="{{ route('idiot_guide_dont_show_again') }}" method="post" id="dontShowAgainForm"
+                    class="hidden">
+                    @csrf
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+                        Got It & Don't Show This Again
+                    </button>
+                </form>
             </div>
         </div>
     </div>
-    <!--Script Multi-Step Guide Modal -->
-    <script>
-        // JavaScript for Step-by-Step Guide with Images
-        const steps = [{
-                text: "Welcome! Are you ready to know more about your data? This guide will help you get started.",
-                img: "{{ asset('storage/idiot-guid-imgs/welcome1.png') }}"
-            },
-            {
-                text: "Step 1: This panel allows you to upload your time series data or get from third party source.",
-                img: "{{ asset('storage/idiot-guid-imgs/data-source.png') }}"
-            },
-            {
-                text: "Step 2: Once you uploaded the time series data or fetched from a third-party source, you will be prompted to fill missing values. In this part, it is crucial to describe what the data is about, as it will be used by AI to explain the result.",
-                img: "{{ asset('storage/idiot-guid-imgs/cleaning.png') }}"
-            },
-            {
-                text: "Step 3: This panel allows you to select the file containing the time series data and define the operation you want to perform, i.e. trend analysis, seasonality analysis, or perform forecast.",
-                img: "{{ asset('storage/idiot-guid-imgs/analyze.png') }}"
-            },
-            {
-                text: "Step 4: The result page includes the graph of the results. It also includes the AI-generated explanation of the result, a chat with AI feature, and integrated notes.",
-                img: "{{ asset('storage/idiot-guid-imgs/forecast.png') }}"
-            },
-        ];
-        let currentStep = 0;
-
-        // Function to display the guide modal after registration
-        window.addEventListener('load', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            // Check if the registered parameter is true
-            if (urlParams.get('registered') === 'true') {
-                document.getElementById('guideModal').classList.remove('hidden'); // Show the modal
-                showStep(currentStep); // Show the first step
-            } else {
-                closeModal(); // Hide the modal if not registered
-            }
-        });
-
-        // Function to show the current step
-        function showStep(step) {
-            const guideText = document.getElementById('guideText');
-            const guideImage = document.getElementById('guideImage');
-            const nextButton = document.getElementById('nextButton');
-            const backButton = document.getElementById('backButton');
-
-            // Update the text and image based on the current step
-            guideText.textContent = steps[step].text;
-            guideImage.src = steps[step].img;
-            // Show or hide the Back button based on the step
-            backButton.classList.toggle('hidden', step === 0);
-
-            // Adjust button text for "Start" on welcome step and "Got it!" on the last step
-            nextButton.textContent = step === 0 ? 'Start' : (step === steps.length - 1 ? 'Got it!' : 'Next');
-        }
-
-        // Function to move to the next step
-        function nextStep() {
-            if (currentStep < steps.length - 1) {
-                currentStep++;
-                showStep(currentStep);
-            } else {
-                closeModal(); // Close modal on the last step
-            }
-        }
-
-        // Function to move to the previous step
-        function prevStep() {
-            if (currentStep > 0) {
-                currentStep--;
-                showStep(currentStep);
-            }
-        }
-
-        // Function to close the modal
-        function closeModal() {
-            document.getElementById('guideModal').classList.add('hidden');
-        }
-    </script>
-
-
-
 
     <!-- Main Content -->
     <div class="container mx-auto my-6">
@@ -1242,9 +1183,110 @@
             </div>
         </div>
     </div>
+
+    <!-- Show Idiot Guide Again button -->
+    <button id="show-idiot-guide-button"
+        class="fixed bottom-3 right-6 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-500 focus:outline-none w-10 h-10 flex items-center justify-center">
+        <i class="fa-regular fa-circle-question text-sm"></i>
+    </button>
+
 @endsection
 
 @section('scripts')
+
+    <script>
+        // JavaScript for Step-by-Step Guide with Images
+        const steps = [{
+                text: "Welcome! Are you ready to know more about your data? This guide will help you get started.",
+                img: "{{ asset('storage/idiot-guid-imgs/welcome1.png') }}"
+            },
+            {
+                text: "Step 1: This panel allows you to upload your time series data or get from third party source.",
+                img: "{{ asset('storage/idiot-guid-imgs/data-source.png') }}"
+            },
+            {
+                text: "Step 2: Once you uploaded the time series data or fetched from a third-party source, you will be prompted to fill missing values. In this part, it is crucial to describe what the data is about, as it will be used by AI to explain the result.",
+                img: "{{ asset('storage/idiot-guid-imgs/cleaning.png') }}"
+            },
+            {
+                text: "Step 3: This panel allows you to select the file containing the time series data and define the operation you want to perform, i.e. trend analysis, seasonality analysis, or perform forecast.",
+                img: "{{ asset('storage/idiot-guid-imgs/analyze.png') }}"
+            },
+            {
+                text: "Step 4: The result page includes the graph of the results. It also includes the AI-generated explanation of the result, a chat with AI feature, and integrated notes.",
+                img: "{{ asset('storage/idiot-guid-imgs/forecast.png') }}"
+            },
+        ];
+
+        let currentStep = 0;
+
+        // Function to display the guide modal after registration
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const show = @json($user->idiot_guide);
+
+            if (show == '1') {
+                document.getElementById('guideModal').classList.remove('hidden'); // Show the modal
+                showStep(currentStep); // Show the first step
+            } else {
+                closeModal(); // Hide the modal if not registered
+            }
+        });
+
+        // Function to show the current step
+        function showStep(step) {
+            const guideText = document.getElementById('guideText');
+            const guideImage = document.getElementById('guideImage');
+            const nextButton = document.getElementById('nextButton');
+            const backButton = document.getElementById('backButton');
+            const skipButton = document.getElementById('skipButton');
+            const gotItButton = document.getElementById('gotItButton');
+            const dontShowAgainForm = document.getElementById('dontShowAgainForm');
+
+            // Update the text and image based on the current step
+            guideText.textContent = steps[step].text;
+            guideImage.src = steps[step].img;
+
+            // Show or hide the Back button based on the step
+            backButton.classList.toggle('hidden', step === 0);
+
+            // Adjust visibility of Skip, Next, Got It, and Don't Show Again buttons
+            skipButton.classList.toggle('hidden', step > 0);
+            nextButton.classList.toggle('hidden', step === steps.length - 1);
+            gotItButton.classList.toggle('hidden', step !== steps.length - 1);
+            dontShowAgainForm.classList.toggle('hidden', step !== steps.length - 1);
+        }
+
+        // Function to move to the next step
+        function nextStep() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                showStep(currentStep);
+            } else {
+                closeModal(); // Close modal on the last step
+            }
+        }
+
+        // Function to move to the previous step
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById('guideModal').classList.add('hidden');
+        }
+
+        $('#show-idiot-guide-button').click(() => {
+            currentStep = 0;
+            document.getElementById('guideModal').classList.remove('hidden');
+            showStep(currentStep);
+        });
+    </script>
+
     <script>
         // JavaScript to set the max attribute to today's date
         document.addEventListener("DOMContentLoaded", function() {

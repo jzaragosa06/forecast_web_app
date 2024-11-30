@@ -44,8 +44,6 @@ class ManageShowResultsController extends Controller
         $users = User::where('id', '!=', Auth::id())->get();
         // ===========================
 
-
-
         // ===================================
         //I put it here to prevent redundancy
         Logs::create([
