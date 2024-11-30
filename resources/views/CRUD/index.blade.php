@@ -124,80 +124,140 @@
                     </button>
                 </div>
 
+
                 <!-- Files Section -->
                 <div x-show="selectedTab === 'files'" class="space-y-4">
-                    <h5 class="text-base font-semibold mb-2 text-gray-700">Files</h5>
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <h5 class="text-base font-semibold text-gray-700" style="margin: 0;">Files</h5>
+                        <input id="searchInput" type="text" id="searchSharedByMe" placeholder="Search files..."
+                            class="p-2 border border-gray-300 rounded-full focus:outline-none" style="width: 250px;" />
+                    </div>
+
+
                     @if ($files_input->isEmpty())
                         <p class="text-sm text-gray-500 text-center">No files found</p>
                     @else
-                        @foreach ($files_input as $file)
-                            <div class="bg-white rounded-lg shadow p-4">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h6 class="font-semibold text-gray-700">{{ $file->filename }}</h6>
-                                        <p class="text-sm text-gray-500">Type: {{ $file->type }}</p>
-                                        <p class="text-sm text-gray-500">Created on:
-                                            {{ $file->created_at->diffForHumans() }}
-                                        </p>
-                                        <p class="text-sm text-gray-500">Description: {{ $file->description }}</p>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <a href="{{ route('input.file.graph.view.get', $file->file_id) }}">
-                                            <button type="button"
-                                                class="bg-blue-500 text-white px-3 py-1 rounded">View</button>
-                                        </a>
-                                        <form action="{{ route('crud.delete.file', $file->file_id) }}" method="POST">
-                                            @csrf
-                                            <button type="submit"
-                                                class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                                        </form>
+                        <div id="filesContainer" class="space-y-4">
+                            @foreach ($files_input as $file)
+                                <div class="file-item bg-white rounded-lg shadow p-4">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <h6 class="font-semibold text-gray-700">{{ $file->filename }}</h6>
+                                            <p class="text-sm text-gray-500">Type: {{ $file->type }}</p>
+                                            <p class="text-sm text-gray-500">Created on:
+                                                {{ $file->created_at->diffForHumans() }}</p>
+                                            <p class="text-sm text-gray-500">Description: {{ $file->description }}</p>
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <a href="{{ route('input.file.graph.view.get', $file->file_id) }}">
+                                                <button type="button"
+                                                    class="bg-blue-500 text-white px-3 py-1 rounded">View</button>
+                                            </a>
+                                            <form action="{{ route('crud.delete.file', $file->file_id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     @endif
                 </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const searchInput = document.getElementById('searchInput');
+                        const filesContainer = document.getElementById('filesContainer');
+
+                        searchInput.addEventListener('input', () => {
+                            const query = searchInput.value.toLowerCase();
+                            const fileItems = filesContainer.getElementsByClassName('file-item');
+
+                            Array.from(fileItems).forEach(item => {
+                                const fileName = item.querySelector('h6').textContent.toLowerCase();
+                                if (fileName.includes(query)) {
+                                    item.style.display = '';
+                                } else {
+                                    item.style.display = 'none';
+                                }
+                            });
+                        });
+                    });
+                </script>
 
                 <!-- Results Section -->
                 <div x-show="selectedTab === 'results'" class="space-y-4">
-                    <h5 class="text-base font-semibold mb-2 text-gray-700">Result Files (Forecast, Trend, Seasonality
-                        Analysis)</h5>
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <h5 class="text-base font-semibold text-gray-700" style="margin: 0;">Result Files (Forecast, Trend,
+                            Seasonality Analysis)</h5>
+                        <input id="searchResultsInput" type="text" placeholder="Search results..."
+                            class="p-2 border border-gray-300 rounded-full focus:outline-none" style="width: 250px;" />
+                    </div>
+
                     @if ($files_assoc->isEmpty())
                         <p class="text-sm text-gray-500 text-center">No post found</p>
                     @else
-                        @foreach ($files_assoc as $file_assoc)
-                            <div class="bg-white rounded-lg shadow p-4">
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h6 class="font-semibold text-gray-700">{{ $file_assoc->assoc_filename }}</h6>
-                                        <p class="text-sm text-gray-500">Operation: {{ $file_assoc->operation }}</p>
-                                        <p class="text-sm text-gray-500">Created on:
-                                            {{ $file_assoc->created_at->diffForHumans() }}</p>
-                                        <p class="text-sm text-gray-500">Description: {{ $file_assoc->description }}</p>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <button type="button" class="bg-blue-500 text-white px-3 py-1 rounded"
-                                            id="shareButton" data-file-assoc-id="{{ $file_assoc->file_assoc_id }}">
-                                            Share
-                                        </button>
-                                        <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}">
-                                            <button type="button"
-                                                class="bg-blue-500 text-white px-3 py-1 rounded">View</button>
-                                        </a>
-                                        <form action="{{ route('crud.delete.file_assoc', $file_assoc->file_assoc_id) }}"
-                                            method="POST">
-                                            @csrf
-                                            <button type="submit"
-                                                class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                                        </form>
+                        <div id="resultsContainer" class="space-y-4">
+                            @foreach ($files_assoc as $file_assoc)
+                                <div class="result-item bg-white rounded-lg shadow p-4">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <h6 class="font-semibold text-gray-700">{{ $file_assoc->assoc_filename }}</h6>
+                                            <p class="text-sm text-gray-500">Operation: {{ $file_assoc->operation }}</p>
+                                            <p class="text-sm text-gray-500">Created on:
+                                                {{ $file_assoc->created_at->diffForHumans() }}</p>
+                                            <p class="text-sm text-gray-500">Description: {{ $file_assoc->description }}
+                                            </p>
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <button type="button" class="bg-blue-500 text-white px-3 py-1 rounded"
+                                                id="shareButton" data-file-assoc-id="{{ $file_assoc->file_assoc_id }}">
+                                                Share
+                                            </button>
+                                            <a href="{{ route('manage.results.get', $file_assoc->file_assoc_id) }}">
+                                                <button type="button"
+                                                    class="bg-blue-500 text-white px-3 py-1 rounded">View</button>
+                                            </a>
+                                            <form
+                                                action="{{ route('crud.delete.file_assoc', $file_assoc->file_assoc_id) }}"
+                                                method="POST">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     @endif
                 </div>
 
-                <div x-show="selectedTab === 'posts'" class="space-y-4">
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const searchResultsInput = document.getElementById('searchResultsInput');
+                        const resultsContainer = document.getElementById('resultsContainer');
+
+                        searchResultsInput.addEventListener('input', () => {
+                            const query = searchResultsInput.value.toLowerCase();
+                            const resultItems = resultsContainer.getElementsByClassName('result-item');
+
+                            Array.from(resultItems).forEach(item => {
+                                const resultName = item.querySelector('h6').textContent.toLowerCase();
+                                if (resultName.includes(query)) {
+                                    item.style.display = '';
+                                } else {
+                                    item.style.display = 'none';
+                                }
+                            });
+                        });
+                    });
+                </script>
+
+                <!-- Post Section -->
+                {{-- <div x-show="selectedTab === 'posts'" class="space-y-4">
                     <h5 class="text-base font-semibold mb-2 text-gray-700">Posts</h5>
                     @if ($posts->isEmpty())
                         <p class="text-sm text-gray-500 text-center">No post found</p>
@@ -247,8 +307,88 @@
                         @endforeach
                     @endif
 
+                </div> --}}
+                <!-- Post Section -->
+                <div x-show="selectedTab === 'posts'" class="space-y-4">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <h5 class="text-base font-semibold text-gray-700" style="margin: 0;">Posts</h5>
+                        <input id="searchPostInput" type="text" placeholder="Search posts..."
+                            class="p-2 border border-gray-300 rounded-full focus:outline-none" style="width: 250px;" />
+                    </div>
+
+                    @if ($posts->isEmpty())
+                        <p class="text-sm text-gray-500 text-center">No post found</p>
+                    @else
+                        <div id="postsContainer" class="space-y-4">
+                            @foreach ($posts as $post)
+                                <div class="post-item bg-white rounded-lg shadow p-4">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <h6 class="font-semibold text-gray-700">
+                                                {{ Str::limit(strip_tags($post->title), 50, '...') }}</h6>
+                                            <!-- Posted By Section -->
+                                            <div class="flex items-center mb-2">
+                                                <img id="profileImage"
+                                                    src="{{ $post->user->profile_photo ? asset('storage/' . $post->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                                    class="w-5 h-5 object-cover rounded-full mr-2" alt="Profile Photo">
+                                                <p class="text-xs text-gray-500">Posted by: {{ $post->user->name }}</p>
+                                            </div>
+                                            <p class="text-sm text-gray-500 break-words overflow-hidden mb-2">
+                                                {{ Str::limit(strip_tags($post->body), 125, '...') }}
+                                            </p>
+                                            <p class="text-sm text-gray-500">Created on:
+                                                {{ $post->created_at->diffForHumans() }}
+                                            </p>
+                                            <!-- Topics Section -->
+                                            <div class="flex flex-wrap mt-2">
+                                                @foreach (explode(',', $post->topics) as $topic)
+                                                    <span
+                                                        class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
+                                                        {{ $topic }}
+                                                    </span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <a href="{{ route('posts.show', $post) }}">
+                                                <button type="button"
+                                                    class="bg-blue-500 text-white px-3 py-1 rounded">View</button>
+                                            </a>
+                                            <form action="{{ route('posts.delete', $post->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
 
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const searchPostInput = document.getElementById('searchPostInput');
+                        const postsContainer = document.getElementById('postsContainer');
+
+                        searchPostInput.addEventListener('input', () => {
+                            const query = searchPostInput.value.toLowerCase();
+                            const postItems = postsContainer.getElementsByClassName('post-item');
+
+                            Array.from(postItems).forEach(item => {
+                                const postTitle = item.querySelector('h6').textContent.toLowerCase();
+                                if (postTitle.includes(query)) {
+                                    item.style.display = '';
+                                } else {
+                                    item.style.display = 'none';
+                                }
+                            });
+                        });
+                    });
+                </script>
+
+                {{-- <!-- Public Files Section -->
                 <div x-show="selectedTab === 'publicly-shared-files'" class="space-y-4">
                     <h5 class="text-base font-semibold mb-2 text-gray-700">Files Shared on Public</h5>
 
@@ -286,7 +426,74 @@
                         @endforeach
                     @endif
 
+                </div> --}}
+
+                <!-- Public Files Section -->
+                <div x-show="selectedTab === 'publicly-shared-files'" class="space-y-4">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <h5 class="text-base font-semibold text-gray-700" style="margin: 0;">Files Shared on Public</h5>
+                        <input id="publicSearchInput" type="text" placeholder="Search files..."
+                            class="p-2 border border-gray-300 rounded-full focus:outline-none" style="width: 250px;" />
+                    </div>
+
+                    @if ($files_shared_on_public->isEmpty())
+                        <p class="text-sm text-gray-500 text-center">No post found</p>
+                    @else
+                        <div id="publicFilesContainer" class="space-y-4">
+                            @foreach ($files_shared_on_public as $file)
+                                <div class="public-file-item bg-white rounded-lg shadow p-4">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <h6 class="font-semibold text-gray-700">{{ $file->title }}</h6>
+                                            <p class="text-sm text-gray-500">Type: {{ $file->freq }}</p>
+                                            <p class="text-sm text-gray-500">Created on:
+                                                {{ $file->created_at->diffForHumans() }}</p>
+                                            <p class="text-sm text-gray-500">Description: {{ $file->description }}</p>
+                                            <!-- Topics Section -->
+                                            <div class="flex flex-wrap mt-2">
+                                                @foreach (explode(',', $file->topics) as $topic)
+                                                    <span
+                                                        class="bg-blue-100 text-blue-600 text-xs font-medium mr-2 mb-2 px-3 py-1 rounded-lg">
+                                                        {{ $topic }}
+                                                    </span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <form action="{{ route('public-files.delete', $file->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const publicSearchInput = document.getElementById('publicSearchInput');
+                        const publicFilesContainer = document.getElementById('publicFilesContainer');
+
+                        publicSearchInput.addEventListener('input', () => {
+                            const query = publicSearchInput.value.toLowerCase();
+                            const publicFileItems = publicFilesContainer.getElementsByClassName('public-file-item');
+
+                            Array.from(publicFileItems).forEach(item => {
+                                const fileName = item.querySelector('h6').textContent.toLowerCase();
+                                if (fileName.includes(query)) {
+                                    item.style.display = '';
+                                } else {
+                                    item.style.display = 'none';
+                                }
+                            });
+                        });
+                    });
+                </script>
+
             </div>
 
 
