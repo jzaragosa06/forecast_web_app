@@ -201,9 +201,156 @@
         </button>
 
     </div>
+
+    <div id="shareModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-1/3 p-6">
+            <h3 class="text-lg font-semibold">Share with Users</h3>
+            <p class="text-xs text-gray-400 p-2">Share your findings with other users. Contribute to the open access to
+                information.</p>
+
+            <input type="text" id="userSearch" placeholder="Search users..."
+                class="mb-4 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+            <form method="POST" action="{{ route('share.with_other') }}">
+                @csrf
+                <input type="hidden" name="file_assoc_id" id="fileAssocId" value = "{{ $file_assoc_id }}">
+                <!-- Hidden field for file_assoc_id -->
+
+                <div class="max-h-64 overflow-y-auto border border-gray-300 rounded p-2 mb-4" id="userList">
+                    @foreach ($users as $user)
+                        <div class="flex items-center space-x-2 mb-2">
+                            <img src="{{ $user->profile_photo ? asset('storage/' . $user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                class="w-8 h-8 object-cover rounded-full" alt="Profile Photo">
+                            <div class="flex-1">
+                                <p class="text-sm">{{ $user->name }}</p>
+                                <p class="text-xs text-gray-500">{{ $user->email }}</p>
+                            </div>
+                            <input type="checkbox" name="shared_to_user_ids[]" value="{{ $user->id }}"
+                                id="user_{{ $user->id }}" class="user-checkbox">
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="border border-gray-300 rounded p-2 mb-4">
+                    <h4 class="text-sm font-semibold">Selected Users:</h4>
+                    <div id="selectedUsers" class="text-gray-500">
+                        Please select
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                        Share
+                    </button>
+                    <button type="button" id="closeModalButton"
+                        class="ml-4 bg-gray-500 text-white font-bold py-2 px-4 rounded hover:bg-gray-600">
+                        Close
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userCheckboxes = document.querySelectorAll('.user-checkbox');
+            const selectedUsersDiv = document.getElementById('selectedUsers');
+            const userSearchInput = document.getElementById('userSearch');
+
+            const sharedUsers = @json($shared_users); // Pass the shared users data to JS
+
+            // Function to update selected users display
+            function updateSelectedUsers() {
+                const selectedUsers = Array.from(userCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => {
+                        const userDiv = checkbox.closest('div'); // Get the user div
+                        const name = userDiv.querySelector('p.text-sm').innerText; // Get the user name
+                        const email = userDiv.querySelector('p.text-xs').innerText; // Get the user email
+                        const profilePic = userDiv.querySelector('img').src; // Get the user profile picture
+                        return `<div class="flex items-center space-x-2 mt-2">
+                                <img src="${profilePic}" class="w-8 h-8 object-cover rounded-full" alt="Profile Photo">
+                                <div>
+                                    <p class="text-sm">${name}</p>
+                                    <p class="text-xs text-gray-500">${email}</p>
+                                </div>
+                            </div>`;
+                    });
+
+                selectedUsersDiv.innerHTML = selectedUsers.length > 0 ? selectedUsers.join('') : 'Please select';
+            }
+
+            // Function to check which users the file is shared with
+            function checkSharedUsers(fileAssocId) {
+                userCheckboxes.forEach(checkbox => {
+                    const userId = checkbox.value;
+                    // Check if the user is already shared for this file_assoc_id
+                    const isShared = sharedUsers.some(share => share.file_assoc_id == fileAssocId && share
+                        .shared_to_user_id == userId);
+                    checkbox.checked = isShared;
+                });
+                updateSelectedUsers();
+            }
+
+            // Add event listener to checkboxes
+            userCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedUsers);
+            });
+
+            // Search functionality
+            userSearchInput.addEventListener('input', function() {
+                const filter = userSearchInput.value.toLowerCase();
+                userCheckboxes.forEach(checkbox => {
+                    const userDiv = checkbox.closest('div'); // Get the user div
+                    const name = userDiv.querySelector('p.text-sm').innerText
+                        .toLowerCase(); // Get user name
+                    userDiv.style.display = name.includes(filter) ? '' :
+                        'none'; // Show/Hide based on search
+                });
+
+                // Reset selected users display on search
+                selectedUsersDiv.innerHTML = 'Please select';
+            });
+
+            // Get modal and button elements
+            const shareButtons = document.querySelectorAll('#shareButton');
+            const shareModal = document.getElementById('shareModal');
+            const closeModalButton = document.getElementById('closeModalButton');
+            const fileAssocIdInput = document.getElementById('fileAssocId');
+
+            window.addEventListener('load', () => {
+                const urlParams = new URLSearchParams(window.location.search);
+
+                if (urlParams.get('initial') == 'true') {
+                    const fileAssocId = @json($file_assoc_id)
+
+                    checkSharedUsers(fileAssocId); // Check shared users
+                    shareModal.classList.remove('hidden');
+                    shareModal.classList.add('block');
+                }
+
+            });
+
+
+
+            // Hide modal when clicking the Close button
+            closeModalButton.addEventListener('click', function() {
+                shareModal.classList.remove('block');
+                shareModal.classList.add('hidden');
+            });
+
+            // Hide modal when clicking outside the modal content
+            window.addEventListener('click', function(event) {
+                if (event.target === shareModal) {
+                    shareModal.classList.remove('block');
+                    shareModal.classList.add('hidden');
+                }
+            });
+        });
+    </script>
     <script>
         // Function to toggle the side panel visibility
         function togglePanel() {

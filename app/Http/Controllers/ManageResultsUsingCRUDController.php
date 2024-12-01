@@ -112,6 +112,4 @@ class ManageResultsUsingCRUDController extends Controller
 
         return redirect()->route('crud.index');
     }
-
-
 }

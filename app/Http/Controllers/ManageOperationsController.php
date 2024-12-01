@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Http;
 use Auth;
 use Storage;
 use App\Models\Logs;
+use App\Models\User;
+
 
 class ManageOperationsController extends Controller
 {
@@ -19,7 +21,6 @@ class ManageOperationsController extends Controller
         if (!$file_id || !$operation) {
             session()->flash('fail', 'No uploaded data found!');
             return redirect()->route('home');
-
         }
 
         // Get the file information using the file ID and user ID
@@ -86,7 +87,7 @@ class ManageOperationsController extends Controller
                         session()->flash('success', 'Data analyzed successfully!');
                         Log::info('file assoc id: ' . $file_assoc->file_assoc_id);
                         Log::info('Created file association:', $file_assoc->toArray());
-                        return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id));
+                        return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id . "?initial=true"));
 
 
                     } else {
@@ -160,9 +161,7 @@ class ManageOperationsController extends Controller
                         session()->flash('success', 'Data analyzed successfully!');
                         Log::info('file assoc id: ' . $file_assoc->file_assoc_id);
                         Log::info('Created file association:', $file_assoc->toArray());
-                        return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id));
-
-
+                        return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id . "?initial=true"));
                     } else {
                         Logs::create([
                             'user_id' => Auth::id(),
@@ -230,7 +229,7 @@ class ManageOperationsController extends Controller
                     session()->flash('success', 'Data analyzed successfully!');
                     Log::info('file assoc id: ' . $file_assoc->file_assoc_id);
                     Log::info('Created file association:', $file_assoc->toArray());
-                    return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id));
+                    return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id . "?initial=true"));
 
 
                 } else {
@@ -300,7 +299,7 @@ class ManageOperationsController extends Controller
                     session()->flash('success', 'Data analyzed successfully!');
                     Log::info('file assoc id: ' . $file_assoc->file_assoc_id);
                     Log::info('Created file association:', $file_assoc->toArray());
-                    return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id));
+                    return redirect(url('/results/view/results/' . $file_assoc->file_assoc_id . "?initial=true"));
 
 
                 } else {

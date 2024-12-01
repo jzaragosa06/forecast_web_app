@@ -40,10 +40,6 @@ class ManageShowResultsController extends Controller
         $note = Note::where('file_assoc_id', $file_assoc_id)->first();
         $history = ChatHistory::where('file_assoc_id', $file_assoc_id)->first();
 
-        // ===========================
-        $users = User::where('id', '!=', Auth::id())->get();
-        // ===========================
-
         // ===================================
         //I put it here to prevent redundancy
         Logs::create([
@@ -57,27 +53,34 @@ class ManageShowResultsController extends Controller
         $description = $file->description;
 
 
+        $users = User::where('id', '!=', Auth::id())->get();
+
+        // Fetch shared users for each file association
+        $shared_users = DB::table('file_user_shares')
+            ->where('shared_by_user_id', Auth::id())
+            ->get();
+
         $additional[] = [
             'description' => $description,
         ];
         // Handle different operations and file types
         if ($operation == "forecast") {
             if ($inputFileType == "univariate") {
-                return view('results.forecast_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
+                return view('results.forecast_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'shared_users' => $shared_users, 'additional' => $additional, 'description' => $description]);
             } else {
-                return view('results.forecast_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
+                return view('results.forecast_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'shared_users' => $shared_users, 'additional' => $additional, 'description' => $description]);
             }
         } elseif ($operation == "trend") {
             if ($inputFileType == "univariate") {
-                return view('results.trend_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'additional' => $additional, 'description' => $description]);
+                return view('results.trend_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'shared_users' => $shared_users, 'additional' => $additional, 'description' => $description]);
             } else {
-                return view('results.trend_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'additional' => $additional, 'description' => $description]);
+                return view('results.trend_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'shared_users' => $shared_users, 'additional' => $additional, 'description' => $description]);
             }
         } else {
             if ($inputFileType == "univariate") {
-                return view('results.seasonality_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
+                return view('results.seasonality_uni', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'shared_users' => $shared_users, 'additional' => $additional, 'description' => $description]);
             } else {
-                return view('results.seasonality_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'additional' => $additional, 'description' => $description]);
+                return view('results.seasonality_multi', ['data' => $jsonData, 'file_assoc_id' => $file_assoc_id, 'note' => $note, 'history' => $history, 'users' => $users, 'shared_users' => $shared_users, 'additional' => $additional, 'description' => $description]);
             }
         }
     }
