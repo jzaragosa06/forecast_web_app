@@ -29,6 +29,7 @@ class ReviewsController extends Controller
             'affiliation' => $request->get('affiliation'),
             'position' => $request->get('position'),
             'review' => $request->get('review'),
+
         ]);
 
         session()->flash('success', 'Review successfully added');

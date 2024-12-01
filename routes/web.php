@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FillDataDbController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InputFileGraphController;
+use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\LLMController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\ManageOperationsController;
@@ -37,11 +38,7 @@ use App\Http\Controllers\CommentController;
 
 
 
-Route::get('/', function () {
-    return view('welcome');
-
-
-})->name('welcome');
+Route::get('/', [LandingPageController::class, 'landing'])->name('welcome');
 
 Route::get('/documentation', function () {
     return view("documentation");

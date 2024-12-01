@@ -27,8 +27,7 @@
             </div>
         </section>
 
-        <!-- Testimonials Section -->
-        <section id="testimonials" class="py-16 bg-gray-100">
+        {{-- <section id="testimonials" class="py-16 bg-gray-100">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center">
                     <h2 class="text-3xl font-extrabold text-gray-900">What Our Clients Say</h2>
@@ -37,53 +36,120 @@
                 </div>
 
                 <div class="mt-12 grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                    <!-- Testimonial 1 -->
-                    <div class="bg-white p-6 shadow-lg rounded-lg">
-                        <div class="flex items-center space-x-4">
-                            <img src="assets/img/user1.jpg" alt="User 1" class="w-12 h-12 rounded-full">
-                            <div>
-                                <p class="text-lg font-semibold text-gray-900">John Doe</p>
-                                <p class="text-sm text-gray-600">CEO, Tech Innovators</p>
+
+                    @if (!$reviews->isEmpty())
+                        @foreach ($reviews as $review)
+                            <!-- Testimonial 1 -->
+                            <div class="bg-white p-6 shadow-lg rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <img src="{{ $review->user->profile_photo ? asset('storage/' . $review->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                        alt="User 1" class="w-12 h-12 rounded-full">
+
+                                    <div>
+                                        <p class="text-lg font-semibold text-gray-900">{{ $review->user->name }}</p>
+                                        <p class="text-sm text-gray-600">{{ $review->position }}, {{ $review->affiliation }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <p class="mt-4 text-gray-600">
+                                    {{ $review->review }}
+                                </p>
                             </div>
+                        @endforeach
+                    @else
+                        <p class="text-center text-gray-500">No one added a review just yet.</p>
+                    @endif
+
+
+
+
+                </div>
+            </div>
+        </section> --}}
+
+
+        <section id="testimonials" class="py-16 bg-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-gray-900">What Our Clients Say</h2>
+                    <p class="mt-4 text-lg text-gray-600">Discover how our platform empowers businesses to thrive and
+                        achieve new heights through data-driven insights. Here's what our clients have to share:</p>
+                </div>
+
+                <div class="mt-12 relative">
+                    <!-- Carousel Container -->
+                    <div class="overflow-hidden relative" id="carousel">
+                        <div class="flex transition-transform duration-700 ease-in-out" id="carouselInner">
+                            @if (!$reviews->isEmpty())
+                                @foreach ($reviews as $review)
+                                    <div class="w-full md:w-1/3 flex-shrink-0 px-4">
+                                        <div class="bg-white p-6 shadow-lg rounded-lg h-56"> <!-- Fixed height added -->
+                                            <div class="flex items-center space-x-4">
+                                                <img src="{{ $review->user->profile_photo ? asset('storage/' . $review->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
+                                                    alt="{{ $review->user->name }}'s photo" class="w-12 h-12 rounded-full">
+                                                <div>
+                                                    <p class="text-lg font-semibold text-gray-900">{{ $review->user->name }}
+                                                    </p>
+                                                    <p class="text-sm text-gray-600">{{ $review->position }},
+                                                        {{ $review->affiliation }}</p>
+                                                </div>
+                                            </div>
+                                            <p class="mt-4 text-gray-600">"{{ $review->review }}"</p>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <p class="text-center text-gray-500">No one has added a review yet.</p>
+                            @endif
                         </div>
-                        <p class="mt-4 text-gray-600">
-                            "DataForesight has completely transformed the way we make business decisions. The insights we
-                            gain from their platform are invaluable!"
-                        </p>
                     </div>
 
-                    <!-- Testimonial 2 -->
-                    <div class="bg-white p-6 shadow-lg rounded-lg">
-                        <div class="flex items-center space-x-4">
-                            <img src="assets/img/user2.jpeg" alt="User 2" class="w-12 h-12 rounded-full">
-                            <div>
-                                <p class="text-lg font-semibold text-gray-900">Jane Smith</p>
-                                <p class="text-sm text-gray-600">COO, Market Masters</p>
-                            </div>
-                        </div>
-                        <p class="mt-4 text-gray-600">
-                            "We’ve seen a 25% increase in forecasting accuracy since using DataForesight. It’s a
-                            game-changer for our operations."
-                        </p>
-                    </div>
-
-                    <!-- Testimonial 3 -->
-                    <div class="bg-white p-6 shadow-lg rounded-lg">
-                        <div class="flex items-center space-x-4">
-                            <img src="assets/img/user3.jpeg" alt="User 3" class="w-12 h-12 rounded-full">
-                            <div>
-                                <p class="text-lg font-semibold text-gray-900">Emily Johnson</p>
-                                <p class="text-sm text-gray-600">Data Analyst, FinCorp</p>
-                            </div>
-                        </div>
-                        <p class="mt-4 text-gray-600">
-                            "The user-friendly interface and powerful analytics tools have made DataForesight an essential
-                            part of our workflow."
-                        </p>
-                    </div>
+                    <!-- Controls -->
+                    <button id="prevButton"
+                        class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-400 text-white p-2 rounded-full shadow hover:bg-gray-600">
+                        &lt;
+                    </button>
+                    <button id="nextButton"
+                        class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-400 text-white p-2 rounded-full shadow hover:bg-gray-600">
+                        &gt;
+                    </button>
                 </div>
             </div>
         </section>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const carousel = document.getElementById('carousel');
+                const carouselInner = document.getElementById('carouselInner');
+                const prevButton = document.getElementById('prevButton');
+                const nextButton = document.getElementById('nextButton');
+
+                let currentIndex = 0;
+                const itemsToShow = 3;
+                const totalItems = {{ $reviews->count() }}; // Use the count of reviews dynamically
+
+                const updateCarousel = () => {
+                    const offset = -(currentIndex * (carousel.offsetWidth / itemsToShow));
+                    carouselInner.style.transform = `translateX(${offset}px)`;
+                };
+
+                prevButton.addEventListener('click', () => {
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                        updateCarousel();
+                    }
+                });
+
+                nextButton.addEventListener('click', () => {
+                    if (currentIndex < totalItems - itemsToShow) {
+                        currentIndex++;
+                        updateCarousel();
+                    }
+                });
+
+                window.addEventListener('resize', updateCarousel);
+            });
+        </script>
 
 
         <!-- Features Section -->

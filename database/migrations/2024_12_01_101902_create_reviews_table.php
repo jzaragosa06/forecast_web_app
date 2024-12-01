@@ -21,6 +21,10 @@ return new class extends Migration {
             $table->string('review');
             $table->integer('show')->default(1);
             $table->timestamps();
+
+
+            // Foreign key constraint
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
