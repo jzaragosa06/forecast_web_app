@@ -14,6 +14,7 @@ use App\Http\Controllers\PreprocessInputFileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicFilesController;
 use App\Http\Controllers\RenderImageController;
+use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\SaveInputController;
 use App\Http\Controllers\ShareController;
 use App\Http\Controllers\TSSeqAlController;
@@ -163,6 +164,12 @@ Route::prefix('public-files')->group(function () {
     Route::post("/upvote/{fileId}", [PublicFilesController::class, 'upvote'])->name("public-files.upvote");
     Route::post('/delete/{id}', [PublicFilesController::class, 'delete'])->name('public-files.delete');
 });
+
+Route::prefix('reviews')->group(function () {
+    Route::get('/', [ReviewsController::class, 'index'])->name('reviews.index');
+    Route::post('/add', [ReviewsController::class, 'add'])->name('reviews.add');
+});
+
 // ============================================================================================================================================================
 
 

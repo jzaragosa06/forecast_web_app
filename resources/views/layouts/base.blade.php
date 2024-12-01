@@ -157,44 +157,6 @@
                 </a>
             </nav>
 
-            <!-- JavaScript for Collapse Functionality with Persistence -->
-            {{-- <script>
-                const sidebar = document.getElementById('sidebar');
-                const collapseButton = document.getElementById('collapseButton');
-                const collapseIcon = document.getElementById('collapseIcon');
-                const sidebarTitle = document.getElementById('sidebarTitle');
-                const sidebarTextElements = document.querySelectorAll('.sidebar-text');
-
-                // Load sidebar state from localStorage
-                function loadSidebarState() {
-                    const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-                    if (isCollapsed) {
-                        sidebar.classList.remove('w-56');
-                        sidebar.classList.add('w-20');
-                        collapseIcon.classList.remove('fa-angle-double-left');
-                        collapseIcon.classList.add('fa-angle-double-right');
-                        sidebarTitle.classList.add('hidden');
-                        sidebarTextElements.forEach(element => element.classList.add('opacity-0'));
-                    }
-                }
-
-                // Toggle sidebar and save state to localStorage
-                collapseButton.addEventListener('click', () => {
-                    sidebar.classList.toggle('w-56');
-                    sidebar.classList.toggle('w-20');
-                    collapseIcon.classList.toggle('fa-angle-double-left');
-                    collapseIcon.classList.toggle('fa-angle-double-right');
-                    sidebarTitle.classList.toggle('hidden');
-                    sidebarTextElements.forEach(element => element.classList.toggle('opacity-0'));
-
-                    // Save the collapsed state
-                    const isCollapsed = sidebar.classList.contains('w-20');
-                    localStorage.setItem('sidebarCollapsed', isCollapsed);
-                });
-
-                // Load the sidebar state when the page loads
-                document.addEventListener('DOMContentLoaded', loadSidebarState);
-            </script> --}}
 
             <script>
                 const sidebar = document.getElementById('sidebar');
@@ -494,6 +456,13 @@
                                     class="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200">
                                     <i class="fas fa-list mr-2"></i>
                                     <span>Logs</span>
+                                </a>
+
+                                <!-- Review Link -->
+                                <a href="{{ route('reviews.index') }}"
+                                    class="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-200">
+                                    <i class="fa-solid fa-plus mr-2"></i>
+                                    <span>Review</span>
                                 </a>
 
                                 <!-- Logout Link -->
