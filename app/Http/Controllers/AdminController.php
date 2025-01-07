@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\File;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File as FileFacade;
 
 
 class AdminController extends Controller
@@ -151,7 +152,7 @@ class AdminController extends Controller
 
         // Update the config file
         $configContent = '<?php return ' . var_export(['daily' => $options], true) . ';';
-        File::put(config_path('weather_options.php'), $configContent);
+        FileFacade::put(config_path('weather_options.php'), $configContent);
 
         return redirect()->back()->with('success', 'Options updated successfully!');
     }
@@ -180,7 +181,7 @@ class AdminController extends Controller
 
         // Update the config file
         $configContent = '<?php return ' . var_export(['stocks' => $options], true) . ';';
-        File::put(config_path('stock_options.php'), $configContent);
+        FileFacade::put(config_path('stock_options.php'), $configContent);
 
         return redirect()->back()->with('success', 'Options updated successfully!');
     }

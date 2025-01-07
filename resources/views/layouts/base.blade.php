@@ -64,6 +64,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Tailwind Icons (Heroicons) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <!-- Date-FNS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/date-fns@latest"></script>
 
@@ -78,8 +79,10 @@
     </script>
     <!-- Apexchart CDN -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
     <!-- Include Alpine.js CDN -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 
