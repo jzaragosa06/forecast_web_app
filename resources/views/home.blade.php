@@ -192,6 +192,9 @@
                                                         data-tooltip="Select the file you want to analyze."></i>
                                                 </div>
                                             </div>
+
+
+
                                             <!-- Second Select File -->
                                             <div class="mb-4 relative">
                                                 <label for="operation"
@@ -1127,18 +1130,74 @@
                     <div class="space-y-2">
                         <!-- Stock Combo Box -->
                         <div>
-                            <label for="stock-selection" class="block text-sm font-medium text-gray-700">Select or
-                                Enter
+                            <label for="stock-selection" class="block text-sm font-medium text-gray-700">Select or Enter
                                 Stock</label>
-                            <input list="stocks" id="stock-selection" name="stock-selection"
+                            <input id="stock-selection" name="stock-selection"
                                 class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                                placeholder="Enter stock symbol or select from the list">
-                            <datalist id="stocks">
-                                @foreach (config('stock_options.stocks') as $key => $label)
-                                    <option value="{{ $key }}">{{ $label }}</option>
-                                @endforeach
-                            </datalist>
+                                placeholder="Enter stock symbol or select from the list" autocomplete="off">
+
+                            <ul id="stock-suggestions"
+                                class="border border-gray-300 rounded-md mt-1 max-h-40 overflow-auto hidden bg-white shadow-md absolute z-10">
+                            </ul>
                         </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const stockInput = document.getElementById('stock-selection');
+                                const suggestionsBox = document.getElementById('stock-suggestions');
+
+                                // Stock options from Laravel configuration
+                                const stockOptions = @json(config('stock_options.stocks'));
+
+                                // Show suggestions based on user input
+                                stockInput.addEventListener('input', function() {
+                                    const query = stockInput.value.toLowerCase();
+                                    suggestionsBox.innerHTML = ''; // Clear previous suggestions
+
+                                    if (query === '') {
+                                        suggestionsBox.classList.add('hidden');
+                                        return;
+                                    }
+
+                                    const filteredStocks = Object.keys(stockOptions).filter(stock =>
+                                        stock.toLowerCase().startsWith(query)
+                                    );
+
+                                    if (filteredStocks.length > 0) {
+                                        filteredStocks.forEach(stock => {
+                                            const suggestionItem = document.createElement('li');
+                                            suggestionItem.textContent = `${stock} - ${stockOptions[stock]}`;
+                                            suggestionItem.classList.add('p-2', 'cursor-pointer', 'hover:bg-gray-200');
+
+                                            suggestionItem.addEventListener('click', () => {
+                                                stockInput.value = stock;
+                                                suggestionsBox.classList.add('hidden');
+                                            });
+
+                                            suggestionsBox.appendChild(suggestionItem);
+                                        });
+
+                                        suggestionsBox.classList.remove('hidden');
+                                    } else {
+                                        suggestionsBox.classList.add('hidden');
+                                    }
+                                });
+
+                                // Hide suggestions when clicking outside
+                                document.addEventListener('click', (e) => {
+                                    if (!suggestionsBox.contains(e.target) && e.target !== stockInput) {
+                                        suggestionsBox.classList.add('hidden');
+                                    }
+                                });
+                            });
+                        </script>
+
+                        <style>
+                            #stock-suggestions {
+                                max-width: calc(100% - 2px);
+                            }
+                        </style>
+
                         <!-- Date Range -->
                         <div class="flex space-x-4">
                             <!-- Start Date -->
@@ -1155,10 +1214,6 @@
                                     class="w-full mt-1 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
                             </div>
                         </div>
-
-
-
-
                     </div>
 
                     <!-- Interval Dropdown -->

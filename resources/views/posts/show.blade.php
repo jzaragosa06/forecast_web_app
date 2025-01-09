@@ -315,6 +315,7 @@
             var chart = new ApexCharts(document.querySelector("#chart"), options);
             chart.render();
         }
+
         @if ($file_meta['operation'] == 'forecast')
             @if ($file_meta['inputFileType'] == 'univariate')
                 $(document).ready(function() {
@@ -328,7 +329,6 @@
 
                     renderChart1();
 
-
                     $('#forecastTable').DataTable({
                         "pageLength": 10,
                         "ordering": true,
@@ -336,12 +336,84 @@
                         "lengthChange": true // Remove the entries dropdown
                     });
 
+                    // function renderChart1() {
+                    //     // Forecast index
+                    //     let forecastIndex = data.forecast.pred_out.index;
+                    //     let forecastValue = data.forecast
+                    //         .pred_out[
+                    //             `${colname}`];
+
+
+                    //     // Initialize the first chart using ApexCharts
+                    //     let options1 = {
+                    //         chart: {
+                    //             type: 'line',
+                    //             height: 300,
+                    //             toolbar: {
+                    //                 show: true,
+                    //             },
+
+
+                    //         },
+                    //         title: {
+                    //             text: 'Forecast Result',
+                    //             align: 'left',
+                    //             style: {
+                    //                 fontSize: '13px', // Font size of the title
+                    //                 color: '#706e69' // Color of the title
+                    //             }
+                    //         },
+                    //         series: [{
+                    //             name: 'Pred Out',
+                    //             data: forecastValue,
+
+                    //         }],
+                    //         xaxis: {
+                    //             categories: forecastIndex,
+                    //             type: 'datetime',
+
+                    //         },
+                    //         yaxis: {
+                    //             labels: {
+                    //                 formatter: function(value) {
+                    //                     // Check if the value is a valid number before applying toFixed
+                    //                     return isNaN(value) ? value : value.toFixed(
+                    //                         2); // Safely format only valid numeric values
+                    //                 }
+                    //             }
+                    //         },
+                    //         tooltip: {
+                    //             y: {
+                    //                 formatter: function(value) {
+                    //                     // Check if the value is a valid number before applying toFixed
+                    //                     return isNaN(value) ? value : value.toFixed(
+                    //                         2); // Safely format only valid numeric values
+                    //                 }
+                    //             }
+                    //         },
+                    //         stroke: {
+                    //             curve: 'smooth',
+                    //             width: 2,
+                    //         },
+
+                    //     };
+
+                    //     let chart1 = new ApexCharts(document.querySelector("#chart1"), options1);
+                    //     chart1.render();
+
+                    // }
+
                     function renderChart1() {
                         // Forecast index
                         let forecastIndex = data.forecast.pred_out.index;
-                        let forecastValue = data.forecast
+                        let originalDataIndex = data.data.entire_data.index;
+                        let full_index = [...originalDataIndex, ...forecastIndex];
+
+                        let forecastData_null = [...Array(originalDataIndex.length).fill(null), ...data.forecast
                             .pred_out[
-                                `${colname}`];
+                                `${colname}`]
+                        ];
+                        let origDataValue = data.data.entire_data[`${colname}`];
 
 
                         // Initialize the first chart using ApexCharts
@@ -351,29 +423,33 @@
                                 height: 300,
                                 toolbar: {
                                     show: true,
-                                },
-
-
-                            },
-                            title: {
-                                text: 'Forecast Result',
-                                align: 'left',
-                                style: {
-                                    fontSize: '13px', // Font size of the title
-                                    color: '#706e69' // Color of the title
                                 }
                             },
+                            // title: {
+                            //     text: 'Forecast Result',
+                            //     align: 'left',
+                            //     style: {
+                            //         fontSize: '18px', // Font size of the title
+                            //         color: '#263238' // Color of the title
+                            //     }
+                            // },
                             series: [{
-                                name: 'Pred Out',
-                                data: forecastValue,
+                                name: `${colname}`,
+                                data: origDataValue,
+
+                            }, {
+                                name: `Forecast on ${colname}`,
+                                data: forecastData_null,
 
                             }],
                             xaxis: {
-                                categories: forecastIndex,
-                                type: 'datetime',
-
+                                categories: full_index,
+                                type: 'datetime'
                             },
                             yaxis: {
+                                title: {
+                                    text: `${colname}`,
+                                },
                                 labels: {
                                     formatter: function(value) {
                                         // Check if the value is a valid number before applying toFixed
@@ -400,8 +476,10 @@
 
                         let chart1 = new ApexCharts(document.querySelector("#chart1"), options1);
                         chart1.render();
-
                     }
+
+
+
                 });
             @else
                 $(document).ready(function() {
@@ -427,12 +505,84 @@
                         "lengthChange": true // Remove the entries dropdown
                     });
 
+                    // function renderChart1() {
+                    //     // Forecast index
+                    //     let forecastIndex = data.forecast.pred_out.index;
+                    //     let forecastValue = data.forecast
+                    //         .pred_out[
+                    //             `${colname}`];
+
+
+                    //     // Initialize the first chart using ApexCharts
+                    //     let options1 = {
+                    //         chart: {
+                    //             type: 'line',
+                    //             height: 300,
+                    //             toolbar: {
+                    //                 show: true,
+                    //             },
+
+
+                    //         },
+                    //         title: {
+                    //             text: 'Forecast Result',
+                    //             align: 'left',
+                    //             style: {
+                    //                 fontSize: '13px', // Font size of the title
+                    //                 color: '#706e69' // Color of the title
+                    //             }
+                    //         },
+                    //         series: [{
+                    //             name: 'Pred Out',
+                    //             data: forecastValue,
+
+                    //         }],
+                    //         xaxis: {
+                    //             categories: forecastIndex,
+                    //             type: 'datetime',
+
+                    //         },
+                    //         yaxis: {
+                    //             labels: {
+                    //                 formatter: function(value) {
+                    //                     // Check if the value is a valid number before applying toFixed
+                    //                     return isNaN(value) ? value : value.toFixed(
+                    //                         2); // Safely format only valid numeric values
+                    //                 }
+                    //             }
+                    //         },
+                    //         tooltip: {
+                    //             y: {
+                    //                 formatter: function(value) {
+                    //                     // Check if the value is a valid number before applying toFixed
+                    //                     return isNaN(value) ? value : value.toFixed(
+                    //                         2); // Safely format only valid numeric values
+                    //                 }
+                    //             }
+                    //         },
+                    //         stroke: {
+                    //             curve: 'smooth',
+                    //             width: 2,
+                    //         },
+
+                    //     };
+
+                    //     let chart1 = new ApexCharts(document.querySelector("#chart1"), options1);
+                    //     chart1.render();
+
+                    // }
+
                     function renderChart1() {
                         // Forecast index
                         let forecastIndex = data.forecast.pred_out.index;
-                        let forecastValue = data.forecast
+                        let originalDataIndex = data.data.entire_data.index;
+                        let full_index = [...originalDataIndex, ...forecastIndex];
+
+                        let forecastData_null = [...Array(originalDataIndex.length).fill(null), ...data.forecast
                             .pred_out[
-                                `${colname}`];
+                                `${colname}`]
+                        ];
+                        let origDataValue = data.data.entire_data[`${colname}`];
 
 
                         // Initialize the first chart using ApexCharts
@@ -442,29 +592,33 @@
                                 height: 300,
                                 toolbar: {
                                     show: true,
-                                },
-
-
-                            },
-                            title: {
-                                text: 'Forecast Result',
-                                align: 'left',
-                                style: {
-                                    fontSize: '13px', // Font size of the title
-                                    color: '#706e69' // Color of the title
                                 }
                             },
+                            // title: {
+                            //     text: 'Forecast Result',
+                            //     align: 'left',
+                            //     style: {
+                            //         fontSize: '18px', // Font size of the title
+                            //         color: '#263238' // Color of the title
+                            //     }
+                            // },
                             series: [{
-                                name: 'Pred Out',
-                                data: forecastValue,
+                                name: `${colname}`,
+                                data: origDataValue,
+
+                            }, {
+                                name: `Forecast on ${colname}`,
+                                data: forecastData_null,
 
                             }],
                             xaxis: {
-                                categories: forecastIndex,
-                                type: 'datetime',
-
+                                categories: full_index,
+                                type: 'datetime'
                             },
                             yaxis: {
+                                title: {
+                                    text: `${colname}`,
+                                },
                                 labels: {
                                     formatter: function(value) {
                                         // Check if the value is a valid number before applying toFixed
@@ -491,7 +645,6 @@
 
                         let chart1 = new ApexCharts(document.querySelector("#chart1"), options1);
                         chart1.render();
-
                     }
 
 
