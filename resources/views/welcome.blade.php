@@ -20,52 +20,14 @@
                         Started</a>
                     <a href="{{ route('documentation') }}"
                         class="border border-blue-500 hover:bg-blue-100 hover:text-blue-600 text-blue-500 font-medium px-8 py-3 rounded-lg transition duration-300 ease-in-out">Documentation</a>
+                    <a href="{{ route('faq') }}"
+                        class="border border-blue-500 hover:bg-blue-100 hover:text-blue-600 text-blue-500 font-medium px-8 py-3 rounded-lg transition duration-300 ease-in-out">FAQ</a>
                 </div>
             </div>
             <div class="mt-8 md:mt-0 animate-fade-in">
                 <img src="assets/img/chart.svg" alt="DataForesight Illustration" class="w-full max-w-lg h-auto">
             </div>
         </section>
-
-        {{-- <section id="testimonials" class="py-16 bg-gray-100">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h2 class="text-3xl font-extrabold text-gray-900">What Our Clients Say</h2>
-                    <p class="mt-4 text-lg text-gray-600">Our platform has helped businesses grow and make smarter
-                        data-driven decisions. Here's what our clients have to say:</p>
-                </div>
-
-                <div class="mt-12 grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-
-                    @if (!$reviews->isEmpty())
-                        @foreach ($reviews as $review)
-                            <!-- Testimonial 1 -->
-                            <div class="bg-white p-6 shadow-lg rounded-lg">
-                                <div class="flex items-center space-x-4">
-                                    <img src="{{ $review->user->profile_photo ? asset('storage/' . $review->user->profile_photo) : 'https://cdn-icons-png.flaticon.com/512/3003/3003035.png' }}"
-                                        alt="User 1" class="w-12 h-12 rounded-full">
-
-                                    <div>
-                                        <p class="text-lg font-semibold text-gray-900">{{ $review->user->name }}</p>
-                                        <p class="text-sm text-gray-600">{{ $review->position }}, {{ $review->affiliation }}
-                                        </p>
-                                    </div>
-                                </div>
-                                <p class="mt-4 text-gray-600">
-                                    {{ $review->review }}
-                                </p>
-                            </div>
-                        @endforeach
-                    @else
-                        <p class="text-center text-gray-500">No one added a review just yet.</p>
-                    @endif
-
-
-
-
-                </div>
-            </div>
-        </section> --}}
 
 
         <section id="testimonials" class="py-16 bg-gray-100">

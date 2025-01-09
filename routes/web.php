@@ -45,6 +45,10 @@ Route::get('/documentation', function () {
 })->name('documentation');
 
 
+Route::get('/faq', function () {
+    return view("faq");
+})->name('faq');
+
 
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
